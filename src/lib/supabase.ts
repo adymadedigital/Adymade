@@ -13,3 +13,18 @@ export interface Lead {
 	message: string;
 	source: string;
 }
+
+export interface Blog {
+	id?: string;
+	created_at?: string;
+	title: string;
+	content: string;
+	image_url?: string;
+}
+
+export interface Content {
+	id?: string;
+	created_at?: string;
+	key: string;
+	value: string;
+}
