@@ -266,7 +266,7 @@
 							2. API Response (Global Avg)
 						</p>
 						<p style="font-size: 32px; font-weight: bold; color: var(--color-cyan);">{metricsMock.apiResponse}</p>
-						<p style="font-size: 12px; color: var(--color-muted); margin-top: 8px;">P95 latency across all edge nodes</p>
+						<p style="font-size: 12px; white; margin-top: 8px;">P95 latency across all edge nodes</p>
 					</div>
 
 					<div style="border: 1px solid rgba(54, 40, 112, 0.4); border-radius: var(--radius-sm); padding: 24px; background: rgba(8, 5, 26, 0.4);">
@@ -274,7 +274,7 @@
 							3. Published Rate
 						</p>
 						<p style="font-size: 32px; font-weight: bold; color: #4ade80;">{metricsMock.publishedRate}</p>
-						<p style="font-size: 12px; color: var(--color-muted); margin-top: 8px;">Content successful delivery rate</p>
+						<p style="font-size: 12px; color: white; margin-top: 8px;">Content successful delivery rate</p>
 					</div>
 				</div>
 			</div>

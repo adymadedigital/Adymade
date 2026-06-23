@@ -109,7 +109,7 @@
 		</div>
 		
 		<div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);">
-			<p style="font-size: 12px; color: var(--color-muted);">Aggregated end-to-end details from global edge nodes.</p>
+			<p style="font-size: 12px; color: white;">Aggregated end-to-end details from global edge nodes.</p>
 		</div>
 	</div>
 

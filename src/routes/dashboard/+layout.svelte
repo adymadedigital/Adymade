@@ -109,6 +109,8 @@
 	</div>
 {:else}
 	<div class="admin-layout selection:bg-white/20">
+		<div class="admin-login-ambient-1"></div>
+		<div class="admin-login-ambient-2"></div>
 		<!-- Sidebar -->
 		<aside class="admin-sidebar">
 			<div style="height: 72px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid rgba(54, 40, 112, 0.5);">
