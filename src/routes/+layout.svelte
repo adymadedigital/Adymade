@@ -1,10 +1,22 @@
 <script lang="ts">
 	import '../app.css';
 	import { seo, localBusinessSchema, buildFaqSchema } from '$lib/config/seo';
+	import { dev } from '$app/environment';
+	import { page } from '$app/stores';
+	
+	import Header from '$lib/components/Header.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+	import WhatsAppFloat from '$lib/components/WhatsAppFloat.svelte';
+	// import { injectAnalytics } from '@vercel/analytics/sveltekit';
+
+	// injectAnalytics({ mode: dev ? 'development' : 'production' });
 
 	const { children } = $props();
 
 	const faqSchema = buildFaqSchema();
+
+	// Check if current route is an admin or login page
+	let isPublicPage = $derived(!$page.url.pathname.startsWith('/dashboard') && !$page.url.pathname.startsWith('/login'));
 </script>
 
 <svelte:head>
@@ -28,4 +40,13 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
 </svelte:head>
 
+{#if isPublicPage}
+	<Header />
+{/if}
+
 {@render children()}
+
+{#if isPublicPage}
+	<Footer />
+	<WhatsAppFloat />
+{/if}

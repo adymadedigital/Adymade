@@ -44,12 +44,12 @@
 					onmouseenter={() => (servicesOpen = true)}
 					onmouseleave={() => (servicesOpen = false)}
 				>
-					<button class="nav-btn" onclick={() => (servicesOpen = !servicesOpen)} aria-expanded={servicesOpen}>
+					<a href="/services" class="nav-btn" onclick={() => { if (window.innerWidth <= 1024) { servicesOpen = !servicesOpen; return false; } }} aria-expanded={servicesOpen}>
 						Services
 						<span class="chev" class:rotated={servicesOpen}>
 							<ChevronDown size={14} />
 						</span>
-					</button>
+					</a>
 
 					<div class="dropdown mega-dropdown" class:open={servicesOpen}>
 						<div class="dd-col">
@@ -122,9 +122,9 @@
 
 			<!-- Nav Actions -->
 			<div class="nav-actions">
-				<a href="https://wa.link/u03r6i" class="wa-nav" aria-label="WhatsApp" target="_blank" rel="noopener">
+				<!-- <a href="https://wa.link/u03r6i" class="wa-nav" aria-label="WhatsApp" target="_blank" rel="noopener">
 					<MessageCircle size={20} />
-				</a>
+				</a> -->
 				<a href="https://calendly.com/addymade/15-minute-consultation-call" class="nav-cta" target="_blank" rel="noopener">
 					Book a Call
 				</a>

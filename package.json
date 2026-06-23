@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@lucide/svelte": "^1.18.0",
 		"@supabase/supabase-js": "^2.47.0",
+		"@vercel/analytics": "^2.0.1",
 		"@wix/data": "^1.0.477",
 		"@wix/sdk": "^1.21.12",
 		"lucide-svelte": "^1.0.1"

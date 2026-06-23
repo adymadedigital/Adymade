@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
 	import Hero from '$lib/components/Hero.svelte';
 	import TrustStrip from '$lib/components/TrustStrip.svelte';
 	import Services from '$lib/components/Services.svelte';
@@ -10,14 +9,10 @@
 	import Industries from '$lib/components/Industries.svelte';
 	import FAQ from '$lib/components/FAQ.svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import WhatsAppFloat from '$lib/components/WhatsAppFloat.svelte';
 	import LeadForm from '$lib/components/LeadForm.svelte';
 
 	let showLeadForm = $state(false);
 </script>
-
-<Header />
 
 <main>
 	<Hero />
@@ -44,9 +39,6 @@
 
 	<FinalCTA />
 </main>
-
-<Footer />
-<WhatsAppFloat />
 
 <style>
 	.form-section {
