@@ -33,6 +33,7 @@
 					<li><a href="/web-development">Web Development</a></li>
 					<li><a href="/software-development">Custom Software</a></li>
 					<li><a href="/digital-marketing">Digital Marketing</a></li>
+					<li><a href="/seo-services">SEO Services</a></li>
 					<li><a href="/geo">GEO Services</a></li>
 				</ul>
 			</div>

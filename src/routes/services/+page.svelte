@@ -104,7 +104,7 @@
 							<p>Omnichannel performance marketing focused strictly on ROI. We design and execute aggressive campaigns across Google Ads, Meta Ads, and LinkedIn to capture high-intent leads, nurture prospects through automated funnels, and maximize your customer lifetime value.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
-						<a href="/digital-marketing#seo" class="glass-card">
+						<a href="/seo-services" class="glass-card">
 							<div class="gc-icon"><Search size={24} /></div>
 							<h3>SEO Services</h3>
 							<p>Dominate search engine results pages with our technical and content-driven SEO strategies. We conduct deep technical audits, build high-authority backlinks, and write intent-optimized content to ensure your brand captures sustainable, organic traffic long-term.</p>
