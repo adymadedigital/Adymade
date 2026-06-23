@@ -31,24 +31,23 @@
 	<title>Login | Adymade CMS</title>
 </svelte:head>
 
-<div class="admin-login-wrapper selection:bg-white/20">
-	<div class="sm:mx-auto sm:w-full sm:max-w-md">
-		<div class="flex justify-center">
-			<div class="admin-icon-box shadow-lg shadow-white/5 bg-white">
-				<Lock class="w-6 h-6 text-black" />
-			</div>
-		</div>
-		<h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">
-			Admin Portal
-		</h2>
-		<p class="mt-2 text-center text-sm text-neutral-400">
-			Sign in to access the content management system
-		</p>
-	</div>
+<div class="admin-login-wrapper">
+	<!-- Ambient Background Elements handled in CSS -->
+	<div class="admin-login-ambient-1"></div>
+	<div class="admin-login-ambient-2"></div>
 
-	<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+	<div class="admin-login-container">
 		<div class="admin-login-box">
-			<form class="space-y-6" onsubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+			
+			<div class="admin-login-header">
+				<div class="admin-icon-box">
+					<Lock class="w-7 h-7 text-white" />
+				</div>
+				<h2>AdyMade Admin Portal</h2>
+				<p>Sign in to access your digital workspace</p>
+			</div>
+
+			<form class="admin-login-form" onsubmit={(e) => { e.preventDefault(); handleLogin(); }}>
 				{#if error}
 					<div class="admin-alert error">
 						<svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,9 +57,9 @@
 					</div>
 				{/if}
 
-				<div>
+				<div class="admin-form-group">
 					<label for="email" class="admin-label">
-						Email address
+						Email Address
 					</label>
 					<input
 						id="email"
@@ -69,14 +68,14 @@
 						autocomplete="email"
 						required
 						bind:value={email}
-						class="admin-input"
+						class="admin-input glass-input"
 						placeholder="admin@adymade.com"
 					/>
 				</div>
 
-				<div>
-					<label for="password" class="admin-label">
-						Password
+				<div class="admin-form-group">
+					<label for="password" class="admin-label flex-between">
+						<span>Password</span>
 					</label>
 					<input
 						id="password"
@@ -85,24 +84,23 @@
 						autocomplete="current-password"
 						required
 						bind:value={password}
-						class="admin-input"
+						class="admin-input glass-input"
 						placeholder="••••••••"
 					/>
 				</div>
-
-				<div class="pt-2">
+				
+				<div class="admin-form-actions">
 					<button
 						type="submit"
 						disabled={loading}
-						class="admin-btn w-full"
-						style="background: white; color: black;"
+						class="admin-btn glass-btn"
 					>
 						{#if loading}
-							<Loader2 class="w-4 h-4 animate-spin" />
-							Signing in...
+							<Loader2 class="w-5 h-5 animate-spin" style="margin-right: 8px;" />
+							Authenticating...
 						{:else}
-							Sign in
-							<ArrowRight class="w-4 h-4 transition-transform" />
+							Sign In to Dashboard
+							<ArrowRight class="w-5 h-5" style="margin-left: 8px;" />
 						{/if}
 					</button>
 				</div>

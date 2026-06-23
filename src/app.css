@@ -2319,24 +2319,165 @@ textarea:focus {
 	color: #ef4444;
 }
 
+/* Liquid Glassmorphism Login Update */
 .admin-login-wrapper {
 	min-height: 100vh;
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	padding: 20px;
 	background: var(--color-abyss);
+	position: relative;
+	overflow: hidden;
+}
+
+.admin-login-ambient-1 {
+	position: absolute;
+	top: -10%;
+	left: -10%;
+	width: 50vw;
+	height: 50vw;
+	max-width: 600px;
+	max-height: 600px;
+	border-radius: 50%;
+	background: rgba(90, 20, 240, 0.3);
+	filter: blur(100px);
+	pointer-events: none;
+}
+
+.admin-login-ambient-2 {
+	position: absolute;
+	bottom: -10%;
+	right: -10%;
+	width: 60vw;
+	height: 60vw;
+	max-width: 700px;
+	max-height: 700px;
+	border-radius: 50%;
+	background: rgba(6, 182, 212, 0.2);
+	filter: blur(120px);
+	pointer-events: none;
+}
+
+.admin-login-container {
+	position: relative;
+	width: 100%;
+	max-width: 440px;
+	z-index: 10;
 }
 
 .admin-login-box {
-	width: 100%;
-	max-width: 440px;
-	background: var(--color-deep-space);
-	border: 1px solid rgba(54, 40, 112, 0.4);
-	border-radius: var(--radius-md);
+	background: rgba(255, 255, 255, 0.03);
+	backdrop-filter: blur(24px);
+	-webkit-backdrop-filter: blur(24px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 24px;
 	padding: 40px;
-	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+}
+
+.admin-login-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 32px;
+	text-align: center;
+}
+
+.admin-login-header .admin-icon-box {
+	width: 64px;
+	height: 64px;
+	border-radius: 16px;
+	background: linear-gradient(135deg, rgba(90, 20, 240, 0.8), rgba(6, 182, 212, 0.8));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 20px;
+	box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+	color: white;
+	border: 1px solid rgba(255,255,255,0.2);
+}
+
+.admin-login-header h2 {
+	font-size: 28px;
+	font-weight: 700;
+	color: white;
+	margin-bottom: 8px;
+	letter-spacing: -0.02em;
+}
+
+.admin-login-header p {
+	font-size: 14px;
+	color: var(--color-muted);
+	font-weight: 500;
+}
+
+.admin-login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.admin-form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.admin-form-group .admin-label {
+	margin-left: 4px;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.flex-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.glass-input {
+	background: rgba(255, 255, 255, 0.05) !important;
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	border-radius: 12px !important;
+	padding: 14px 16px !important;
+	color: white !important;
+	transition: all 0.3s ease !important;
+	margin-top: 0 !important;
+}
+
+.glass-input:focus {
+	border-color: rgba(6, 182, 212, 0.5) !important;
+	box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1) !important;
+	outline: none !important;
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.glass-input::placeholder {
+	color: rgba(255, 255, 255, 0.3);
+}
+
+.admin-form-actions {
+	margin-top: 8px;
+}
+
+.glass-btn {
+	width: 100%;
+	background: white !important;
+	color: #08051a !important;
+	border-radius: 12px !important;
+	padding: 14px 20px !important;
+	font-weight: 600 !important;
+	font-size: 15px !important;
+	transition: all 0.3s ease !important;
+	box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.glass-btn:hover:not(:disabled) {
+	transform: translateY(-2px) scale(1.01) !important;
+	box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25) !important;
 }
 
 .admin-table-row {
