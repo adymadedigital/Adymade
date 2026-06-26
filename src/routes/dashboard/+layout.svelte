@@ -17,7 +17,8 @@
 		Code,
 		Terminal,
 		TrendingUp,
-		Search
+		Search,
+		BookOpen
 	} from 'lucide-svelte';
 
 	let { children } = $props();
@@ -30,6 +31,7 @@
 			items: [
 				{ name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
 				{ name: 'Blogs', href: '/dashboard/blogs', icon: FileText },
+				{ name: 'Case Studies', href: '/dashboard/case-studies', icon: BookOpen },
 				{ name: 'Images', href: '/dashboard/images', icon: ImageIcon },
 				{ name: 'Content', href: '/dashboard/content', icon: Settings }
 			]

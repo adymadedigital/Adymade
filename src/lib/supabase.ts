@@ -28,3 +28,16 @@ export interface Content {
 	key: string;
 	value: string;
 }
+
+export interface CaseStudyDB {
+	id?: string;
+	created_at?: string;
+	badge: string;
+	title: string;
+	href: string;
+	metrics: { value: string; description: string }[];
+	badge_style?: string;
+	link_style?: string;
+	card_style?: string;
+	featured?: boolean;
+}

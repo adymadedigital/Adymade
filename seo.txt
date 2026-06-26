@@ -1,0 +1,37 @@
+/ai-automation-agents
+/ai-video-creative-services
+/compliance-training-videos
+/geo-ai-search-optimization
+
+
+/development
+/development/web-app-development
+/development/custom-software-development
+
+
+
+Services Page Section
+
+/services
+
+Dedicated Pages
+/services/web-app-development
+/services/custom-software-development
+
+
+Services Page Section
+
+/services
+Dedicated Pages
+/services/digital-marketing
+/services/seo-services
+
+
+
+Main Industry Page
+/industries
+Industry Landing Pages
+/industries/construction-scaffolding
+/industries/healthcare-clinics
+/industries/ecommerce
+/industries/saas-tech
