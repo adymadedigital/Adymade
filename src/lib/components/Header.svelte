@@ -18,6 +18,26 @@
 	let mobileServicesOpen   = $state(false);
 	let mobileIndustriesOpen = $state(false);
 
+	// Close-delay timers — give the cursor time to travel into the dropdown
+	let servicesTimer: ReturnType<typeof setTimeout> | null = null;
+	let industriesTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function openServices() {
+		if (servicesTimer) { clearTimeout(servicesTimer); servicesTimer = null; }
+		servicesOpen = true;
+	}
+	function closeServices() {
+		servicesTimer = setTimeout(() => { servicesOpen = false; }, 150);
+	}
+
+	function openIndustries() {
+		if (industriesTimer) { clearTimeout(industriesTimer); industriesTimer = null; }
+		industriesOpen = true;
+	}
+	function closeIndustries() {
+		industriesTimer = setTimeout(() => { industriesOpen = false; }, 150);
+	}
+
 	function toggleMobile() {
 		mobileOpen = !mobileOpen;
 		if (!mobileOpen) {
@@ -31,7 +51,7 @@
 	<div class="container">
 		<nav class="nav-inner">
 			<!-- Logo -->
-			<a href="/" class="logo-wrap">
+			<a href="#hero" class="logo-wrap">
 				<div class="logo-icon">A</div>
 				<span class="logo-text">adymade</span>
 			</a>
@@ -41,8 +61,8 @@
 				<!-- Services Mega-Menu -->
 				<li
 					class="has-dropdown"
-					onmouseenter={() => (servicesOpen = true)}
-					onmouseleave={() => (servicesOpen = false)}
+					onmouseenter={openServices}
+					onmouseleave={closeServices}
 				>
 					<a href="/services" class="nav-btn" onclick={() => { if (window.innerWidth <= 1024) { servicesOpen = !servicesOpen; return false; } }} aria-expanded={servicesOpen}>
 						Services
@@ -51,7 +71,7 @@
 						</span>
 					</a>
 
-					<div class="dropdown mega-dropdown" class:open={servicesOpen}>
+					<div class="dropdown mega-dropdown" class:open={servicesOpen} onmouseenter={openServices} onmouseleave={closeServices}>
 						<div class="dd-col">
 							<h5>AI &amp; Automation</h5>
 							<ul>
@@ -73,22 +93,14 @@
 								<li><a href="/digital-marketing#seo"> <span class="dd-icon"><Search size={15} /></span>SEO Services</a></li>
 							</ul>
 						</div>
-						<div class="dd-col dd-featured">
-							<h5>GCC Expertise</h5>
-							<div class="dd-featured-content">
-								<div class="dd-featured-title">🇸🇦 RGS — Tamimi Group</div>
-								<div class="dd-featured-desc">Website built for a Tamimi Group scaffolding company in Saudi Arabia</div>
-							</div>
-							<a href="/case-studies/rgs-saudi-arabia" class="dd-featured-link">View case study →</a>
-						</div>
 					</div>
 				</li>
 
 				<!-- Industries Dropdown -->
 				<li
 					class="has-dropdown"
-					onmouseenter={() => (industriesOpen = true)}
-					onmouseleave={() => (industriesOpen = false)}
+					onmouseenter={openIndustries}
+					onmouseleave={closeIndustries}
 				>
 					<button class="nav-btn" onclick={() => (industriesOpen = !industriesOpen)} aria-expanded={industriesOpen}>
 						Industries
@@ -97,7 +109,7 @@
 						</span>
 					</button>
 
-					<div class="dropdown dropdown-sm" class:open={industriesOpen}>
+					<div class="dropdown dropdown-sm" class:open={industriesOpen} onmouseenter={openIndustries} onmouseleave={closeIndustries}>
 						<div class="dd-col">
 							<h5>By Industry</h5>
 							<ul>
@@ -114,7 +126,7 @@
 					</div>
 				</li>
 
-				<li><a href="/case-studies">Our Work</a></li>
+				<li><a href="/case-studies">Case Studies</a></li>
 				<li><a href="/about">About</a></li>
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/contact">Contact</a></li>
