@@ -82,23 +82,24 @@ export interface ClientChip {
 	name: string;
 	sub?: string;
 	star?: boolean;
+	logo?: string;
 }
 
 export const clientChips: ClientChip[] = [
 	{ name: 'RGS', sub: 'Tamimi Group 🇸🇦', star: true },
-	{ name: 'CLIENT 02' },
-	{ name: 'CLIENT 03' },
-	{ name: 'CLIENT 04' },
-	{ name: 'CLIENT 05' },
-	{ name: 'CLIENT 06' },
-	{ name: 'CLIENT 07' },
-	{ name: 'CLIENT 08' }
+	{ name: 'UltraTech Cement', logo: '/logos/ultratech-premium.webp'},
+	{ name: 'Axis Bank', logo: '/logos/axis-bank.gif'},
+	{ name: 'HDFC', logo: '/logos/hdfc-logo-hdfc-.jpg'},
+	{ name: 'SBI', logo: '/logos/OIP.webp'},
+	{ name: 'Ipca', logo: '/logos/logo1.jpg'},
+	{ name: 'Cisco', logo: '/logos/cisco-logo-transparent.png'}
 ];
 
 export const flagPills = [
-	{ flag: '🇮🇳', label: 'India' },
-	{ flag: '🇸🇦', label: 'Saudi Arabia' },
-	{ flag: '🇦🇪', label: 'UAE' },
-	{ flag: '🇬🇧', label: 'United Kingdom' },
-	{ flag: '🇦🇺', label: 'Australia' }
+	{ code: 'in', label: 'India' },
+	{ code: 'sa', label: 'Saudi Arabia' },
+	{ code: 'ae', label: 'UAE' },
+	{ code: 'gb', label: 'United Kingdom' },
+	{ code: 'au', label: 'Australia' },
+	{ code: 'us', label: 'USA' }
 ];

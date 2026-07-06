@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import 'flag-icons/css/flag-icons.min.css';
 	import { seo, localBusinessSchema, buildFaqSchema } from '$lib/config/seo';
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';

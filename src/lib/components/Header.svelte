@@ -32,7 +32,7 @@
 		<nav class="nav-inner">
 			<!-- Logo -->
 			<a href="/" class="logo-wrap">
-				<div class="logo-icon">A</div>
+				<img src="/logos/logo.png" alt="adymade Logo" class="logo-icon"/>
 				<span class="logo-text">adymade</span>
 			</a>
 

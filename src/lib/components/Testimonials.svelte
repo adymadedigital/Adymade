@@ -6,6 +6,7 @@
 	const total = testimonials.length;
 
 	let activeIndex = $state(0);
+	let isPaused = $state(false);
 
 	function next() {
 		activeIndex = (activeIndex + 1) % total;
@@ -15,6 +16,17 @@
 	}
 
 	const trackOffset = $derived(activeIndex * (100 / total));
+
+	// Auto-scroll every 4 seconds, pauses on hover
+	$effect(() => {
+		if (isPaused) return;
+
+		const interval = setInterval(() => {
+			next();
+		}, 4000);
+
+		return () => clearInterval(interval);
+	});
 </script>
 
 <section class="section">
@@ -25,7 +37,11 @@
 			<p>Real words from real clients — no screenshot screenshots, no made-up names.</p>
 		</div>
 
-		<div class="testi-carousel">
+		<div
+			class="testi-carousel"
+			onmouseenter={() => (isPaused = true)}
+			onmouseleave={() => (isPaused = false)}
+		>
 			<button class="testi-nav testi-nav-prev" onclick={prev} aria-label="Previous testimonials">
 				<ChevronLeft size={20} />
 			</button>
