@@ -8,7 +8,10 @@
 
 		<div class="flag-pills">
 			{#each flagPills as pill (pill.label)}
-				<span class="flag-pill">{pill.flag} {pill.label}</span>
+				<span class="flag-pill">
+					<span class="fi fi-{pill.code}"></span>
+					{pill.label}
+				</span>
 			{/each}
 		</div>
 
@@ -22,7 +25,13 @@
 						{/if}
 					</div>
 				{:else}
-					<div class="client-chip">{chip.name}</div>
+					<div class="client-chip">
+						{#if chip.logo}
+							<img src={chip.logo} alt={chip.name} class="chip-logo" />
+						{:else}
+							{chip.name}
+						{/if}
+					</div>
 				{/if}
 			{/each}
 		</div>

@@ -2,7 +2,7 @@
 	import { Plus } from 'lucide-svelte';
 	import { faqItems } from '$lib/data/faq';
 
-	let openIndex = $state(0);
+	let openIndex = $state(-1);
 
 	function toggle(i: number) {
 		openIndex = openIndex === i ? -1 : i;
@@ -18,8 +18,14 @@
 
 		<div class="faq-wrap">
 			{#each faqItems as item, i}
-				<div class="faq-item" class:open={openIndex === i}>
-					<button class="faq-btn" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
+				<div
+					class="faq-item"
+					class:open={openIndex === i}
+					onmouseenter={() => (openIndex = i)}
+					onmouseleave={() => (openIndex = -1)}
+					role="group"
+				>
+					<button class="faq-btn" aria-expanded={openIndex === i}>
 						<span>{item.question}</span>
 						<span class="faq-toggle" aria-hidden="true">
 							<Plus size={16} />

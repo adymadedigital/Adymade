@@ -8,6 +8,9 @@
 	const iconMap: Record<string, any> = {
 		HardHat, HeartPulse, ShoppingCart, Lightbulb, Building2, Factory
 	};
+
+	// Duplicate list so the loop looks seamless
+	const marqueeItems = [...industries, ...industries];
 </script>
 
 <section class="section">
@@ -20,9 +23,11 @@
 				the technology.
 			</p>
 		</div>
+	</div>
 
-		<div class="industry-pills">
-			{#each industries as ind}
+	<div class="marquee-wrap">
+		<div class="marquee-track">
+			{#each marqueeItems as ind}
 				{@const Icon = iconMap[ind.icon]}
 				<a href={ind.href} class="ind-pill">
 					{#if Icon}

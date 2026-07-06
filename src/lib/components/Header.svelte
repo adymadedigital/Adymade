@@ -51,8 +51,13 @@
 	<div class="container">
 		<nav class="nav-inner">
 			<!-- Logo -->
+<<<<<<< HEAD
 			<a href="#hero" class="logo-wrap">
 				<div class="logo-icon">A</div>
+=======
+			<a href="/" class="logo-wrap">
+				<img src="/logos/logo.png" alt="adymade Logo" class="logo-icon"/>
+>>>>>>> main
 				<span class="logo-text">adymade</span>
 			</a>
 
