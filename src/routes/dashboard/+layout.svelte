@@ -116,12 +116,12 @@
 		<!-- Sidebar -->
 		<aside class="admin-sidebar">
 			<div style="height: 72px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid rgba(54, 40, 112, 0.5);">
-				<h1 style="font-size: 20px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px;">
+				<a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 8px; cursor: pointer;">
 					<div style="width: 24px; height: 24px; background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
 						<span style="color: black; font-size: 12px; font-weight: bold;">A</span>
 					</div>
-					Adymade
-				</h1>
+					<span style="font-size: 20px; font-weight: 800; color: white; margin: 0;">Adymade</span>
+				</a>
 			</div>
 
 			<div style="flex: 1; overflow-y: auto; padding: 24px 12px;">

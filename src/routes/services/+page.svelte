@@ -114,7 +114,7 @@
 				</div>
 
 				<!-- GCC Expertise -->
-				<div class="service-category">
+				<!-- <div class="service-category">
 					<div class="category-header">
 						<h2>GCC Expertise</h2>
 						<p>Specialized enterprise solutions for the Middle East market.</p>
@@ -133,7 +133,7 @@
 							</div>
 						</a>
 					</div>
-				</div>
+				</div> -->
 
 			</div>
 		</section>
@@ -263,65 +263,4 @@
 		color: white;
 	}
 
-	.featured-glass-card {
-		background: linear-gradient(135deg, rgba(90, 20, 240, 0.05), rgba(6, 182, 212, 0.05));
-		border: 1px solid rgba(90, 20, 240, 0.2);
-	}
-
-	.featured-glass-card:hover {
-		background: linear-gradient(135deg, rgba(90, 20, 240, 0.08), rgba(6, 182, 212, 0.08));
-		border: 1px solid rgba(90, 20, 240, 0.4);
-	}
-
-	.featured-icon {
-		background: linear-gradient(135deg, var(--color-electric), var(--color-cyan));
-		color: white;
-		width: 72px;
-		height: 72px;
-		border: none;
-		box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
-	}
-
-	.featured-glass-card:hover .featured-icon {
-		transform: scale(1.05);
-	}
-
-	.featured-card-content {
-		display: flex;
-		flex-direction: column;
-		gap: 24px;
-	}
-
-	.glass-btn-inline {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		background: white;
-		color: #08051a;
-		padding: 12px 24px;
-		border-radius: 12px;
-		font-weight: 600;
-		transition: all 0.2s ease;
-		align-self: flex-start;
-		box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-	}
-
-	.featured-glass-card:hover .glass-btn-inline {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(255,255,255,0.25);
-	}
-
-	@media (min-width: 900px) {
-		.featured-card-content {
-			flex-direction: row;
-			align-items: center;
-			gap: 40px;
-		}
-
-		.glass-btn-inline {
-			align-self: center;
-			white-space: nowrap;
-		}
-	}
 </style>

@@ -32,12 +32,18 @@ export interface Content {
 export interface CaseStudyDB {
 	id?: string;
 	created_at?: string;
-	badge: string;
+	slug: string;
 	title: string;
-	href: string;
+	badge?: string;
+	industry?: string;
+	filter_category: 'AI & Automation' | 'Development' | 'Marketing';
+	duration?: string;
+	services: string[];
+	short_description?: string;
 	metrics: { value: string; description: string }[];
-	badge_style?: string;
-	link_style?: string;
-	card_style?: string;
+	hero_image?: string;
 	featured?: boolean;
+	published?: boolean;
+	sort_order?: number;
+	content: any[]; // Ordered content blocks
 }

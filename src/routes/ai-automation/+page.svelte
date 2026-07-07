@@ -21,7 +21,7 @@
 </svelte:head>
 
 <!-- Liquid Glass Wrapper -->
-<div class="relative min-h-screen bg-[#08051a] overflow-hidden">
+<div class="relative min-h-screen bg-abyss overflow-hidden">
 	
 	<!-- Ambient Background Orbs -->
 	<div class="admin-login-ambient-1" style="position: absolute; z-index: 0;"></div>
@@ -114,7 +114,7 @@
 						<p>Tailored AI solutions for diverse market sectors.</p>
 					</div>
 					<div class="glass-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 80px;">
-						{#each ['Healthcare', 'Manufacturing', 'Finance', 'SaaS', 'Education', 'E-commerce'] as industry}
+						{#each ['Healthcare', 'Manufacturing', 'Finance', 'SaaS', 'Education', 'E-commerce'] as industry (industry)}
 							<div class="glass-card" style="padding: 24px; align-items: center; text-align: center; flex-direction: row; gap: 16px;">
 								<Building2 size={24} color="var(--color-cyan)" />
 								<h3 style="margin: 0; font-size: 18px;">{industry}</h3>
@@ -127,7 +127,7 @@
 						<h2>Frequently Asked Questions</h2>
 					</div>
 					<div class="faq-container">
-						{#each faqs as faq}
+						{#each faqs as faq (faq.q)}
 							<div class="glass-card faq-card">
 								<h3>{faq.q}</h3>
 								<p>{faq.a}</p>

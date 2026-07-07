@@ -1,84 +1,19 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { ArrowRight, Clock } from 'lucide-svelte';
+	import { ArrowRight, Clock, Loader2 } from 'lucide-svelte';
 	import FAQ from '$lib/components/FAQ.svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
+	import { supabase, type CaseStudyDB } from '$lib/supabase';
 
-	interface Metric {
-		value: string;
-		description: string;
-	}
+	let studies = $state<CaseStudyDB[]>([]);
+	let loading = $state(true);
 
-	interface Study {
-		id: string;
-		badge: string;
-		industry: string;
-		title: string;
-		duration: string;
-		services: string[];
-		description: string;
-		metrics: Metric[];
-		href: string;
-		filter: string;
-		image: string;
-	}
+	const filters = ['All', 'AI & Automation', 'Development', 'Marketing'];
+	let activeFilter = $state('All');
 
-	const pageStudies: Study[] = [
-		{
-			id: 'dental-clinic',
-			badge: 'Healthcare · AI Automation',
-			industry: 'Healthcare',
-			title: 'Dental Clinic Management System',
-			duration: '3 weeks',
-			services: ['AI Automation', 'Custom Software'],
-			description:
-				'Complete automation of patient scheduling, billing reconciliation, and staff workflows for a busy multi-chair dental practice in Indore.',
-			metrics: [
-				{ value: '25%', description: 'Better chair utilisation' },
-				{ value: '0%', description: 'Billing errors (was 4%)' },
-				{ value: '3 hrs', description: 'Admin time saved daily' }
-			],
-			href: '/case-studies/dental-clinic',
-			filter: 'AI & Automation',
-			image: '/dental-mockup.png'
-		},
-		{
-			id: 'sales-pipeline',
-			badge: 'Sales · AI Automation',
-			industry: 'Sales & CRM',
-			title: 'AI-Powered Sales Pipeline Automation',
-			duration: '4 weeks',
-			services: ['AI Automation', 'AI Agents'],
-			description:
-				'End-to-end lead qualification, scoring, and automated follow-up sequences that slashed response time from 8 hours to 30 minutes.',
-			metrics: [
-				{ value: '+15%', description: 'Revenue in 6 months' },
-				{ value: '30 min', description: 'Lead response (was 8 hrs)' },
-				{ value: '3×', description: 'Qualification rate' }
-			],
-			href: '/case-studies/sales-pipeline',
-			filter: 'AI & Automation',
-			image: '/sales-mockup.png'
-		},
-		{
-			id: 'rgs-saudi-arabia',
-			badge: 'Construction · Web Dev · 🇸🇦 Saudi Arabia',
-			industry: 'Construction',
-			title: 'RGS — A Tamimi Group Company',
-			duration: '3 weeks',
-			services: ['Web Development', 'SEO'],
-			description:
-				"Enterprise-grade bilingual website with full RTL Arabic support for a scaffolding subsidiary of Tamimi Group — one of Saudi Arabia's largest conglomerates.",
-			metrics: [
-				{ value: 'EN+AR', description: 'Bilingual with RTL' },
-				{ value: '100%', description: 'Mobile-first, SEO-ready' },
-				{ value: 'Enterprise', description: 'Tamimi Group subsidiary' }
-			],
-			href: '/case-studies/rgs-saudi-arabia',
-			filter: 'Development',
-			image: '/construction-mockup.png'
-		}
-	];
+	const filteredStudies = $derived(
+		activeFilter === 'All' ? studies : studies.filter((s) => s.filter_category === activeFilter)
+	);
 
 	const globalStats = [
 		{ value: '50+', label: 'Projects Completed' },
@@ -95,13 +30,6 @@
 		{ num: '05', name: 'Optimise', desc: 'Review data, iterate, and fine-tune for peak performance.' },
 		{ num: '06', name: 'Grow', desc: "Scale what's working and build on the foundation we've laid." }
 	];
-
-	const filters = ['All', 'AI & Automation', 'Development', 'Marketing'];
-	let activeFilter = $state('All');
-
-	const filteredStudies = $derived(
-		activeFilter === 'All' ? pageStudies : pageStudies.filter((s) => s.filter === activeFilter)
-	);
 
 	// ── Case study cards: scroll-scrubbed stacked-deck fan-out ──
 	let cardRefs: HTMLElement[] = [];
@@ -147,8 +75,25 @@
 		});
 	}
 
-	onMount(() => {
-		updateAll();
+	onMount(async () => {
+		try {
+			const { data, error } = await supabase
+				.from('case_studies')
+				.select('*')
+				.eq('published', true)
+				.order('sort_order', { ascending: true });
+
+			if (!error && data) {
+				studies = data as CaseStudyDB[];
+			}
+		} catch (e) {
+			console.error('Error fetching case studies:', e);
+		} finally {
+			loading = false;
+			await tick();
+			updateAll();
+		}
+
 		window.addEventListener('scroll', onScroll, { passive: true });
 		window.addEventListener('resize', onScroll);
 		return () => {
@@ -159,7 +104,7 @@
 
 	// re-measure card positions whenever the filtered list changes (cards re-mount)
 	$effect(() => {
-		filteredStudies;
+		const _unused = filteredStudies;
 		tick().then(updateCardProgress);
 	});
 </script>
@@ -178,7 +123,7 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<main>
+<main class="cs-page">
 	<!-- 1. HERO -->
 	<section class="cs-page-hero">
 		<div class="container">
@@ -241,64 +186,74 @@
 			</div>
 
 			<div class="cs-studies-list">
-				{#each filteredStudies as study, i (study.id)}
-					{@const p = cardProgress[i] ?? 0}
-					{@const dir = i % 2 === 0 ? -1 : 1}
-					<div
-						class="cs-featured-card"
-						class:cs-opposite={i % 2 === 1}
-						bind:this={cardRefs[i]}
-						style="
-							opacity: {Math.max(p, 0.001)};
-							transform:
-								translateY({(1 - p) * 70}px)
-								translateX({dir * (1 - p) * 90}px)
-								rotate({dir * (1 - p) * 14}deg)
-								scale({0.9 + p * 0.1});
-							z-index: {10 + i};
-						"
-					>
-						<!-- Left: info -->
-						<div class="cs-featured-left">
-							<span class="cs-featured-tag">{study.industry}</span>
-							<h2 class="cs-featured-title">{study.title}</h2>
-							<p class="cs-featured-desc">{study.description}</p>
+				{#if loading}
+					<div style="display: flex; justify-content: center; padding: 6rem 0;">
+						<Loader2 class="animate-spin" size={40} style="color: #06b6d4;" />
+					</div>
+				{:else}
+					{#each filteredStudies as study, i (study.id)}
+						{@const p = cardProgress[i] ?? 0}
+						{@const dir = i % 2 === 0 ? -1 : 1}
+						<div
+							class="cs-featured-card"
+							class:cs-opposite={i % 2 === 1}
+							bind:this={cardRefs[i]}
+							style="
+								opacity: {Math.max(p, 0.001)};
+								transform:
+									translateY({(1 - p) * 70}px)
+									translateX({dir * (1 - p) * 90}px)
+									rotate({dir * (1 - p) * 14}deg)
+									scale({0.9 + p * 0.1});
+								z-index: {10 + i};
+							"
+						>
+							<!-- Left: info -->
+							<div class="cs-featured-left">
+								<span class="cs-featured-tag">{study.industry}</span>
+								<h2 class="cs-featured-title">{@html study.title}</h2>
+								<p class="cs-featured-desc">{study.short_description}</p>
 
-							<div class="cs-featured-metrics-left">
-								{#each study.metrics as metric (metric.description)}
-									<div class="cs-feat-metric-left">
-										<div class="cs-feat-metric-val">{metric.value}</div>
-										<div class="cs-feat-metric-desc">{metric.description}</div>
+								{#if study.metrics && study.metrics.length > 0}
+									<div class="cs-featured-metrics-left">
+										{#each study.metrics as metric (metric.description)}
+											<div class="cs-feat-metric-left">
+												<div class="cs-feat-metric-val">{metric.value}</div>
+												<div class="cs-feat-metric-desc">{metric.description}</div>
+											</div>
+										{/each}
 									</div>
-								{/each}
+								{/if}
+
+								<div class="cs-featured-services">
+									{#each study.services || [] as svc (svc)}
+										<span class="cs-service-tag">{svc}</span>
+									{/each}
+									{#if study.duration}
+										<span class="cs-service-tag">
+											<Clock size={11} aria-hidden="true" />{study.duration}
+										</span>
+									{/if}
+								</div>
+								<a href="/case-studies/{study.slug}" class="btn btn-primary" style="align-self: flex-start;">
+									Read Full Case Study <ArrowRight size={16} />
+								</a>
 							</div>
 
-							<div class="cs-featured-services">
-								{#each study.services as svc (svc)}
-									<span class="cs-service-tag">{svc}</span>
-								{/each}
-								<span class="cs-service-tag">
-									<Clock size={11} aria-hidden="true" />{study.duration}
-								</span>
+							<!-- Right: mockup image side -->
+							<div class="cs-featured-right-mockup">
+								<div class="cs-mockup-wrapper">
+									<img src={study.hero_image} alt={study.title.replace(/<\/?[^>]+(>|$)/g, '')} class="cs-mockup-img" loading="lazy" />
+								</div>
 							</div>
-							<a href={study.href} class="btn btn-primary" style="align-self: flex-start;">
-								Read Full Case Study <ArrowRight size={16} />
-							</a>
 						</div>
+					{/each}
 
-						<!-- Right: mockup image side -->
-						<div class="cs-featured-right-mockup">
-							<div class="cs-mockup-wrapper">
-								<img src={study.image} alt={study.title} class="cs-mockup-img" loading="lazy" />
-							</div>
+					{#if filteredStudies.length === 0}
+						<div class="cs-empty" role="status">
+							<p>No case studies found for this filter. More coming soon!</p>
 						</div>
-					</div>
-				{/each}
-
-				{#if filteredStudies.length === 0}
-					<div class="cs-empty" role="status">
-						<p>No case studies found for this filter. More coming soon!</p>
-					</div>
+					{/if}
 				{/if}
 			</div>
 		</div>
