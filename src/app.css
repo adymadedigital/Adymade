@@ -1635,13 +1635,7 @@ header {
 		black 95%,
 		transparent 100%
 	);
-	mask-image: linear-gradient(
-		to right,
-		transparent 0%,
-		black 5%,
-		black 95%,
-		transparent 100%
-	);
+	mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
 .marquee-track {
@@ -3052,24 +3046,84 @@ textarea:focus {
 	margin-bottom: 8px;
 }
 
-.cs-feat-metric-desc {
-	font-size: 13px;
-	color: var(--color-body-text);
-	line-height: 1.45;
+/* ── Mockup Presentation Column ── */
+.cs-featured-right-mockup {
+	position: relative;
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 40px;
+	background:
+		radial-gradient(circle at center, rgba(90, 20, 240, 0.06) 0%, rgba(90, 20, 240, 0) 70%),
+		rgba(255, 255, 255, 0.02);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	min-height: 340px;
+	transition:
+		border-color 0.3s ease,
+		background 0.3s ease;
+}
+
+.cs-featured-card:hover .cs-featured-right-mockup {
+	border-color: rgba(90, 20, 240, 0.25);
+	background:
+		radial-gradient(circle at center, rgba(90, 20, 240, 0.09) 0%, rgba(90, 20, 240, 0) 75%),
+		rgba(255, 255, 255, 0.03);
+}
+
+.cs-mockup-wrapper {
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+	box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+	overflow: hidden;
+	background: #08051a;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition:
+		transform 0.4s ease,
+		box-shadow 0.4s ease;
+}
+
+.cs-mockup-img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	display: block;
+}
+
+.cs-featured-card:hover .cs-mockup-wrapper {
+	transform: translateY(-6px);
+	box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
 }
 
 /* ── Filter Bar ── */
 .cs-filter-section {
-	padding: 72px 0 0;
+	position: sticky;
+	top: 72px;
+	z-index: 150;
+	background: rgba(90, 20, 240, 0.1);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	padding: 20px 0;
+	border-bottom: 1px solid rgba(54, 40, 112, 0.25);
+	margin-top: 48px;
+	border-radius: var(--radius-pill);
 }
 
 .cs-filter-top {
-	display: flex;
+	/* display: flex;
 	align-items: center;
 	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 16px;
-	margin-bottom: 0;
+	margin-bottom: 0; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .cs-filter-bar {
@@ -3105,6 +3159,15 @@ textarea:focus {
 .cs-result-count {
 	font-size: 14px;
 	color: var(--color-body-text);
+}
+
+.cs-studies-wrap {
+	position: relative;
+}
+.cs-filter-section {
+	position: sticky;
+	z-index: 20;
+	padding-block: 0.75rem;
 }
 
 /* ── Studies Grid ── */
@@ -3331,6 +3394,7 @@ textarea:focus {
 	border: 1px solid rgba(54, 40, 112, 0.45);
 	border-radius: var(--radius-md);
 	transition: border-color 0.25s ease;
+	will-change: transform, opacity;
 }
 
 .cs-process-step:hover {
@@ -3357,4 +3421,17 @@ textarea:focus {
 	font-size: 12px;
 	color: var(--color-body-text);
 	line-height: 1.55;
+}
+.cs-process-pin {
+	position: relative;
+	height: 450vh; /* scroll runway — increase for a slower, more dramatic scrub */
+}
+.cs-process-sticky {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	overflow: hidden;
 }

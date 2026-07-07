@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount, tick } from 'svelte';
 	import { ArrowRight, Clock } from 'lucide-svelte';
 	import FAQ from '$lib/components/FAQ.svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
@@ -19,6 +20,7 @@
 		metrics: Metric[];
 		href: string;
 		filter: string;
+		image: string;
 	}
 
 	const pageStudies: Study[] = [
@@ -37,7 +39,8 @@
 				{ value: '3 hrs', description: 'Admin time saved daily' }
 			],
 			href: '/case-studies/dental-clinic',
-			filter: 'AI & Automation'
+			filter: 'AI & Automation',
+			image: '/dental-mockup.png'
 		},
 		{
 			id: 'sales-pipeline',
@@ -54,7 +57,8 @@
 				{ value: '3×', description: 'Qualification rate' }
 			],
 			href: '/case-studies/sales-pipeline',
-			filter: 'AI & Automation'
+			filter: 'AI & Automation',
+			image: '/sales-mockup.png'
 		},
 		{
 			id: 'rgs-saudi-arabia',
@@ -71,10 +75,10 @@
 				{ value: 'Enterprise', description: 'Tamimi Group subsidiary' }
 			],
 			href: '/case-studies/rgs-saudi-arabia',
-			filter: 'Development'
+			filter: 'Development',
+			image: '/construction-mockup.png'
 		}
 	];
-
 
 	const globalStats = [
 		{ value: '50+', label: 'Projects Completed' },
@@ -98,6 +102,66 @@
 	const filteredStudies = $derived(
 		activeFilter === 'All' ? pageStudies : pageStudies.filter((s) => s.filter === activeFilter)
 	);
+
+	// ── Case study cards: scroll-scrubbed stacked-deck fan-out ──
+	let cardRefs: HTMLElement[] = [];
+	let cardProgress = $state<number[]>([]);
+
+	function computeCardProgress(el: HTMLElement) {
+		const rect = el.getBoundingClientRect();
+		const vh = window.innerHeight;
+		const start = vh * 0.95; // card just entering from bottom → 0
+		const end = vh * 0.35;   // card reaching resting position → 1
+		return Math.min(Math.max((start - rect.top) / (start - end), 0), 1);
+	}
+
+	function updateCardProgress() {
+		cardProgress = cardRefs.map((el) => (el ? computeCardProgress(el) : 0));
+	}
+
+	// ── Process section: pinned scroll-scrubbed stack ──
+	let processPinEl: HTMLElement;
+	let sectionProgress = $state(0);
+
+	function computeSectionProgress() {
+		if (!processPinEl) return 0;
+		const rect = processPinEl.getBoundingClientRect();
+		const vh = window.innerHeight;
+		const total = rect.height - vh; // scrollable distance while pinned
+		if (total <= 0) return 0;
+		const scrolled = Math.min(Math.max(-rect.top, 0), total);
+		return scrolled / total;
+	}
+
+	// ── Shared scroll loop ──
+	let rafId = 0;
+	function updateAll() {
+		updateCardProgress();
+		sectionProgress = computeSectionProgress();
+	}
+	function onScroll() {
+		if (rafId) return;
+		rafId = requestAnimationFrame(() => {
+			updateAll();
+			rafId = 0;
+		});
+	}
+
+	onMount(() => {
+		updateAll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		return () => {
+			window.removeEventListener('scroll', onScroll);
+			window.removeEventListener('resize', onScroll);
+		};
+	});
+
+	// re-measure card positions whenever the filtered list changes (cards re-mount)
+	$effect(() => {
+		filteredStudies;
+		tick().then(updateCardProgress);
+	});
 </script>
 
 <svelte:head>
@@ -155,42 +219,62 @@
 			</div>
 		</div>
 	</section>
-	<!-- 3. FILTER BAR -->
-	<section id="studies" class="cs-filter-section" aria-label="Filter case studies">
+
+	<!-- 2. STUDIES SECTION — sticky filter lives inside so it un-sticks once the list ends -->
+	<section id="studies" class="cs-featured cs-studies-wrap" aria-label="Case studies">
 		<div class="container">
-			<div class="cs-filter-top">
-				<div class="cs-filter-bar" role="group" aria-label="Filter by category">
-					{#each filters as f}
-						<button
-							class="cs-filter-btn"
-							class:active={activeFilter === f}
-							onclick={() => (activeFilter = f)}
-							aria-pressed={activeFilter === f}
-						>
-							{f}
-						</button>
-					{/each}
+			<div class="cs-filter-section" aria-label="Filter case studies">
+				<div class="cs-filter-top">
+					<div class="cs-filter-bar" role="group" aria-label="Filter by category">
+						{#each filters as f (f)}
+							<button
+								class="cs-filter-btn"
+								class:active={activeFilter === f}
+								onclick={() => (activeFilter = f)}
+								aria-pressed={activeFilter === f}
+							>
+								{f}
+							</button>
+						{/each}
+					</div>
 				</div>
-				<span class="cs-result-count" aria-live="polite">
-					{filteredStudies.length}
-					{filteredStudies.length === 1 ? 'case study' : 'case studies'}
-				</span>
 			</div>
-		</div>
-	</section>
-	<!-- 2. STUDIES LIST (featured-card style for every entry, filtered) -->
-	<section class="cs-featured" aria-label="Case studies">
-		<div class="container">
+
 			<div class="cs-studies-list">
-				{#each filteredStudies as study (study.id)}
-					<div class="cs-featured-card">
+				{#each filteredStudies as study, i (study.id)}
+					{@const p = cardProgress[i] ?? 0}
+					{@const dir = i % 2 === 0 ? -1 : 1}
+					<div
+						class="cs-featured-card"
+						class:cs-opposite={i % 2 === 1}
+						bind:this={cardRefs[i]}
+						style="
+							opacity: {Math.max(p, 0.001)};
+							transform:
+								translateY({(1 - p) * 70}px)
+								translateX({dir * (1 - p) * 90}px)
+								rotate({dir * (1 - p) * 14}deg)
+								scale({0.9 + p * 0.1});
+							z-index: {10 + i};
+						"
+					>
 						<!-- Left: info -->
 						<div class="cs-featured-left">
 							<span class="cs-featured-tag">{study.industry}</span>
 							<h2 class="cs-featured-title">{study.title}</h2>
 							<p class="cs-featured-desc">{study.description}</p>
+
+							<div class="cs-featured-metrics-left">
+								{#each study.metrics as metric (metric.description)}
+									<div class="cs-feat-metric-left">
+										<div class="cs-feat-metric-val">{metric.value}</div>
+										<div class="cs-feat-metric-desc">{metric.description}</div>
+									</div>
+								{/each}
+							</div>
+
 							<div class="cs-featured-services">
-								{#each study.services as svc}
+								{#each study.services as svc (svc)}
 									<span class="cs-service-tag">{svc}</span>
 								{/each}
 								<span class="cs-service-tag">
@@ -202,15 +286,10 @@
 							</a>
 						</div>
 
-						<!-- Right: metrics grid -->
-						<div class="cs-featured-right">
-							<div class="cs-featured-metrics">
-								{#each study.metrics as metric}
-									<div class="cs-feat-metric">
-										<div class="cs-feat-metric-val">{metric.value}</div>
-										<div class="cs-feat-metric-desc">{metric.description}</div>
-									</div>
-								{/each}
+						<!-- Right: mockup image side -->
+						<div class="cs-featured-right-mockup">
+							<div class="cs-mockup-wrapper">
+								<img src={study.image} alt={study.title} class="cs-mockup-img" loading="lazy" />
 							</div>
 						</div>
 					</div>
@@ -225,11 +304,11 @@
 		</div>
 	</section>
 
-	<!-- 5. GLOBAL SUCCESS METRICS BAND -->
+	<!-- 3. GLOBAL SUCCESS METRICS BAND -->
 	<section class="cs-stats" aria-label="Company-wide results">
 		<div class="container">
 			<div class="cs-stats-grid">
-				{#each globalStats as stat}
+				{#each globalStats as stat (stat.label)}
 					<div class="cs-stat">
 						<div class="cs-stat-value">
 							<span class="grad">{stat.value}</span>
@@ -241,32 +320,86 @@
 		</div>
 	</section>
 
-	<!-- 6. PROCESS SECTION -->
-	<section class="section" aria-label="Our process">
-		<div class="container">
-			<div class="section-header">
-				<div class="eyebrow">How We Work</div>
-				<h2>Our Proven <span class="grad">6-Step Process</span></h2>
-				<p>
-					Every project follows the same disciplined process — so you always know where we are and
-					what's coming next.
-				</p>
-			</div>
-			<div class="cs-process-grid">
-				{#each processSteps as step}
-					<div class="cs-process-step">
-						<div class="cs-process-num" aria-hidden="true">{step.num}</div>
-						<div class="cs-process-name">{step.name}</div>
-						<div class="cs-process-desc">{step.desc}</div>
-					</div>
-				{/each}
+	<!-- 4. PROCESS SECTION — pinned scroll-scrubbed stack -->
+	<section class="section cs-process-pin" bind:this={processPinEl} aria-label="Our process">
+		<div class="cs-process-sticky">
+			<div class="container">
+				<div class="section-header">
+					<div class="eyebrow">How We Work</div>
+					<h2>Our Proven <span class="grad">6-Step Process</span></h2>
+					<p>
+						Every project follows the same disciplined process — so you always know where we are and
+						what's coming next.
+					</p>
+				</div>
+
+				<div class="cs-process-grid">
+					{#each processSteps as step, i (step.num)}
+						{@const windowSize = 1 / processSteps.length}
+						{@const localRaw = (sectionProgress - i * windowSize) / windowSize}
+						{@const local = Math.min(Math.max(localRaw, 0), 1)}
+						{@const depth = (i % 2 === 0 ? 1 : -1) * (1 - local) * 14}
+						<div
+							class="cs-process-step"
+							style="
+								opacity: {local};
+								transform: translateY({(1 - local) * 70}px) translateX({depth}px) scale({0.9 + local * 0.1});
+							"
+						>
+							<div class="cs-process-num">{step.num}</div>
+							<div class="cs-process-name">{step.name}</div>
+							<div class="cs-process-desc">{step.desc}</div>
+						</div>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- 7. FAQ -->
+	<!-- 5. FAQ -->
 	<FAQ />
 
-	<!-- 8. FINAL CTA -->
+	<!-- 6. FINAL CTA -->
 	<FinalCTA />
 </main>
+
+<style>
+	.cs-studies-wrap {
+		position: relative;
+	}
+	.cs-filter-section {
+		position: sticky;
+		top: 5.5rem; /* adjust to sit just below your header */
+		z-index: 20;
+		padding-block: 0.75rem;
+	}
+
+	.cs-featured-card {
+		will-change: transform, opacity;
+	}
+
+	.cs-process-pin {
+		position: relative;
+		height: 250vh; /* scroll runway — tune for pace */
+	}
+	.cs-process-sticky {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		overflow: hidden;
+	}
+	.cs-process-step {
+		will-change: transform, opacity;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cs-featured-card,
+		.cs-process-step {
+			opacity: 1 !important;
+			transform: none !important;
+		}
+	}
+</style>
