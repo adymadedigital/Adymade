@@ -35,5 +35,7 @@
 				{/if}
 			{/each}
 		</div>
+
+		<p class="clients-caption"><b>150+ Clients Worldwide</b></p>
 	</div>
 </section>

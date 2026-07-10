@@ -1097,6 +1097,16 @@ header {
 	margin-bottom: 28px;
 }
 
+.clients-caption {
+	text-align: center;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-muted);
+	margin-top: 32px;
+}
+
 .flag-pills {
 	display: flex;
 	flex-wrap: wrap;
@@ -1155,10 +1165,10 @@ header {
 .clients-row {
 	display: flex;
 	flex-wrap: wrap;
-	gap:44px;
+	gap:26px;
 	align-items: center;
 	justify-content: center;
-	row-gap: 28px;
+	row-gap: 24px;
 }
 
 .client-chip {

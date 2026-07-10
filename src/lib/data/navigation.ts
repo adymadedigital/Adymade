@@ -86,13 +86,13 @@ export interface ClientChip {
 }
 
 export const clientChips: ClientChip[] = [
-	{ name: 'RGS', logo: '/logos/rgs.png' },
-	{ name: 'UltraTech Cement', logo: '/logos/ultra.png' },
-	{ name: 'Axis Bank', logo: '/logos/axis.png' },
-	{ name: 'HDFC', logo: '/logos/hdfc.png' },
-	{ name: 'SBI', logo: '/logos/sbi.png' },
-	{ name: 'Ipca', logo: '/logos/ipca.png' },
-	{ name: 'Cisco', logo: '/logos/cisco-logo-transparent.png' },
+	{ name: 'RGS', logo: '/logos/rgss.png' },
+	{ name: 'UltraTech Cement', logo: '/logos/ultraa.png' },
+	{ name: 'Axis Bank', logo: '/logos/axiss.png' },
+	{ name: 'HDFC', logo: '/logos/hdfcc.png' },
+	{ name: 'SBI', logo: '/logos/sbii.png' },
+	{ name: 'Ipca', logo: '/logos/ipcaa.png' },
+	{ name: 'Cisco', logo: '/logos/cisco.png' },
 	// { name: 'Amulyam', logo: '/logos/amulyam.jpg' },
 	// { name: 'Anasuria', logo: '/logos/anasuria.png' },
 	// { name: 'ATL Systems', logo: '/logos/atlsystems.jpg' },
