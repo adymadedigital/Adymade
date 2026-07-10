@@ -23,10 +23,10 @@
 	<Services />
 	<CaseStudies studies={data.featuredStudies} />
 	<StatsBand />
-	<Testimonials />
+	<Testimonials testimonials={data.testimonials} />
 	<GlobalMap />
 	<Industries />
-	<FAQ />
+	<FAQ faqItems={data.faqItems} />
 
 	<!-- Lead Form Section (inline on homepage) -->
 	<section class="form-section section">

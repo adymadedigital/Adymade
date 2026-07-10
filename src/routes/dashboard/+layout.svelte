@@ -18,7 +18,9 @@
 		Terminal,
 		TrendingUp,
 		Search,
-		BookOpen
+		BookOpen,
+		MessageSquare,
+		HelpCircle
 	} from 'lucide-svelte';
 
 	let { children } = $props();
@@ -32,6 +34,8 @@
 				{ name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
 				{ name: 'Blogs', href: '/dashboard/blogs', icon: FileText },
 				{ name: 'Case Studies', href: '/dashboard/case-studies', icon: BookOpen },
+				{ name: 'Testimonials', href: '/dashboard/testimonials', icon: MessageSquare },
+				{ name: 'FAQ', href: '/dashboard/faq', icon: HelpCircle },
 				{ name: 'Images', href: '/dashboard/images', icon: ImageIcon },
 				{ name: 'Content', href: '/dashboard/content', icon: Settings }
 			]

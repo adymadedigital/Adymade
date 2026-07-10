@@ -1,25 +1,28 @@
 <script lang="ts">
 	import { Star, ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import { testimonials } from '$lib/data/testimonials';
+
+	let { testimonials = [] } = $props();
 
 	const visibleCount = 3;
-	const total = testimonials.length;
+	let total = $derived(testimonials.length);
 
 	let activeIndex = $state(0);
 	let isPaused = $state(false);
 
 	function next() {
+		if (total === 0) return;
 		activeIndex = (activeIndex + 1) % total;
 	}
 	function prev() {
+		if (total === 0) return;
 		activeIndex = (activeIndex - 1 + total) % total;
 	}
 
-	const trackOffset = $derived(activeIndex * (100 / total));
+	const trackOffset = $derived(total > 0 ? activeIndex * (100 / total) : 0);
 
 	// Auto-scroll every 4 seconds, pauses on hover
 	$effect(() => {
-		if (isPaused) return;
+		if (isPaused || total === 0) return;
 
 		const interval = setInterval(() => {
 			next();
@@ -65,8 +68,8 @@
 								<div class="testi-author">
 									<div
 										class="t-avatar"
-										style={t.avatarGradient
-											? `background:${t.avatarGradient}`
+										style={t.avatar_gradient
+											? `background:${t.avatar_gradient}`
 											: 'background:linear-gradient(135deg,#320082,#5a14f0)'}
 									>
 										{t.initials}

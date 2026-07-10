@@ -12,9 +12,9 @@
 
 	// injectAnalytics({ mode: dev ? 'development' : 'production' });
 
-	const { children } = $props();
+	let { data, children } = $props();
 
-	const faqSchema = buildFaqSchema();
+	const faqSchema = $derived(buildFaqSchema(data.faqItems));
 
 	// Check if current route is an admin or login page
 	let isPublicPage = $derived(!$page.url.pathname.startsWith('/dashboard') && !$page.url.pathname.startsWith('/login'));
