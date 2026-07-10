@@ -24,6 +24,7 @@
 	let error = $state('');
 	let saveLoading = $state(false);
 	let uploadingImage = $state(false);
+	let reordering = $state(false);
 
 	// Form panel state
 	let isEditing = $state(false);
@@ -66,15 +67,58 @@
 	// ── Fetch ────────────────────────────────────────────────────────────────
 	onMount(() => fetchStudies());
 
-	async function fetchStudies() {
-		loading = true;
+	async function fetchStudies(quiet = false) {
+		if (!quiet) loading = true;
 		const { data, error: e } = await supabase
 			.from('case_studies')
 			.select('*')
 			.order('sort_order', { ascending: true });
 		if (e) error = e.message;
 		else studies = (data as CaseStudyDB[]) || [];
-		loading = false;
+		if (!quiet) loading = false;
+	}
+
+	async function moveStudy(index: number, direction: 'up' | 'down') {
+		if (reordering) return;
+		const targetIndex = direction === 'up' ? index - 1 : index + 1;
+		if (targetIndex < 0 || targetIndex >= studies.length) return;
+
+		reordering = true;
+		error = '';
+
+		// Create a copy and swap the elements
+		const updatedStudies = [...studies];
+		const temp = updatedStudies[index];
+		updatedStudies[index] = updatedStudies[targetIndex];
+		updatedStudies[targetIndex] = temp;
+
+		// Optimistically update local UI state
+		studies = updatedStudies;
+
+		// Assign sequential sort_order (e.g. 10, 20, 30...)
+		const updates = studies.map((study, idx) => ({
+			id: study.id,
+			sort_order: (idx + 1) * 10
+		}));
+
+		// Perform parallel updates to Supabase
+		const promises = updates.map((update) =>
+			supabase
+				.from('case_studies')
+				.update({ sort_order: update.sort_order })
+				.eq('id', update.id)
+		);
+
+		const results = await Promise.all(promises);
+		const failedResult = results.find((r) => r.error);
+
+		if (failedResult) {
+			error = 'Failed to save new order: ' + failedResult.error.message;
+			await fetchStudies(); // Revert local state to DB state
+		} else {
+			await fetchStudies(true); // Quietly sync state with database
+		}
+		reordering = false;
 	}
 
 	// ── Slug Generator ───────────────────────────────────────────────────────
@@ -996,7 +1040,7 @@
 		</div>
 	{:else if !isEditing}
 		<div style="display:flex;flex-direction:column;gap:16px;">
-			{#each studies as cs (cs.id)}
+			{#each studies as cs, idx (cs.id)}
 				<div class="admin-card cs-row">
 					<!-- Left info -->
 					<div style="flex:1;min-width:0;">
@@ -1031,6 +1075,22 @@
 
 					<!-- Actions -->
 					<div style="display:flex;gap:8px;align-items:flex-start;flex-shrink:0;">
+						<button
+							class="admin-icon-btn"
+							title="Move Up"
+							onclick={() => moveStudy(idx, 'up')}
+							disabled={idx === 0 || reordering}
+						>
+							<ArrowUp style="width:16px;height:16px;" />
+						</button>
+						<button
+							class="admin-icon-btn"
+							title="Move Down"
+							onclick={() => moveStudy(idx, 'down')}
+							disabled={idx === studies.length - 1 || reordering}
+						>
+							<ArrowDown style="width:16px;height:16px;" />
+						</button>
 						<button class="admin-icon-btn" title="Edit" onclick={() => startEdit(cs)}>
 							<Edit2 style="width:16px;height:16px;" />
 						</button>
@@ -1049,6 +1109,12 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 20px;
+	}
+
+	.cs-row :global(.admin-icon-btn:disabled) {
+		opacity: 0.3;
+		cursor: not-allowed;
+		pointer-events: none;
 	}
 
 	.cs-badge-pill {
