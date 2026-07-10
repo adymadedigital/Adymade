@@ -1,11 +1,45 @@
 <script lang="ts">
+<<<<<<< HEAD
 	import { Star } from 'lucide-svelte';
 	import { testimonials } from '$lib/data/testimonials';
 
 	// Duplicate the list so the CSS animation can loop seamlessly (0% -> -50%)
 	const loopList = [...testimonials, ...testimonials];
+=======
+	import { Star, ChevronLeft, ChevronRight } from 'lucide-svelte';
+
+	let { testimonials = [] } = $props();
+
+	const visibleCount = 3;
+	let total = $derived(testimonials.length);
+>>>>>>> 4bd41302fa9e0e813ca877166d17a8c50a6d35c9
 
 	let isPaused = $state(false);
+<<<<<<< HEAD
+=======
+
+	function next() {
+		if (total === 0) return;
+		activeIndex = (activeIndex + 1) % total;
+	}
+	function prev() {
+		if (total === 0) return;
+		activeIndex = (activeIndex - 1 + total) % total;
+	}
+
+	const trackOffset = $derived(total > 0 ? activeIndex * (100 / total) : 0);
+
+	// Auto-scroll every 4 seconds, pauses on hover
+	$effect(() => {
+		if (isPaused || total === 0) return;
+
+		const interval = setInterval(() => {
+			next();
+		}, 4000);
+
+		return () => clearInterval(interval);
+	});
+>>>>>>> 4bd41302fa9e0e813ca877166d17a8c50a6d35c9
 </script>
 
 <section class="section">
@@ -33,6 +67,7 @@
 
 					<p class="testi-quote">{t.quote}</p>
 
+<<<<<<< HEAD
 					<div class="testi-author">
 						<div
 							class="t-avatar"
@@ -41,6 +76,26 @@
 								: 'background:linear-gradient(135deg,#320082,#5a14f0)'}
 						>
 							{t.initials}
+=======
+								<p class="testi-quote">{t.quote}</p>
+
+								<div class="testi-author">
+									<div
+										class="t-avatar"
+										style={t.avatar_gradient
+											? `background:${t.avatar_gradient}`
+											: 'background:linear-gradient(135deg,#320082,#5a14f0)'}
+									>
+										{t.initials}
+									</div>
+
+									<div>
+										<div class="t-name">{t.name}</div>
+										<div class="t-role">{t.role}</div>
+									</div>
+								</div>
+							</div>
+>>>>>>> 4bd41302fa9e0e813ca877166d17a8c50a6d35c9
 						</div>
 
 						<div>

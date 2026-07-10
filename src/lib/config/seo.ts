@@ -1,4 +1,3 @@
-import { faqItems } from '$lib/data/faq';
 
 export const seo = {
 	title: 'Adymade | AI Automation, AI Videos, Web Development & Digital Marketing — India',
@@ -34,11 +33,11 @@ export const localBusinessSchema = {
 };
 
 // Generated dynamically from faqItems — never duplicated
-export function buildFaqSchema() {
+export function buildFaqSchema(faqItems: { question: string; answer: string }[]) {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'FAQPage',
-		mainEntity: faqItems.map((item) => ({
+		mainEntity: (faqItems || []).map((item) => ({
 			'@type': 'Question',
 			name: item.question,
 			acceptedAnswer: {

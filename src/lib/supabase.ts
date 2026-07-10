@@ -47,3 +47,22 @@ export interface CaseStudyDB {
 	sort_order?: number;
 	content: any[]; // Ordered content blocks
 }
+
+export interface TestimonialDB {
+	id?: string;
+	created_at?: string;
+	quote: string;
+	initials: string;
+	name: string;
+	role: string;
+	avatar_gradient?: string;
+	sort_order?: number;
+}
+
+export interface FaqDB {
+	id?: string;
+	created_at?: string;
+	question: string;
+	answer: string;
+	sort_order?: number;
+}

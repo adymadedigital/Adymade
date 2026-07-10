@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Plus } from 'lucide-svelte';
-	import { faqItems } from '$lib/data/faq';
+
+	let { faqItems = [] } = $props();
 
 	let openIndex = $state(-1);
 
