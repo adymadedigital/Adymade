@@ -1,48 +1,34 @@
 <script lang="ts">
 	import {
 		Bot, Clapperboard, ClipboardCheck, Globe, Settings2, TrendingUp, Search, Sparkles,
-		HardHat, HeartPulse, ShoppingCart, Lightbulb,
 		ChevronDown, MessageCircle, X, Menu
 	} from 'lucide-svelte';
 	import { navLinks } from '$lib/data/navigation';
 
 	// Lucide icon map — all icons used in nav dropdowns
 	const iconMap: Record<string, any> = {
-		Bot, Clapperboard, ClipboardCheck, Globe, Settings2, TrendingUp, Search, Sparkles,
-		HardHat, HeartPulse, ShoppingCart, Lightbulb
+		Bot, Clapperboard, ClipboardCheck, Globe, Settings2, TrendingUp, Search, Sparkles
 	};
 
 	let servicesOpen   = $state(false);
-	let industriesOpen = $state(false);
 	let mobileOpen     = $state(false);
 	let mobileServicesOpen   = $state(false);
-	let mobileIndustriesOpen = $state(false);
 
-	// Close-delay timers — give the cursor time to travel into the dropdown
+	// Close-delay timer — give the cursor time to travel into the dropdown
 	let servicesTimer: ReturnType<typeof setTimeout> | null = null;
-	let industriesTimer: ReturnType<typeof setTimeout> | null = null;
 
 	function openServices() {
 		if (servicesTimer) { clearTimeout(servicesTimer); servicesTimer = null; }
 		servicesOpen = true;
 	}
 	function closeServices() {
-		servicesTimer = setTimeout(() => { servicesOpen = false; }, 150);
-	}
-
-	function openIndustries() {
-		if (industriesTimer) { clearTimeout(industriesTimer); industriesTimer = null; }
-		industriesOpen = true;
-	}
-	function closeIndustries() {
-		industriesTimer = setTimeout(() => { industriesOpen = false; }, 150);
+		servicesTimer = setTimeout(() => { servicesOpen = false; }, 400);
 	}
 
 	function toggleMobile() {
 		mobileOpen = !mobileOpen;
 		if (!mobileOpen) {
 			mobileServicesOpen   = false;
-			mobileIndustriesOpen = false;
 		}
 	}
 </script>
@@ -51,14 +37,12 @@
 	<div class="container">
 		<nav class="nav-inner">
 			<!-- Logo -->
-<<<<<<< HEAD
-			<a href="#hero" class="logo-wrap">
-				<div class="logo-icon">A</div>
-=======
 			<a href="/" class="logo-wrap">
-				<img src="/logos/logo.png" alt="adymade Logo" class="logo-icon"/>
->>>>>>> main
-				<span class="logo-text">adymade</span>
+				<img src="/logos/adymade.png" alt="adymade Logo" class="logo-icon"/>
+				<div class="logo-text-group">
+				    <span class="logo-text">adymade</span>
+				    <span class="logo-subtext">Digital LLP</span>
+				</div>
 			</a>
 
 			<!-- Desktop Nav -->
@@ -96,36 +80,6 @@
 							<ul>
 								<li><a href="/digital-marketing">     <span class="dd-icon"><TrendingUp size={15} /></span>Digital Marketing</a></li>
 								<li><a href="/digital-marketing#seo"> <span class="dd-icon"><Search size={15} /></span>SEO Services</a></li>
-							</ul>
-						</div>
-					</div>
-				</li>
-
-				<!-- Industries Dropdown -->
-				<li
-					class="has-dropdown"
-					onmouseenter={openIndustries}
-					onmouseleave={closeIndustries}
-				>
-					<button class="nav-btn" onclick={() => (industriesOpen = !industriesOpen)} aria-expanded={industriesOpen}>
-						Industries
-						<span class="chev" class:rotated={industriesOpen}>
-							<ChevronDown size={14} />
-						</span>
-					</button>
-
-					<div class="dropdown dropdown-sm" class:open={industriesOpen} onmouseenter={openIndustries} onmouseleave={closeIndustries}>
-						<div class="dd-col">
-							<h5>By Industry</h5>
-							<ul>
-								<li><a href="/industries/construction"><span class="dd-icon"><HardHat size={15} /></span>Construction &amp; Scaffolding</a></li>
-								<li><a href="/industries/healthcare">  <span class="dd-icon"><HeartPulse size={15} /></span>Healthcare &amp; Clinics</a></li>
-							</ul>
-						</div>
-						<div class="dd-col dd-col-offset">
-							<ul>
-								<li><a href="/industries/ecommerce"><span class="dd-icon"><ShoppingCart size={15} /></span>E-commerce</a></li>
-								<li><a href="/industries/saas">     <span class="dd-icon"><Lightbulb size={15} /></span>SaaS &amp; Tech</a></li>
 							</ul>
 						</div>
 					</div>
@@ -175,22 +129,6 @@
 						<a href="/digital-marketing"    onclick={() => (mobileOpen = false)}><span class="mob-icon"><TrendingUp size={14} /></span>Digital Marketing</a>
 						<a href="/digital-marketing#seo"onclick={() => (mobileOpen = false)}><span class="mob-icon"><Search size={14} /></span>SEO Services</a>
 						<a href="/geo"                  onclick={() => (mobileOpen = false)}><span class="mob-icon"><Sparkles size={14} /></span>GEO Services</a>
-					</div>
-				{/if}
-			</div>
-
-			<!-- Industries -->
-			<div class="mob-item">
-				<button class="mob-section-btn" onclick={() => (mobileIndustriesOpen = !mobileIndustriesOpen)}>
-					Industries
-					<span class="chev" class:rotated={mobileIndustriesOpen}><ChevronDown size={16} /></span>
-				</button>
-				{#if mobileIndustriesOpen}
-					<div class="mob-submenu">
-						<a href="/industries/construction" onclick={() => (mobileOpen = false)}><span class="mob-icon"><HardHat size={14} /></span>Construction &amp; Scaffolding</a>
-						<a href="/industries/healthcare"   onclick={() => (mobileOpen = false)}><span class="mob-icon"><HeartPulse size={14} /></span>Healthcare &amp; Clinics</a>
-						<a href="/industries/ecommerce"    onclick={() => (mobileOpen = false)}><span class="mob-icon"><ShoppingCart size={14} /></span>E-commerce</a>
-						<a href="/industries/saas"         onclick={() => (mobileOpen = false)}><span class="mob-icon"><Lightbulb size={14} /></span>SaaS &amp; Tech</a>
 					</div>
 				{/if}
 			</div>

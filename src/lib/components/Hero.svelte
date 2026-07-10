@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Check, ArrowRight, Bot, Clapperboard } from 'lucide-svelte';
+	import { Check, ArrowRight, Bot, Clapperboard, Search } from 'lucide-svelte';
 </script>
 
 <section class="hero">
@@ -94,22 +94,23 @@
 					<div class="fc-bar"><div class="fc-bar-fill" style="width:80%"></div></div>
 				</div>
 
-				<!-- Card 3: RGS Saudi Arabia -->
+				<!-- Card 3: SEO & GEO -->
 				<div class="float-card fc3">
 					<div class="fc-label">
-						<div class="fc-icon" style="background:linear-gradient(135deg,#006c35,#009a44);font-size:16px">🇸🇦</div>
+						<div class="fc-icon"><Search size={18} /></div>
 						<div>
-							<div class="fc-title">RGS — Tamimi Group</div>
-							<div class="fc-desc">Saudi Arabia · Construction</div>
+							<div class="fc-title">SEO &amp; GEO</div>
+							<div class="fc-desc">AI search visibility</div>
 						</div>
 					</div>
 					<div class="fc-stat">
 						<div>
-							<div class="fc-num">EN + AR</div>
-							<div class="fc-was">Bilingual website</div>
+							<div class="fc-num">Top 3</div>
+							<div class="fc-was">In AI Overviews &amp; ChatGPT</div>
 						</div>
-						<span class="fc-badge fc-badge-purple">Enterprise ✦</span>
+						<span class="fc-badge fc-badge-purple">Ranked ✦</span>
 					</div>
+					<div class="fc-bar"><div class="fc-bar-fill" style="width:88%"></div></div>
 				</div>
 			</div>
 		</div>

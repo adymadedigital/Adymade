@@ -5,9 +5,14 @@
 
 	const cities = [
 		{ name: 'Riyadh', flag: 'SA', x: 65.0, y: 20.4, labelOffset: 'translate(-65%,105px)' },
-		{ name: 'Dubai', flag: 'AE', x: 66.8, y: 20.1, labelOffset: 'translate(-15px,80px)' },
-		{ name: 'London', flag: 'GB', x: 49.0, y: 10.1, labelOffset: 'translate(-58%,53px)' },
-		{ name: 'Melbourne', flag: 'AU', x: 94.5, y: 42.5, labelOffset: 'translate(-54%,215px)' }
+	    { name: 'Dubai', flag: 'AE', x: 66.8, y: 20.1, labelOffset: 'translate(-15px,80px)' },
+	    { name: 'London', flag: 'GB', x: 49.0, y: 10.1, labelOffset: 'translate(-58%,53px)' },
+	    { name: 'Melbourne', flag: 'AU', x: 94.5, y: 42.5, labelOffset: 'translate(-54%,215px)' },
+	    { name: 'New York', flag: 'US', x: 24.5, y: 15.0, labelOffset: 'translate(-58%,53px)' },
+	    { name: 'Amsterdam', flag: 'NL', x: 50.5, y: 9.5, labelOffset: 'translate(10px,-30px)' },
+	    { name: 'Warsaw', flag: 'PL', x: 56.0, y: 10.5, labelOffset: 'translate(10px,25px)' },
+	    { name: 'Stockholm', flag: 'SE', x: 55.0, y: 6.5, labelOffset: 'translate(10px,-30px)' },
+	    { name: 'Suva', flag: 'FJ', x: 97.5, y: 39.0, labelOffset: 'translate(-20px,-30px)' }
 	];
 </script>
 

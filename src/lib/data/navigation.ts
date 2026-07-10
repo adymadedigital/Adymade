@@ -86,13 +86,26 @@ export interface ClientChip {
 }
 
 export const clientChips: ClientChip[] = [
-	{ name: 'RGS', sub: 'Tamimi Group 🇸🇦', star: true },
-	{ name: 'UltraTech Cement', logo: '/logos/ultratech-premium.webp'},
-	{ name: 'Axis Bank', logo: '/logos/axis-bank.gif'},
-	{ name: 'HDFC', logo: '/logos/hdfc-logo-hdfc-.jpg'},
-	{ name: 'SBI', logo: '/logos/OIP.webp'},
-	{ name: 'Ipca', logo: '/logos/logo1.jpg'},
-	{ name: 'Cisco', logo: '/logos/cisco-logo-transparent.png'}
+	{ name: 'RGS', logo: '/logos/rgs.png' },
+	{ name: 'UltraTech Cement', logo: '/logos/ultra.png' },
+	{ name: 'Axis Bank', logo: '/logos/axis.png' },
+	{ name: 'HDFC', logo: '/logos/hdfc.png' },
+	{ name: 'SBI', logo: '/logos/sbi.png' },
+	{ name: 'Ipca', logo: '/logos/ipca.png' },
+	{ name: 'Cisco', logo: '/logos/cisco-logo-transparent.png' },
+	// { name: 'Amulyam', logo: '/logos/amulyam.jpg' },
+	// { name: 'Anasuria', logo: '/logos/anasuria.png' },
+	// { name: 'ATL Systems', logo: '/logos/atlsystems.jpg' },
+	// { name: 'BizFusion', logo: '/logos/bizfusion.png' },
+	// { name: 'Brotherman London', logo: '/logos/brotherman london.png' },
+	// { name: 'Brotherspath', logo: '/logos/brotherspath.png' },
+	// { name: 'City2City', logo: '/logos/city2city.png' },
+	// { name: 'Digearth', logo: '/logos/Digearth.png' },
+	// { name: 'Ezeecomforts', logo: '/logos/Ezeecomforts.avif' },
+	// { name: 'Glendale Solutions', logo: '/logos/glendale solutions.png' },
+	// { name: 'Grupio', logo: '/logos/Grupio.png' },
+	// { name: 'HPN', logo: '/logos/hpn.png' },
+	// { name: 'Infienergy Systems', logo: '/logos/infienergy systems2.png' }
 ];
 
 export const flagPills = [
@@ -101,5 +114,9 @@ export const flagPills = [
 	{ code: 'ae', label: 'UAE' },
 	{ code: 'gb', label: 'United Kingdom' },
 	{ code: 'au', label: 'Australia' },
-	{ code: 'us', label: 'USA' }
+	{ code: 'us', label: 'USA' },
+	{ code: 'nl', label: 'Netherlands' },
+    { code: 'pl', label: 'Poland' },
+    { code: 'se', label: 'Sweden' },
+    { code: 'fj', label: 'Fiji' }
 ];

@@ -26,7 +26,7 @@
 				<a href={svc.href} class="svc-card">
 					<div class="svc-icon">
 						{#if Icon}
-							<Icon size={24} />
+							<Icon size={28} />
 						{/if}
 					</div>
 					<h3>{svc.title}</h3>

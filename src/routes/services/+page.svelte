@@ -1,6 +1,35 @@
 <script lang="ts">
 	import { Bot, Clapperboard, ClipboardCheck, Globe, Settings2, TrendingUp, Search, Sparkles, HardHat, ArrowRight } from 'lucide-svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
+
+	const categories = [
+		{ id: 'ai-automation-cat', label: 'AI & Automation' },
+		{ id: 'development-cat', label: 'Development' },
+		{ id: 'marketing-cat', label: 'Marketing' },
+		{ id: 'gcc-cat', label: 'GCC Expertise' }
+	];
+
+	let activeCat = $state('ai-automation-cat');
+
+	function scrollToCat(id: string) {
+		const el = document.getElementById(id);
+		if (el) {
+			const y = el.getBoundingClientRect().top + window.scrollY - 140;
+			window.scrollTo({ top: y, behavior: 'smooth' });
+		}
+		activeCat = id;
+	}
+
+	function handleScroll() {
+		const offsets = categories.map((c) => {
+			const el = document.getElementById(c.id);
+			return { id: c.id, top: el ? el.getBoundingClientRect().top : Infinity };
+		});
+		const current = offsets
+			.filter((o) => o.top < 180)
+			.sort((a, b) => b.top - a.top)[0];
+		if (current) activeCat = current.id;
+	}
 </script>
 
 <svelte:head>
@@ -8,9 +37,11 @@
 	<meta name="description" content="Explore Adymade's comprehensive services including AI & Automation, Development, Marketing, and GCC Expertise." />
 </svelte:head>
 
+<svelte:window onscroll={handleScroll} />
+
 <!-- Liquid Glass Wrapper -->
 <div class="relative min-h-screen bg-[#08051a] overflow-hidden">
-	
+
 	<!-- Ambient Background Orbs -->
 	<div class="admin-login-ambient-1" style="position: absolute; z-index: 0;"></div>
 	<div class="admin-login-ambient-2" style="position: absolute; z-index: 0;"></div>
@@ -31,90 +62,107 @@
 			</div>
 		</section>
 
+		<!-- Sticky Category Nav -->
+		<div class="cat-nav-sticky">
+			<div class="container">
+				<div class="cat-nav-bar">
+					{#each categories as cat}
+						<button
+							class="cat-nav-btn"
+							class:active={activeCat === cat.id}
+							onclick={() => scrollToCat(cat.id)}
+						>
+							{cat.label}
+						</button>
+					{/each}
+				</div>
+			</div>
+		</div>
+
 		<!-- Services Grid -->
 		<section class="section pt-0">
 			<div class="container">
-				
+
 				<!-- AI & Automation -->
-				<div class="service-category">
+				<div class="service-category" id="ai-automation-cat">
 					<div class="category-header">
 						<h2>AI &amp; Automation</h2>
 						<p>Intelligent solutions to streamline operations and scale your brand.</p>
 					</div>
 					<div class="services-grid">
 						<a href="/ai-automation" class="glass-card">
-							<div class="gc-icon"><Bot size={24} /></div>
+							<div class="gc-icon"><Bot size={32} /></div>
 							<h3>AI Automation &amp; Agents</h3>
-							<p>Deploy intelligent, autonomous AI agents capable of handling complex customer service, lead qualification, and data processing. We build custom workflows that seamlessly integrate with your existing CRM and tech stack to reduce manual labor and scale your productivity 10x.</p>
+							<p>Autonomous AI agents for support, lead qualification &amp; workflows.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/ai-videos" class="glass-card">
-							<div class="gc-icon"><Clapperboard size={24} /></div>
+							<div class="gc-icon"><Clapperboard size={32} /></div>
 							<h3>AI Videos &amp; Creatives</h3>
-							<p>Leverage the power of generative AI to produce high-converting, personalized video creatives at scale. From engaging short-form TikTok/Reels content to highly targeted ad creatives, we reduce production costs while driving massive engagement and ROI.</p>
+							<p>High-converting AI video content for ads, Reels &amp; TikTok.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/compliance-videos" class="glass-card">
-							<div class="gc-icon"><ClipboardCheck size={24} /></div>
+							<div class="gc-icon"><ClipboardCheck size={32} /></div>
 							<h3>Compliance Videos</h3>
-							<p>Turn dry, text-heavy regulatory manuals into engaging, easy-to-understand compliance training videos. We use AI avatars and voiceovers to quickly localize and update content, ensuring your workforce stays compliant across all global offices with zero production delays.</p>
+							<p>AI avatar training videos, localized fast across offices.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/geo" class="glass-card">
-							<div class="gc-icon"><Sparkles size={24} /></div>
+							<div class="gc-icon"><Sparkles size={32} /></div>
 							<h3>GEO — AI Search</h3>
-							<p>Generative Engine Optimization (GEO) is the future of search. We optimize your brand's digital presence so you rank natively as the top recommended solution inside AI platforms like ChatGPT, Claude, and Google Gemini. Capture intent before your competitors do.</p>
+							<p>Rank as the top answer inside ChatGPT, Claude &amp; Gemini.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 					</div>
 				</div>
 
 				<!-- Development -->
-				<div class="service-category">
+				<div class="service-category" id="development-cat">
 					<div class="category-header">
 						<h2>Development</h2>
 						<p>Robust, scalable, and high-performance digital infrastructure.</p>
 					</div>
 					<div class="services-grid">
 						<a href="/web-development" class="glass-card">
-							<div class="gc-icon"><Globe size={24} /></div>
+							<div class="gc-icon"><Globe size={32} /></div>
 							<h3>Web &amp; App Development</h3>
-							<p>End-to-end development of lightning-fast websites and custom web applications. We utilize modern frameworks to deliver exceptional user experiences, robust backend architecture, and seamless API integrations optimized for high traffic.</p>
+							<p>Fast websites &amp; apps built for scale and conversions.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/software-development" class="glass-card">
-							<div class="gc-icon"><Settings2 size={24} /></div>
+							<div class="gc-icon"><Settings2 size={32} /></div>
 							<h3>Custom Software</h3>
-							<p>Bespoke enterprise software designed to solve your most complex operational bottlenecks. From custom SaaS platforms to internal ERP systems, we engineer scalable, secure, and maintainable software that acts as the backbone of your digital infrastructure.</p>
+							<p>Bespoke SaaS &amp; ERP systems engineered for your operations.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 					</div>
 				</div>
 
 				<!-- Marketing -->
-				<div class="service-category">
+				<div class="service-category" id="marketing-cat">
 					<div class="category-header">
 						<h2>Marketing</h2>
 						<p>Data-driven strategies to dominate your market and capture intent.</p>
 					</div>
 					<div class="services-grid">
 						<a href="/digital-marketing" class="glass-card">
-							<div class="gc-icon"><TrendingUp size={24} /></div>
+							<div class="gc-icon"><TrendingUp size={32} /></div>
 							<h3>Digital Marketing</h3>
-							<p>Omnichannel performance marketing focused strictly on ROI. We design and execute aggressive campaigns across Google Ads, Meta Ads, and LinkedIn to capture high-intent leads, nurture prospects through automated funnels, and maximize your customer lifetime value.</p>
+							<p>ROI-focused campaigns across Google, Meta &amp; LinkedIn.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/seo-services" class="glass-card">
-							<div class="gc-icon"><Search size={24} /></div>
+							<div class="gc-icon"><Search size={32} /></div>
 							<h3>SEO Services</h3>
-							<p>Dominate search engine results pages with our technical and content-driven SEO strategies. We conduct deep technical audits, build high-authority backlinks, and write intent-optimized content to ensure your brand captures sustainable, organic traffic long-term.</p>
+							<p>Technical &amp; content SEO for sustainable organic growth.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 					</div>
 				</div>
 
 				<!-- GCC Expertise -->
-				<div class="service-category">
+				<div class="service-category" id="gcc-cat">
 					<div class="category-header">
 						<h2>GCC Expertise</h2>
 						<p>Specialized enterprise solutions for the Middle East market.</p>
@@ -123,11 +171,11 @@
 						<a href="/case-studies/rgs-saudi-arabia" class="glass-card featured-glass-card">
 							<div class="featured-card-content">
 								<div class="gc-icon featured-icon">
-									<HardHat size={32} color="white" />
+									<HardHat size={36} color="white" />
 								</div>
 								<div style="flex: 1;">
 									<h3 style="font-size: 24px; margin-bottom: 12px;">🇸🇦 RGS — Tamimi Group</h3>
-									<p style="font-size: 16px; margin-bottom: 0;">A comprehensive digital transformation and enterprise website rebuild for a leading Tamimi Group scaffolding company in Saudi Arabia. This project focused on ensuring strict corporate compliance, establishing a commanding digital presence, and building a robust B2B lead generation engine capable of showcasing massive infrastructural capabilities across the Middle East.</p>
+									<p style="font-size: 16px; margin-bottom: 0;">Enterprise website rebuild &amp; digital transformation for a leading Saudi scaffolding company.</p>
 								</div>
 								<span class="glass-btn-inline">View Case Study <ArrowRight size={16} /></span>
 							</div>
@@ -144,12 +192,59 @@
 
 <style>
 	.services-hero {
-		padding: 140px 0 60px;
+		padding: 140px 0 40px;
 		position: relative;
 	}
 
+	/* ── Sticky category nav ── */
+	.cat-nav-sticky {
+		position: sticky;
+		top: 72px; /* sits just below the fixed header */
+		z-index: 50;
+		background: rgba(8, 5, 26, 0.85);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-top: 1px solid rgba(255, 255, 255, 0.06);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		padding: 14px 0;
+		margin-bottom: 8px;
+	}
+
+	.cat-nav-bar {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.cat-nav-btn {
+		padding: 8px 20px;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: transparent;
+		color: rgba(255, 255, 255, 0.6);
+		font-size: 13px;
+		font-weight: 500;
+		font-family: inherit;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
+
+	.cat-nav-btn:hover {
+		border-color: rgba(6, 182, 212, 0.4);
+		color: white;
+	}
+
+	.cat-nav-btn.active {
+		background: var(--color-electric, #5a14f0);
+		border-color: var(--color-electric, #5a14f0);
+		color: white;
+	}
+
 	.service-category {
-		margin-bottom: 80px;
+		margin-bottom: 72px;
+		scroll-margin-top: 140px;
 	}
 
 	.service-category:last-child {
@@ -211,11 +306,11 @@
 	}
 
 	.gc-icon {
-		width: 56px;
-		height: 56px;
+		width: 76px;
+		height: 76px;
 		background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
 		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
+		border-radius: 20px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -233,18 +328,18 @@
 	}
 
 	.glass-card h3 {
-		font-size: 22px;
+		font-size: 20px;
 		font-weight: 700;
 		color: white;
-		margin-bottom: 16px;
+		margin-bottom: 10px;
 		letter-spacing: -0.01em;
 	}
 
 	.glass-card p {
-		font-size: 15px;
-		color: rgba(255, 255, 255, 0.65);
-		line-height: 1.7;
-		margin-bottom: 32px;
+		font-size: 14px;
+		color: rgba(255, 255, 255, 0.6);
+		line-height: 1.55;
+		margin-bottom: 24px;
 		flex: 1;
 	}
 
