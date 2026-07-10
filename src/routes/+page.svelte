@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PageData } from './$types';
 	import Hero from '$lib/components/Hero.svelte';
 	import TrustStrip from '$lib/components/TrustStrip.svelte';
 	import Services from '$lib/components/Services.svelte';
@@ -11,14 +12,16 @@
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
 	import LeadForm from '$lib/components/LeadForm.svelte';
 
+	let { data }: { data: PageData } = $props();
 	let showLeadForm = $state(false);
+
 </script>
 
 <main>
 	<Hero />
 	<TrustStrip />
 	<Services />
-	<CaseStudies />
+	<CaseStudies studies={data.featuredStudies} />
 	<StatsBand />
 	<Testimonials />
 	<GlobalMap />

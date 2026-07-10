@@ -167,6 +167,7 @@
 		<Loader2 class="w-8 h-8 animate-spin" style="color: var(--color-cyan)" />
 	</div>
 {:else}
+	<!-- svelte-ignore a11y_label_has_associated_control -->
 	<div class="admin-card" style="max-width: 800px;">
 		{#if errorMessage}
 			<div class="admin-alert error" style="margin-bottom: 24px;">

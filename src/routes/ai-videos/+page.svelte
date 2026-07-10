@@ -30,7 +30,7 @@
 	<meta name="description" content="Create professional-quality videos, ads, graphics, and marketing assets faster than ever using AI-powered production workflows." />
 </svelte:head>
 
-<div class="relative min-h-screen bg-[#08051a] overflow-hidden">
+<div class="relative min-h-screen bg-abyss overflow-hidden">
 	<div class="admin-login-ambient-1" style="position: absolute; z-index: 0;"></div>
 	<div class="admin-login-ambient-2" style="position: absolute; z-index: 0;"></div>
 
@@ -143,7 +143,7 @@
 					</div>
 
 					<div class="aiv-benefits-grid">
-						{#each benefits as b}
+						{#each benefits as b (b.title)}
 							<div class="glass-card">
 								<div class="gc-icon"><b.icon size={22} /></div>
 								<h3>{b.title}</h3>
@@ -190,7 +190,7 @@
 					</div>
 
 					<div class="aiv-use-cases">
-						{#each useCases as uc, i}
+						{#each useCases as uc, i (uc)}
 							<div class="glass-card aiv-usecase-card">
 								<div class="aiv-usecase-num">0{i + 1}</div>
 								<div class="aiv-usecase-content">
