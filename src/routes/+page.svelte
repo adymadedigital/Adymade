@@ -20,7 +20,7 @@
 <main>
 	<Hero />
 	<TrustStrip />
-	<Services />
+	<Services services={data.services} />
 	<CaseStudies studies={data.featuredStudies} />
 	<StatsBand />
 	<Testimonials testimonials={data.testimonials} />

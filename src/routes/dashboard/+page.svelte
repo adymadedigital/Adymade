@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { FileText, Image as ImageIcon, Settings, ArrowRight } from 'lucide-svelte';
+	import { FileText, BookOpen, MessageSquare, ArrowRight } from 'lucide-svelte';
 	import WixAnalyticsCard from '$lib/components/admin/WixAnalyticsCard.svelte';
 	import AnalyticsCharts from '$lib/components/admin/AnalyticsCharts.svelte';
 
 	const stats = [
 		{ name: 'Total Blogs', value: '12', icon: FileText, href: '/dashboard/blogs', color: 'text-blue-400', bg: 'bg-blue-400/10' },
-		{ name: 'Images Hosted', value: '48', icon: ImageIcon, href: '/dashboard/images', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-		{ name: 'Content Keys', value: '8', icon: Settings, href: '/dashboard/content', color: 'text-purple-400', bg: 'bg-purple-400/10' }
+		{ name: 'Case Studies', value: '10', icon: BookOpen, href: '/dashboard/case-studies', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+		{ name: 'Testimonials', value: '3', icon: MessageSquare, href: '/dashboard/testimonials', color: 'text-purple-400', bg: 'bg-purple-400/10' }
 	];
 </script>
 
