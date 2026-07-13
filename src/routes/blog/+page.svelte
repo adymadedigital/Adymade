@@ -79,7 +79,7 @@
 			<a href="/blog/{featuredPost.slug}" class="blog-featured-card">
 				<div class="blog-featured-media">
 					<span class="blog-featured-tag">Featured</span>
-					<img src={featuredPost.image_url || featuredPost.image} alt={featuredPost.title} />
+					<img src={featuredPost.image_url || featuredPost.image} alt={featuredPost.alt_text || featuredPost.title} />
 				</div>
 				<div class="blog-featured-body">
 					<div class="blog-featured-eyebrow">{featuredPost.category}</div>
@@ -110,7 +110,7 @@
 				{#each gridPosts as post (post.slug)}
 					<a href="/blog/{post.slug}" class="blog-card">
 						<div class="blog-card-media">
-							<img src={post.image_url || post.image} alt={post.title} />
+							<img src={post.image_url || post.image} alt={post.alt_text || post.title} />
 						</div>
 						<div class="blog-card-body">
 							<span class="blog-card-cat">{post.category}</span>

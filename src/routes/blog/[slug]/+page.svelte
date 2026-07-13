@@ -20,6 +20,44 @@
 			return dateStr;
 		}
 	}
+
+	function getParsedContent(content: any) {
+		if (!content) return [];
+		let parsed = content;
+		
+		// If the entire content column is returned as a stringified JSON array
+		if (typeof parsed === 'string') {
+			try {
+				const trimmed = parsed.trim();
+				if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+					parsed = JSON.parse(trimmed);
+				} else {
+					return [parsed];
+				}
+			} catch (e) {
+				return [parsed];
+			}
+		}
+
+		if (Array.isArray(parsed)) {
+			return parsed.map((block) => {
+				// If individual blocks are stringified JSON strings (e.g. from text array driver issues)
+				if (typeof block === 'string') {
+					try {
+						const trimmed = block.trim();
+						if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+							return JSON.parse(trimmed);
+						}
+					} catch (e) {}
+				}
+				return block;
+			});
+		}
+		
+		return [];
+	}
+
+	const contentBlocks = $derived(getParsedContent(post?.content));
 </script>
 
 <svelte:head>
@@ -39,6 +77,10 @@
 			<div class="article-eyebrow">{post.category}</div>
 			<h1 class="article-title">{post.title}</h1>
 			<div class="article-meta">
+				{#if post.author_name}
+					<span>By {post.author_name}</span>
+					<span>·</span>
+				{/if}
 				<span>{formatDate(post.created_at || post.date)}</span>
 				<span>·</span>
 				<span>{post.read_time || post.readTime}</span>
@@ -49,7 +91,7 @@
 	<section class="article-media-section">
 		<div class="container">
 			<div class="article-media">
-				<img src={post.image_url || post.image} alt={post.title} />
+				<img src={post.image_url || post.image} alt={post.alt_text || post.title} />
 			</div>
 		</div>
 	</section>
@@ -57,9 +99,34 @@
 	<section>
 		<div class="container article-layout">
 			<article class="article-body">
-				{#if post.content}
-					{#each post.content as paragraph}
-						<p>{paragraph}</p>
+				{#if contentBlocks && contentBlocks.length > 0}
+					{#each contentBlocks as block}
+						{#if typeof block === 'string'}
+							<p>{block}</p>
+						{:else if block && typeof block === 'object'}
+							{#if block.type === 'paragraph'}
+								<p>{block.text}</p>
+							{:else if block.type === 'heading'}
+								{#if block.level === 1}
+									<h1 style="color: white; margin-top: 32px; margin-bottom: 16px; font-size: 32px; font-weight: 700;">{block.text}</h1>
+								{:else if block.level === 2}
+									<h2 style="color: white; margin-top: 28px; margin-bottom: 14px; font-size: 26px; font-weight: 600;">{block.text}</h2>
+								{:else if block.level === 3}
+									<h3 style="color: white; margin-top: 24px; margin-bottom: 12px; font-size: 22px; font-weight: 600;">{block.text}</h3>
+								{:else if block.level === 4}
+									<h4 style="color: white; margin-top: 20px; margin-bottom: 10px; font-size: 18px; font-weight: 600;">{block.text}</h4>
+								{/if}
+							{:else if block.type === 'image'}
+								<div class="article-body-image" style="margin: 32px 0; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+									<img src={block.url} alt={block.caption || ''} style="width: 100%; height: auto;" />
+									{#if block.caption}
+										<p style="font-size: 14px; color: var(--color-muted); text-align: center; margin-top: 8px; font-style: italic;">{block.caption}</p>
+									{/if}
+								</div>
+							{:else if block.type === 'newline'}
+								<div style="height: 24px;"></div>
+							{/if}
+						{/if}
 					{/each}
 				{:else}
 					<p>{post.excerpt}</p>

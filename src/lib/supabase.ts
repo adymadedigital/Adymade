@@ -23,9 +23,12 @@ export interface Blog {
 	category: string;
 	excerpt: string;
 	image_url?: string;
+	image_path?: string;
+	alt_text?: string;
 	read_time?: string;
 	featured?: boolean;
-	content: string[];
+	author_name?: string;
+	content: any[];
 }
 
 export interface Content {

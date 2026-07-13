@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase, type Blog } from '$lib/supabase';
-	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText, Upload, Image as ImageIcon } from 'lucide-svelte';
+	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText, Upload, Image as ImageIcon, ArrowUp, ArrowDown } from 'lucide-svelte';
 
 	let blogs = $state<Blog[]>([]);
 	let loading = $state(true);
@@ -16,9 +16,11 @@
 	let category = $state('');
 	let excerpt = $state('');
 	let imageUrl = $state('');
+	let altText = $state('');
 	let readTime = $state('');
 	let featured = $state(false);
-	let content = $state('');
+	let authorName = $state('');
+	let contentBlocks = $state<any[]>([]);
 
 	let saveLoading = $state(false);
 	let uploadingImage = $state(false);
@@ -54,6 +56,63 @@
 		}
 	}
 
+	function addBlock(type: string) {
+		if (type === 'heading') {
+			contentBlocks = [...contentBlocks, { type: 'heading', level: 2, text: '' }];
+		} else if (type === 'paragraph') {
+			contentBlocks = [...contentBlocks, { type: 'paragraph', text: '' }];
+		} else if (type === 'image') {
+			contentBlocks = [...contentBlocks, { type: 'image', url: '', caption: '' }];
+		} else if (type === 'newline') {
+			contentBlocks = [...contentBlocks, { type: 'newline' }];
+		}
+	}
+
+	function removeBlock(idx: number) {
+		contentBlocks = contentBlocks.filter((_, i) => i !== idx);
+	}
+
+	function moveBlockUp(idx: number) {
+		if (idx === 0) return;
+		const temp = contentBlocks[idx];
+		contentBlocks[idx] = contentBlocks[idx - 1];
+		contentBlocks[idx - 1] = temp;
+		contentBlocks = [...contentBlocks];
+	}
+
+	function moveBlockDown(idx: number) {
+		if (idx === contentBlocks.length - 1) return;
+		const temp = contentBlocks[idx];
+		contentBlocks[idx] = contentBlocks[idx + 1];
+		contentBlocks[idx + 1] = temp;
+		contentBlocks = [...contentBlocks];
+	}
+
+	async function handleBlockImageUpload(idx: number, e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files || target.files.length === 0) return;
+
+		const file = target.files[0];
+		error = '';
+
+		const fileExt = file.name.split('.').pop();
+		const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+		const filePath = `blogs/${fileName}`;
+
+		const { error: uploadError } = await supabase.storage
+			.from('images')
+			.upload(filePath, file);
+
+		if (uploadError) {
+			error = uploadError.message;
+			return;
+		}
+
+		const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+		contentBlocks[idx].url = data.publicUrl;
+		contentBlocks = [...contentBlocks];
+	}
+
 	function startEdit(blog?: Blog) {
 		error = '';
 		if (blog) {
@@ -64,9 +123,22 @@
 			category = blog.category;
 			excerpt = blog.excerpt;
 			imageUrl = blog.image_url || '';
+			altText = blog.alt_text || '';
 			readTime = blog.read_time || '';
 			featured = blog.featured ?? false;
-			content = blog.content ? blog.content.join('\n\n') : '';
+			authorName = blog.author_name || 'Adymade Team';
+			
+			// Safe dynamic parsing of content blocks
+			if (blog.content && Array.isArray(blog.content)) {
+				contentBlocks = blog.content.map(b => {
+					if (typeof b === 'string') {
+						return { type: 'paragraph', text: b };
+					}
+					return { ...b };
+				});
+			} else {
+				contentBlocks = [{ type: 'paragraph', text: '' }];
+			}
 		} else {
 			isEditing = true;
 			editingId = null;
@@ -75,9 +147,11 @@
 			category = 'AI Automation';
 			excerpt = '';
 			imageUrl = '';
+			altText = '';
 			readTime = '5 min read';
 			featured = false;
-			content = '';
+			authorName = 'Adymade Team';
+			contentBlocks = [{ type: 'paragraph', text: '' }];
 		}
 	}
 
@@ -117,15 +191,25 @@
 		saveLoading = true;
 		error = '';
 
+		// Filter out invalid blocks
+		const validBlocks = contentBlocks.filter(b => 
+			b.type === 'newline' || 
+			(b.type === 'paragraph' && b.text) || 
+			(b.type === 'heading' && b.text) || 
+			(b.type === 'image' && b.url)
+		);
+
 		const blogData = {
 			title,
 			slug: slug.toLowerCase().replace(/[^a-z0-9_-]/g, '_'),
 			category,
 			excerpt,
 			image_url: imageUrl || null,
+			alt_text: altText || null,
 			read_time: readTime || null,
 			featured,
-			content: content.split('\n\n').map(p => p.trim()).filter(Boolean),
+			author_name: authorName || 'Adymade Team',
+			content: validBlocks,
 			updated_at: new Date().toISOString()
 		};
 
@@ -249,20 +333,34 @@
 					</div>
 				</div>
 
-				<div style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-					<input
-						id="featured"
-						type="checkbox"
-						bind:checked={featured}
-						style="width: 18px; height: 18px; accent-color: var(--color-cyan);"
-					/>
-					<label for="featured" class="admin-label" style="margin: 0; cursor: pointer;">
-						Featured Post (Highlighted on top)
-					</label>
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+					<div>
+						<label for="authorName" class="admin-label">Author Name</label>
+						<input
+							type="text"
+							id="authorName"
+							bind:value={authorName}
+							required
+							class="admin-input"
+							placeholder="e.g. Adymade Team"
+						/>
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 24px;">
+						<input
+							id="featured"
+							type="checkbox"
+							bind:checked={featured}
+							style="width: 18px; height: 18px; accent-color: var(--color-cyan);"
+						/>
+						<label for="featured" class="admin-label" style="margin: 0; cursor: pointer;">
+							Featured Post (Highlighted on top)
+						</label>
+					</div>
 				</div>
 
 				<div>
-					<label for="imageUrl" class="admin-label">Image</label>
+					<label for="imageUrl" class="admin-label">Featured Image</label>
 					<div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
 						<input
 							type="text"
@@ -300,6 +398,17 @@
 				</div>
 
 				<div>
+					<label for="altText" class="admin-label">Image Alt Text</label>
+					<input
+						type="text"
+						id="altText"
+						bind:value={altText}
+						class="admin-input"
+						placeholder="Describe the cover image for SEO & accessibility (e.g. Lead response graph)..."
+					/>
+				</div>
+
+				<div>
 					<label for="excerpt" class="admin-label">Excerpt (Short Description)</label>
 					<textarea
 						id="excerpt"
@@ -311,17 +420,119 @@
 					></textarea>
 				</div>
 
+				<!-- Structured Content Blocks Editor -->
 				<div>
-					<label for="content" class="admin-label">Content (Separate paragraphs with double newlines)</label>
-					<textarea
-						id="content"
-						bind:value={content}
-						rows="12"
-						required
-						class="admin-input"
-						style="font-family: monospace; font-size: 14px; line-height: 1.6;"
-						placeholder="Paragraph 1...&#10;&#10;Paragraph 2..."
-					></textarea>
+					<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+						<label class="admin-label" style="margin: 0;">Blog Body Content Blocks</label>
+						<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('heading')}>
+								<Plus size={12} /> Heading
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('paragraph')}>
+								<Plus size={12} /> Paragraph
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('image')}>
+								<Plus size={12} /> Image
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('newline')}>
+								<Plus size={12} /> Spacing
+							</button>
+						</div>
+					</div>
+
+					<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+						{#each contentBlocks as block, idx}
+							<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 16px;">
+								<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
+									<span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-cyan); background: rgba(6, 182, 212, 0.1); padding: 2px 8px; border-radius: 4px;">
+										{block.type} Block
+									</span>
+									<div style="display: flex; gap: 4px;">
+										<button type="button" class="admin-icon-btn" onclick={() => moveBlockUp(idx)} disabled={idx === 0}>
+											<ArrowUp size={12} />
+										</button>
+										<button type="button" class="admin-icon-btn" onclick={() => moveBlockDown(idx)} disabled={idx === contentBlocks.length - 1}>
+											<ArrowDown size={12} />
+										</button>
+										<button type="button" class="admin-icon-btn danger" onclick={() => removeBlock(idx)} disabled={contentBlocks.length === 1}>
+											<Trash2 size={12} />
+										</button>
+									</div>
+								</div>
+
+								{#if block.type === 'paragraph'}
+									<textarea
+										bind:value={block.text}
+										rows="4"
+										class="admin-input"
+										style="margin: 0;"
+										placeholder="Type paragraph text..."
+									></textarea>
+
+								{:else if block.type === 'heading'}
+									<div style="display: flex; gap: 12px; align-items: center;">
+										<select bind:value={block.level} class="admin-input" style="margin: 0; width: 140px; background: var(--color-abyss); color: white;">
+											<option value={1}>Heading 1</option>
+											<option value={2}>Heading 2</option>
+											<option value={3}>Heading 3</option>
+											<option value={4}>Heading 4</option>
+										</select>
+										<input
+											type="text"
+											bind:value={block.text}
+											class="admin-input"
+											style="margin: 0; flex: 1;"
+											placeholder="Heading text..."
+										/>
+									</div>
+
+								{:else if block.type === 'image'}
+									<div style="display: flex; flex-direction: column; gap: 10px;">
+										<div style="display: flex; gap: 10px; align-items: center;">
+											<input
+												type="text"
+												bind:value={block.url}
+												class="admin-input"
+												style="margin: 0; flex: 1;"
+												placeholder="Image URL or upload..."
+											/>
+											<input
+												type="file"
+												id={`block-file-${idx}`}
+												accept="image/*"
+												style="display: none;"
+												onchange={(e) => handleBlockImageUpload(idx, e)}
+											/>
+											<label
+												for={`block-file-${idx}`}
+												class="admin-btn"
+												style="margin: 0; cursor: pointer; white-space: nowrap;"
+											>
+												<Upload size={14} /> Upload
+											</label>
+										</div>
+										<input
+											type="text"
+											bind:value={block.caption}
+											class="admin-input"
+											style="margin: 0;"
+											placeholder="Image caption (optional)..."
+										/>
+										{#if block.url}
+											<div style="width: 100px; aspect-ratio: 16/10; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); margin-top: 4px;">
+												<img src={block.url} alt="Block preview" style="width: 100%; height: 100%; object-fit: cover;" />
+											</div>
+										{/if}
+									</div>
+
+								{:else if block.type === 'newline'}
+									<div style="color: var(--color-muted); font-size: 13px; padding: 4px 0;">
+										Adds a clean vertical separation margin (24px space) inside the article.
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
 				</div>
 
 				<div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid rgba(54, 40, 112, 0.4);">
