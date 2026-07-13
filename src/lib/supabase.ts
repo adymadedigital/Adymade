@@ -25,6 +25,9 @@ export interface Blog {
 	image_url?: string;
 	image_path?: string;
 	alt_text?: string;
+	seo_title?: string;
+	seo_description?: string;
+	seo_keywords?: string;
 	read_time?: string;
 	featured?: boolean;
 	author_name?: string;

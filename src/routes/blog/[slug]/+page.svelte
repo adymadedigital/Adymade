@@ -61,9 +61,60 @@
 </script>
 
 <svelte:head>
-	<title>{post ? `${post.title} — Adymade Blog` : 'Blog — Adymade'}</title>
 	{#if post}
-		<meta name="description" content={post.excerpt} />
+		<title>{post.seo_title || `${post.title} — Adymade Blog`}</title>
+		<meta name="description" content={post.seo_description || post.excerpt} />
+		<link rel="canonical" href="https://adymade.com/blog/{post.slug}" />
+		{#if post.seo_keywords}
+			<meta name="keywords" content={post.seo_keywords} />
+		{/if}
+		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content={post.seo_title || post.title} />
+		<meta property="og:description" content={post.seo_description || post.excerpt} />
+		<meta property="og:image" content={post.image_url || post.image} />
+		<meta property="og:url" content="https://adymade.com/blog/{post.slug}" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="Adymade" />
+		<meta property="article:published_time" content={post.created_at || post.date} />
+		{#if post.author_name}
+			<meta property="article:author" content={post.author_name} />
+		{/if}
+
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={post.seo_title || post.title} />
+		<meta name="twitter:description" content={post.seo_description || post.excerpt} />
+		<meta name="twitter:image" content={post.image_url || post.image} />
+
+		<!-- Schema.org JSON-LD Structured Data -->
+		{@html `<script type="application/ld+json">${JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "BlogPosting",
+			"headline": post.title,
+			"description": post.seo_description || post.excerpt,
+			"image": [post.image_url || post.image],
+			"datePublished": post.created_at || post.date,
+			"dateModified": post.updated_at || post.created_at || post.date,
+			"author": {
+				"@type": "Person",
+				"name": post.author_name || "Adymade Team"
+			},
+			"publisher": {
+				"@type": "Organization",
+				"name": "Adymade",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://adymade.com/logo.png"
+				}
+			},
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": `https://adymade.com/blog/${post.slug}`
+			}
+		})}</script>`}
+	{:else}
+		<title>Blog — Adymade</title>
 	{/if}
 </svelte:head>
 

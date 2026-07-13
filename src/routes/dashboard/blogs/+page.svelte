@@ -22,6 +22,10 @@
 	let authorName = $state('');
 	let contentBlocks = $state<any[]>([]);
 
+	let seoTitle = $state('');
+	let seoDescription = $state('');
+	let seoKeywords = $state('');
+
 	let saveLoading = $state(false);
 	let uploadingImage = $state(false);
 
@@ -124,6 +128,9 @@
 			excerpt = blog.excerpt;
 			imageUrl = blog.image_url || '';
 			altText = blog.alt_text || '';
+			seoTitle = blog.seo_title || '';
+			seoDescription = blog.seo_description || '';
+			seoKeywords = blog.seo_keywords || '';
 			readTime = blog.read_time || '';
 			featured = blog.featured ?? false;
 			authorName = blog.author_name || 'Adymade Team';
@@ -148,6 +155,9 @@
 			excerpt = '';
 			imageUrl = '';
 			altText = '';
+			seoTitle = '';
+			seoDescription = '';
+			seoKeywords = '';
 			readTime = '5 min read';
 			featured = false;
 			authorName = 'Adymade Team';
@@ -206,6 +216,9 @@
 			excerpt,
 			image_url: imageUrl || null,
 			alt_text: altText || null,
+			seo_title: seoTitle || null,
+			seo_description: seoDescription || null,
+			seo_keywords: seoKeywords || null,
 			read_time: readTime || null,
 			featured,
 			author_name: authorName || 'Adymade Team',
@@ -418,6 +431,51 @@
 						class="admin-input"
 						placeholder="Brief summary of the article..."
 					></textarea>
+				</div>
+
+				<!-- SEO Settings Group -->
+				<div style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 20px; background: rgba(255, 255, 255, 0.01);">
+					<h4 style="font-size: 15px; font-weight: 600; color: white; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+						SEO Configuration (Search Optimization)
+					</h4>
+					
+					<div style="display: flex; flex-direction: column; gap: 16px;">
+						<div>
+							<label for="seoTitle" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Meta Title</label>
+							<input
+								type="text"
+								id="seoTitle"
+								bind:value={seoTitle}
+								class="admin-input"
+								placeholder="Defaults to standard title if left empty..."
+								style="margin: 0;"
+							/>
+						</div>
+						
+						<div>
+							<label for="seoDescription" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Meta Description</label>
+							<textarea
+								id="seoDescription"
+								bind:value={seoDescription}
+								rows="2"
+								class="admin-input"
+								placeholder="Defaults to excerpt if left empty..."
+								style="margin: 0;"
+							></textarea>
+						</div>
+						
+						<div>
+							<label for="seoKeywords" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Keywords</label>
+							<input
+								type="text"
+								id="seoKeywords"
+								bind:value={seoKeywords}
+								class="admin-input"
+								placeholder="e.g. AI automation, B2B sales automation, WhatsApp CRM integration (comma separated)"
+								style="margin: 0;"
+							/>
+						</div>
+					</div>
 				</div>
 
 				<!-- Structured Content Blocks Editor -->
