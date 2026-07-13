@@ -17,9 +17,15 @@ export interface Lead {
 export interface Blog {
 	id?: string;
 	created_at?: string;
+	updated_at?: string;
 	title: string;
-	content: string;
+	slug: string;
+	category: string;
+	excerpt: string;
 	image_url?: string;
+	read_time?: string;
+	featured?: boolean;
+	content: string[];
 }
 
 export interface Content {

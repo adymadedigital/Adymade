@@ -1,13 +1,54 @@
 <script lang="ts">
 	import { Search, ArrowRight } from 'lucide-svelte';
-	import { blogPosts, blogCategories, blogTags } from '$lib/data/blog';
+	import { blogPosts as fallbackPosts, blogTags } from '$lib/data/blog';
+
+	let { data } = $props();
+
+	// Fallback to static blog posts if database is empty
+	const blogPosts = $derived(data.blogs && data.blogs.length > 0 ? data.blogs : fallbackPosts);
 
 	let searchQuery = $state('');
 	let activeCategory = $state('All Topics');
 
-	const featuredPost = blogPosts.find((p) => p.featured) ?? blogPosts[0];
-	const gridPosts = blogPosts.filter((p) => p.slug !== featuredPost.slug);
-	const popularPosts = blogPosts.slice(0, 3);
+	// Compute filtered posts dynamically based on search query and active category
+	const filteredPosts = $derived(
+		blogPosts.filter((p) => {
+			const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+				p.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+			const matchesCategory = activeCategory === 'All Topics' || p.category === activeCategory;
+			return matchesSearch && matchesCategory;
+		})
+	);
+
+	const featuredPost = $derived(blogPosts.find((p) => p.featured) ?? blogPosts[0]);
+	const gridPosts = $derived(filteredPosts.filter((p) => p.slug !== (featuredPost?.slug || '')));
+	const popularPosts = $derived(blogPosts.slice(0, 3));
+
+	// Compute categories and counts dynamically
+	const blogCategories = $derived([
+		{ name: 'All Topics', count: blogPosts.length },
+		...Object.entries(
+			blogPosts.reduce((acc, p) => {
+				acc[p.category] = (acc[p.category] || 0) + 1;
+				return acc;
+			}, {} as Record<string, number>)
+		).map(([name, count]) => ({ name, count }))
+	]);
+
+	function formatDate(dateStr?: string, fallback = '') {
+		if (!dateStr) return fallback;
+		// If it's already in the format "Jul 6, 2026", just return it
+		if (dateStr.includes(',') && !dateStr.includes('-') && !dateStr.includes('T')) return dateStr;
+		try {
+			return new Date(dateStr).toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric'
+			});
+		} catch (e) {
+			return dateStr;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -34,25 +75,27 @@
 
 <section class="blog-featured">
 	<div class="container">
-		<a href="/blog/{featuredPost.slug}" class="blog-featured-card">
-			<div class="blog-featured-media">
-				<span class="blog-featured-tag">Featured</span>
-				<img src={featuredPost.image} alt={featuredPost.title} />
-			</div>
-			<div class="blog-featured-body">
-				<div class="blog-featured-eyebrow">{featuredPost.category}</div>
-				<h2>{featuredPost.title}</h2>
-				<p class="blog-featured-excerpt">{featuredPost.excerpt}</p>
-				<div class="blog-featured-meta">
-					<span>{featuredPost.date}</span>
-					<span>·</span>
-					<span>{featuredPost.readTime}</span>
-					<span class="blog-read-link">
-						Read Article <ArrowRight size={14} />
-					</span>
+		{#if featuredPost}
+			<a href="/blog/{featuredPost.slug}" class="blog-featured-card">
+				<div class="blog-featured-media">
+					<span class="blog-featured-tag">Featured</span>
+					<img src={featuredPost.image_url || featuredPost.image} alt={featuredPost.title} />
 				</div>
-			</div>
-		</a>
+				<div class="blog-featured-body">
+					<div class="blog-featured-eyebrow">{featuredPost.category}</div>
+					<h2>{featuredPost.title}</h2>
+					<p class="blog-featured-excerpt">{featuredPost.excerpt}</p>
+					<div class="blog-featured-meta">
+						<span>{formatDate(featuredPost.created_at || featuredPost.date)}</span>
+						<span>·</span>
+						<span>{featuredPost.read_time || featuredPost.readTime}</span>
+						<span class="blog-read-link">
+							Read Article <ArrowRight size={14} />
+						</span>
+					</div>
+				</div>
+			</a>
+		{/if}
 	</div>
 </section>
 
@@ -67,14 +110,14 @@
 				{#each gridPosts as post (post.slug)}
 					<a href="/blog/{post.slug}" class="blog-card">
 						<div class="blog-card-media">
-							<img src={post.image} alt={post.title} />
+							<img src={post.image_url || post.image} alt={post.title} />
 						</div>
 						<div class="blog-card-body">
 							<span class="blog-card-cat">{post.category}</span>
 							<h3 class="blog-card-title">{post.title}</h3>
 							<p class="blog-card-excerpt">{post.excerpt}</p>
 							<div class="blog-card-footer">
-								<span>{post.date}</span>
+								<span>{formatDate(post.created_at || post.date)}</span>
 								<span class="blog-read-link">Read <ArrowRight size={13} /></span>
 							</div>
 						</div>
@@ -127,11 +170,11 @@
 				{#each popularPosts as post (post.slug)}
 					<a href="/blog/{post.slug}" class="blog-mini-post">
 						<div class="blog-mini-thumb">
-							<img src={post.image} alt="" />
+							<img src={post.image_url || post.image} alt="" />
 						</div>
 						<div>
 							<div class="blog-mini-title">{post.title}</div>
-							<div class="blog-mini-date">{post.date}</div>
+							<div class="blog-mini-date">{formatDate(post.created_at || post.date)}</div>
 						</div>
 					</a>
 				{/each}

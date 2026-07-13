@@ -38,7 +38,7 @@ export const blogPosts: BlogPost[] = [
 	{
 		slug: 'ai-video-vs-traditional-production',
 		title: 'AI Video vs Traditional Production: What Actually Changes at 80% Less Cost',
-		category: 'AI Video',
+		category: 'AI Video Production',
 		excerpt:
 			'A breakdown of where AI video genuinely saves money — and the two stages where a human editor still matters.',
 		image: 'https://images.unsplash.com/photo-1626544827763-d516dce335e2?w=1200&q=80',
@@ -83,7 +83,7 @@ export const blogPosts: BlogPost[] = [
 	{
 		slug: 'build-vs-buy-custom-software',
 		title: "Build vs Buy: A Founder's Framework for Custom Software Decisions",
-		category: 'Software Dev',
+		category: 'Software Development',
 		excerpt:
 			'Not every workflow needs a bespoke build. A simple checklist we walk every client through before quoting.',
 		image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',

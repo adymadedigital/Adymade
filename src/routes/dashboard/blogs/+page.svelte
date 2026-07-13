@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase, type Blog } from '$lib/supabase';
-	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText } from 'lucide-svelte';
+	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText, Upload, Image as ImageIcon } from 'lucide-svelte';
 
 	let blogs = $state<Blog[]>([]);
 	let loading = $state(true);
@@ -9,10 +9,19 @@
 
 	let isEditing = $state(false);
 	let editingId = $state<string | null>(null);
+
+	// Form fields
 	let title = $state('');
-	let content = $state('');
+	let slug = $state('');
+	let category = $state('');
+	let excerpt = $state('');
 	let imageUrl = $state('');
+	let readTime = $state('');
+	let featured = $state(false);
+	let content = $state('');
+
 	let saveLoading = $state(false);
+	let uploadingImage = $state(false);
 
 	onMount(async () => {
 		await fetchBlogs();
@@ -20,6 +29,7 @@
 
 	async function fetchBlogs() {
 		loading = true;
+		error = '';
 		const { data, error: fetchError } = await supabase
 			.from('blogs')
 			.select('*')
@@ -33,20 +43,41 @@
 		loading = false;
 	}
 
+	function generateSlug() {
+		if (!editingId) {
+			slug = title
+				.toLowerCase()
+				.replace(/<\/?[^>]+(>|$)/g, '') // Strip HTML tags
+				.replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+				.trim()
+				.replace(/\s+/g, '-');
+		}
+	}
+
 	function startEdit(blog?: Blog) {
 		error = '';
 		if (blog) {
 			isEditing = true;
 			editingId = blog.id!;
 			title = blog.title;
-			content = blog.content;
+			slug = blog.slug;
+			category = blog.category;
+			excerpt = blog.excerpt;
 			imageUrl = blog.image_url || '';
+			readTime = blog.read_time || '';
+			featured = blog.featured ?? false;
+			content = blog.content ? blog.content.join('\n\n') : '';
 		} else {
 			isEditing = true;
 			editingId = null;
 			title = '';
-			content = '';
+			slug = '';
+			category = 'AI Automation';
+			excerpt = '';
 			imageUrl = '';
+			readTime = '5 min read';
+			featured = false;
+			content = '';
 		}
 	}
 
@@ -55,14 +86,47 @@
 		editingId = null;
 	}
 
+	async function handleImageUpload(e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files || target.files.length === 0) return;
+
+		const file = target.files[0];
+		uploadingImage = true;
+		error = '';
+
+		const fileExt = file.name.split('.').pop();
+		const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+		const filePath = `blogs/${fileName}`;
+
+		const { error: uploadError } = await supabase.storage
+			.from('images')
+			.upload(filePath, file);
+
+		if (uploadError) {
+			error = uploadError.message;
+			uploadingImage = false;
+			return;
+		}
+
+		const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+		imageUrl = data.publicUrl;
+		uploadingImage = false;
+	}
+
 	async function saveBlog() {
 		saveLoading = true;
 		error = '';
 
 		const blogData = {
 			title,
-			content,
-			image_url: imageUrl || null
+			slug: slug.toLowerCase().replace(/[^a-z0-9_-]/g, '_'),
+			category,
+			excerpt,
+			image_url: imageUrl || null,
+			read_time: readTime || null,
+			featured,
+			content: content.split('\n\n').map(p => p.trim()).filter(Boolean),
+			updated_at: new Date().toISOString()
 		};
 
 		if (editingId) {
@@ -119,13 +183,13 @@
 	</div>
 
 	{#if error}
-		<div class="admin-alert error">
+		<div class="admin-alert error" style="margin-bottom: 24px;">
 			{error}
 		</div>
 	{/if}
 
 	{#if isEditing}
-		<div class="admin-card" style="margin-bottom: 32px;">
+		<div class="admin-card" style="margin-bottom: 32px; max-width: 800px;">
 			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
 				<h3 style="font-size: 20px; font-weight: 600; color: white;">{editingId ? 'Edit Post' : 'Create New Post'}</h3>
 				<button onclick={cancelEdit} style="background: none; border: none; padding: 8px; color: var(--color-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s;">
@@ -140,6 +204,7 @@
 						type="text"
 						id="title"
 						bind:value={title}
+						oninput={generateSlug}
 						required
 						class="admin-input"
 						placeholder="Post Title"
@@ -147,30 +212,115 @@
 				</div>
 
 				<div>
-					<label for="imageUrl" class="admin-label">Image URL</label>
-					<div style="display: flex; gap: 12px; margin-top: 8px;">
+					<label for="slug" class="admin-label">Slug</label>
+					<input
+						type="text"
+						id="slug"
+						bind:value={slug}
+						required
+						class="admin-input"
+						placeholder="e.g. post-title-slug"
+					/>
+				</div>
+
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+					<div>
+						<label for="category" class="admin-label">Category</label>
+						<select id="category" bind:value={category} class="admin-input" style="background: var(--color-abyss); color: white;">
+							<option value="AI Automation">AI Automation</option>
+							<option value="AI Video Production">AI Video Production</option>
+							<option value="Web Development">Web Development</option>
+							<option value="SEO & GEO">SEO & GEO</option>
+							<option value="Software Development">Software Development</option>
+							<option value="Digital Marketing">Digital Marketing</option>
+						</select>
+					</div>
+
+					<div>
+						<label for="readTime" class="admin-label">Read Time</label>
 						<input
-							type="url"
-							id="imageUrl"
-							bind:value={imageUrl}
+							type="text"
+							id="readTime"
+							bind:value={readTime}
+							required
 							class="admin-input"
-							style="margin-top: 0;"
-							placeholder="https://example.com/image.jpg"
+							placeholder="e.g. 5 min read"
 						/>
 					</div>
-					<p style="font-size: 12px; color: var(--color-muted); margin-top: 8px;">You can upload images in the Images section and paste the URL here.</p>
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+					<input
+						id="featured"
+						type="checkbox"
+						bind:checked={featured}
+						style="width: 18px; height: 18px; accent-color: var(--color-cyan);"
+					/>
+					<label for="featured" class="admin-label" style="margin: 0; cursor: pointer;">
+						Featured Post (Highlighted on top)
+					</label>
 				</div>
 
 				<div>
-					<label for="content" class="admin-label">Content</label>
+					<label for="imageUrl" class="admin-label">Image</label>
+					<div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+						<input
+							type="text"
+							id="imageUrl"
+							bind:value={imageUrl}
+							class="admin-input"
+							placeholder="Image URL or upload a file..."
+							style="margin: 0;"
+						/>
+						<input
+							type="file"
+							id="blog-file-upload"
+							accept="image/*"
+							style="display: none;"
+							onchange={handleImageUpload}
+							disabled={uploadingImage}
+						/>
+						<label
+							for="blog-file-upload"
+							class="admin-btn"
+							style="margin: 0; white-space: nowrap; cursor: pointer;"
+						>
+							{#if uploadingImage}
+								<Loader2 style="width: 14px; height: 14px; animation: spin 1s linear infinite;" /> uploading
+							{:else}
+								<Upload style="width: 14px; height: 14px;" /> Upload File
+							{/if}
+						</label>
+					</div>
+					{#if imageUrl}
+						<div style="margin-top: 10px; width: 140px; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+							<img src={imageUrl} alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" />
+						</div>
+					{/if}
+				</div>
+
+				<div>
+					<label for="excerpt" class="admin-label">Excerpt (Short Description)</label>
+					<textarea
+						id="excerpt"
+						bind:value={excerpt}
+						rows="3"
+						required
+						class="admin-input"
+						placeholder="Brief summary of the article..."
+					></textarea>
+				</div>
+
+				<div>
+					<label for="content" class="admin-label">Content (Separate paragraphs with double newlines)</label>
 					<textarea
 						id="content"
 						bind:value={content}
-						rows="10"
+						rows="12"
 						required
 						class="admin-input"
-						style="font-family: monospace; font-size: 14px;"
-						placeholder="Write your post content here (HTML or plain text)..."
+						style="font-family: monospace; font-size: 14px; line-height: 1.6;"
+						placeholder="Paragraph 1...&#10;&#10;Paragraph 2..."
 					></textarea>
 				</div>
 
@@ -202,7 +352,7 @@
 
 	{#if loading}
 		<div style="display: flex; justify-content: center; padding: 48px 0;">
-			<Loader2 style="width: 32px; height: 32px; color: var(--color-muted); animation: spin 1s linear infinite;" />
+			<Loader2 style="width: 32px; height: 32px; color: var(--color-cyan); animation: spin 1s linear infinite;" />
 		</div>
 	{:else if blogs.length === 0 && !isEditing}
 		<div class="admin-card" style="text-align: center; padding: 48px 24px;">
@@ -221,24 +371,36 @@
 			</button>
 		</div>
 	{:else if !isEditing}
-		<div class="admin-grid">
+		<div class="admin-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
 			{#each blogs as blog (blog.id)}
-				<div class="admin-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+				<div class="admin-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%;">
 					{#if blog.image_url}
-						<div class="admin-image-container" style="height: 192px;">
-							<img src={blog.image_url} alt={blog.title} />
+						<div class="admin-image-container" style="height: 192px; width: 100%; position: relative; overflow: hidden;">
+							<img src={blog.image_url} alt={blog.title} style="width: 100%; height: 100%; object-fit: cover;" />
 						</div>
 					{:else}
 						<div style="height: 192px; width: 100%; background: var(--color-abyss); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(54, 40, 112, 0.4);">
 							<FileText style="width: 48px; height: 48px; color: rgba(54, 40, 112, 0.6);" />
 						</div>
 					{/if}
-					<div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
-						<h3 style="font-size: 18px; font-weight: 600; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{blog.title}</h3>
-						<p style="margin-top: 8px; font-size: 14px; color: var(--color-body-text); flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{blog.content.replace(/<[^>]*>?/gm, '')}</p>
+					<div style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+						<div>
+							<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+								<span style="border-radius: 6px; background: rgba(54, 40, 112, 0.4); padding: 2px 6px; font-size: 11px; font-weight: 500; color: white;">
+									{blog.category}
+								</span>
+								{#if blog.featured}
+									<span style="border-radius: 6px; background: rgba(6, 182, 212, 0.2); padding: 2px 6px; font-size: 11px; font-weight: 600; color: var(--color-cyan);">
+										Featured
+									</span>
+								{/if}
+							</div>
+							<h3 style="font-size: 18px; font-weight: 600; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">{blog.title}</h3>
+							<p style="font-size: 14px; color: var(--color-body-text); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">{blog.excerpt}</p>
+						</div>
 						<div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(54, 40, 112, 0.4); display: flex; align-items: center; justify-content: space-between;">
 							<span style="font-size: 12px; color: var(--color-muted);">
-								{new Date(blog.created_at || '').toLocaleDateString()}
+								{blog.read_time || '5 min read'}
 							</span>
 							<div style="display: flex; gap: 8px;">
 								<button
@@ -246,7 +408,7 @@
 									class="admin-icon-btn"
 									title="Edit"
 								>
-									<Edit2 style="width: 16px; height: 16px;" />
+									<Edit2 style="width: 16px; height: 16px; color: var(--color-cyan);" />
 								</button>
 								<button
 									onclick={() => deleteBlog(blog.id!)}
@@ -263,3 +425,9 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+</style>

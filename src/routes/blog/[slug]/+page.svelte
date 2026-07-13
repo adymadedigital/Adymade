@@ -1,10 +1,25 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
-	import { blogPosts, blogCategories, blogTags } from '$lib/data/blog';
+	import { blogPosts as fallbackPosts, blogCategories, blogTags } from '$lib/data/blog';
 
-	const post = $derived(blogPosts.find((p) => p.slug === $page.params.slug));
-	const popularPosts = $derived(blogPosts.filter((p) => p.slug !== $page.params.slug).slice(0, 3));
+	let { data } = $props();
+
+	const post = $derived(data.post);
+	const popularPosts = $derived(fallbackPosts.filter((p) => p.slug !== post?.slug).slice(0, 3));
+
+	function formatDate(dateStr?: string, fallback = '') {
+		if (!dateStr) return fallback;
+		if (dateStr.includes(',') && !dateStr.includes('-') && !dateStr.includes('T')) return dateStr;
+		try {
+			return new Date(dateStr).toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric'
+			});
+		} catch (e) {
+			return dateStr;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -24,9 +39,9 @@
 			<div class="article-eyebrow">{post.category}</div>
 			<h1 class="article-title">{post.title}</h1>
 			<div class="article-meta">
-				<span>{post.date}</span>
+				<span>{formatDate(post.created_at || post.date)}</span>
 				<span>·</span>
-				<span>{post.readTime}</span>
+				<span>{post.read_time || post.readTime}</span>
 			</div>
 		</div>
 	</section>
@@ -34,7 +49,7 @@
 	<section class="article-media-section">
 		<div class="container">
 			<div class="article-media">
-				<img src={post.image} alt={post.title} />
+				<img src={post.image_url || post.image} alt={post.title} />
 			</div>
 		</div>
 	</section>
@@ -71,11 +86,11 @@
 					{#each popularPosts as p (p.slug)}
 						<a href="/blog/{p.slug}" class="blog-mini-post">
 							<div class="blog-mini-thumb">
-								<img src={p.image} alt="" />
+								<img src={p.image_url || p.image} alt="" />
 							</div>
 							<div>
 								<div class="blog-mini-title">{p.title}</div>
-								<div class="blog-mini-date">{p.date}</div>
+								<div class="blog-mini-date">{formatDate(p.created_at || p.date)}</div>
 							</div>
 						</a>
 					{/each}
