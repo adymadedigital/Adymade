@@ -1,13 +1,35 @@
 <script lang="ts">
-	import { FileText, BookOpen, MessageSquare, ArrowRight } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { supabase } from '$lib/supabase';
+	import { FileText, BookOpen, Briefcase, MessageSquare, ArrowRight } from 'lucide-svelte';
 	import WixAnalyticsCard from '$lib/components/admin/WixAnalyticsCard.svelte';
 	import AnalyticsCharts from '$lib/components/admin/AnalyticsCharts.svelte';
 
-	const stats = [
-		{ name: 'Total Blogs', value: '12', icon: FileText, href: '/dashboard/blogs', color: 'text-blue-400', bg: 'bg-blue-400/10' },
-		{ name: 'Case Studies', value: '10', icon: BookOpen, href: '/dashboard/case-studies', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-		{ name: 'Testimonials', value: '3', icon: MessageSquare, href: '/dashboard/testimonials', color: 'text-purple-400', bg: 'bg-purple-400/10' }
-	];
+	let blogCount = $state<number | string>('...');
+	let caseStudyCount = $state<number | string>('...');
+	let serviceCount = $state<number | string>('...');
+	let testimonialCount = $state<number | string>('...');
+
+	onMount(async () => {
+		const [blogsRes, caseStudiesRes, servicesRes, testimonialsRes] = await Promise.all([
+			supabase.from('blogs').select('*', { count: 'exact', head: true }),
+			supabase.from('case_studies').select('*', { count: 'exact', head: true }),
+			supabase.from('services').select('*', { count: 'exact', head: true }),
+			supabase.from('testimonials').select('*', { count: 'exact', head: true })
+		]);
+
+		blogCount = blogsRes.error ? 0 : (blogsRes.count ?? 0);
+		caseStudyCount = caseStudiesRes.error ? 0 : (caseStudiesRes.count ?? 0);
+		serviceCount = servicesRes.error ? 0 : (servicesRes.count ?? 0);
+		testimonialCount = testimonialsRes.error ? 0 : (testimonialsRes.count ?? 0);
+	});
+
+	const stats = $derived([
+		{ name: 'Total Blogs', value: blogCount, icon: FileText, href: '/dashboard/blogs', color: '#60a5fa', bg: 'rgba(96,165,250,0.1)' },
+		{ name: 'Case Studies', value: caseStudyCount, icon: BookOpen, href: '/dashboard/case-studies', color: '#34d399', bg: 'rgba(52,211,153,0.1)' },
+		{ name: 'Services', value: serviceCount, icon: Briefcase, href: '/dashboard/services', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+		{ name: 'Testimonials', value: testimonialCount, icon: MessageSquare, href: '/dashboard/testimonials', color: '#c084fc', bg: 'rgba(192,132,252,0.1)' }
+	]);
 </script>
 
 <div style="max-width: 1000px;">
@@ -20,11 +42,11 @@
 
 	<WixAnalyticsCard />
 
-	<div class="admin-grid">
+	<div class="stats-grid">
 		{#each stats as stat (stat.name)}
 			<div class="admin-card" style="position: relative; overflow: hidden;">
 				<div style="display: flex; align-items: center; justify-content: space-between;">
-					<div class="admin-icon-box" style="color: {stat.color.replace('text-', '') === 'blue-400' ? '#60a5fa' : stat.color.replace('text-', '') === 'emerald-400' ? '#34d399' : '#c084fc'}; background: {stat.bg.replace('bg-', '').replace('/10', '') === 'blue-400' ? 'rgba(96,165,250,0.1)' : stat.bg.replace('bg-', '').replace('/10', '') === 'emerald-400' ? 'rgba(52,211,153,0.1)' : 'rgba(192,132,252,0.1)'}">
+					<div class="admin-icon-box" style="color: {stat.color}; background: {stat.bg};">
 						<stat.icon style="width: 24px; height: 24px;" />
 					</div>
 					<a href={stat.href} style="padding: 8px; color: var(--color-muted); transition: color 0.2s;">
@@ -68,3 +90,24 @@
 
 	
 </div>
+
+<style>
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 24px;
+		margin-bottom: 32px;
+	}
+
+	@media (max-width: 1024px) {
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.stats-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

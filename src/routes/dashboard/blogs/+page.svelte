@@ -22,6 +22,10 @@
 	let authorName = $state('');
 	let contentBlocks = $state<any[]>([]);
 
+	function generateId() {
+		return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+	}
+
 	let seoTitle = $state('');
 	let seoDescription = $state('');
 	let seoKeywords = $state('');
@@ -61,14 +65,15 @@
 	}
 
 	function addBlock(type: string) {
+		const id = generateId();
 		if (type === 'heading') {
-			contentBlocks = [...contentBlocks, { type: 'heading', level: 2, text: '' }];
+			contentBlocks = [...contentBlocks, { id, type: 'heading', level: 2, text: '' }];
 		} else if (type === 'paragraph') {
-			contentBlocks = [...contentBlocks, { type: 'paragraph', text: '' }];
+			contentBlocks = [...contentBlocks, { id, type: 'paragraph', text: '' }];
 		} else if (type === 'image') {
-			contentBlocks = [...contentBlocks, { type: 'image', url: '', caption: '' }];
+			contentBlocks = [...contentBlocks, { id, type: 'image', url: '', caption: '' }];
 		} else if (type === 'newline') {
-			contentBlocks = [...contentBlocks, { type: 'newline' }];
+			contentBlocks = [...contentBlocks, { id, type: 'newline' }];
 		}
 	}
 
@@ -138,13 +143,14 @@
 			// Safe dynamic parsing of content blocks
 			if (blog.content && Array.isArray(blog.content)) {
 				contentBlocks = blog.content.map(b => {
+					const id = b.id || generateId();
 					if (typeof b === 'string') {
-						return { type: 'paragraph', text: b };
+						return { id, type: 'paragraph', text: b };
 					}
-					return { ...b };
+					return { id, ...b };
 				});
 			} else {
-				contentBlocks = [{ type: 'paragraph', text: '' }];
+				contentBlocks = [{ id: generateId(), type: 'paragraph', text: '' }];
 			}
 		} else {
 			isEditing = true;
@@ -161,7 +167,7 @@
 			readTime = '5 min read';
 			featured = false;
 			authorName = 'Adymade Team';
-			contentBlocks = [{ type: 'paragraph', text: '' }];
+			contentBlocks = [{ id: generateId(), type: 'paragraph', text: '' }];
 		}
 	}
 
@@ -481,7 +487,7 @@
 				<!-- Structured Content Blocks Editor -->
 				<div>
 					<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
-						<label class="admin-label" style="margin: 0;">Blog Body Content Blocks</label>
+						<span class="admin-label" style="margin: 0;">Blog Body Content Blocks</span>
 						<div style="display: flex; gap: 8px; flex-wrap: wrap;">
 							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('heading')}>
 								<Plus size={12} /> Heading
@@ -499,7 +505,7 @@
 					</div>
 
 					<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
-						{#each contentBlocks as block, idx}
+						{#each contentBlocks as block, idx (block.id)}
 							<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 16px;">
 								<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
 									<span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-cyan); background: rgba(6, 182, 212, 0.1); padding: 2px 8px; border-radius: 4px;">
