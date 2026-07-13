@@ -36,6 +36,8 @@
 			{/each}
 		</div>
 
+		<a href="/clients" class="show-more-link">Show More →</a>
+
 		<p class="clients-caption"><b>150+ Clients Worldwide</b></p>
 	</div>
 </section>
