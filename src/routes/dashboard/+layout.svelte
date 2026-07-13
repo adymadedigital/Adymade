@@ -6,7 +6,6 @@
 	import { 
 		LayoutDashboard, 
 		FileText, 
-		Image as ImageIcon, 
 		Settings, 
 		LogOut,
 		Loader2,
@@ -35,9 +34,7 @@
 				{ name: 'Blogs', href: '/dashboard/blogs', icon: FileText },
 				{ name: 'Case Studies', href: '/dashboard/case-studies', icon: BookOpen },
 				{ name: 'Testimonials', href: '/dashboard/testimonials', icon: MessageSquare },
-				{ name: 'FAQ', href: '/dashboard/faq', icon: HelpCircle },
-				{ name: 'Images', href: '/dashboard/images', icon: ImageIcon },
-				{ name: 'Content', href: '/dashboard/content', icon: Settings }
+				{ name: 'FAQ', href: '/dashboard/faq', icon: HelpCircle }
 			]
 		},
 		{
