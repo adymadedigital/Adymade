@@ -7,7 +7,7 @@ export interface BlogPost {
 	date: string;
 	readTime: string;
 	featured?: boolean;
-    content?: string[];
+	content?: string[];
 }
 
 export interface BlogCategory {
@@ -15,9 +15,7 @@ export interface BlogCategory {
 	count: number;
 }
 
-
 // dummy/placeholder data
-
 
 export const blogPosts: BlogPost[] = [
 	{
@@ -127,6 +125,16 @@ export const blogPosts: BlogPost[] = [
 			'We break down what each one actually automates and where the human still needs to stay in the loop.'
 		]
 	}
+];
+
+export const blogCategories: BlogCategory[] = [
+	{ name: 'All Topics', count: 48 },
+	{ name: 'AI Automation', count: 14 },
+	{ name: 'AI Video Production', count: 9 },
+	{ name: 'Web Development', count: 8 },
+	{ name: 'Software Development', count: 6 },
+	{ name: 'SEO & GEO', count: 7 },
+	{ name: 'Digital Marketing', count: 4 }
 ];
 
 export const blogTags: string[] = [
