@@ -8,8 +8,11 @@
 			<!-- Brand Column -->
 			<div class="foot-brand">
 				<a href="/" class="logo-wrap">
-					<div class="logo-icon">A</div>
-					<span class="logo-text">adymade</span>
+					<img src="/logos/adymade.png" alt="adymade Logo" class="logo-icon" />
+					<div class="logo-text-group">
+						<span class="logo-text">adymade</span>
+						<span class="logo-subtext">Digital LLP</span>
+					</div>
 				</a>
 				<p>
 					A global AI and digital agency based in Indore, India. Serving clients across India, Saudi
@@ -67,9 +70,8 @@
 				<ul>
 					<li><a href="mailto:contact@adymade.com">contact@adymade.com</a></li>
 					<li><a href="https://wa.link/u03r6i" target="_blank" rel="noopener">WhatsApp us</a></li>
-					<li>
-						<a
-							href="https://calendly.com/addymade/15-minute-consultation-call"
+					<li>	
+						<a href="https://calendly.com/addymade/15-minute-consultation-call"
 							target="_blank"
 							rel="noopener"
 						>
