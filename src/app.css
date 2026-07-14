@@ -4347,12 +4347,21 @@ textarea:focus {
 	padding: 6px 14px;
 	text-decoration: none;
 	transition: all 0.2s;
+	cursor: pointer;
+	font-family: inherit;
 }
 
 .blog-tag:hover {
 	border-color: var(--color-electric);
 	color: var(--color-lavender);
 	background: rgba(90, 20, 240, 0.08);
+}
+
+.blog-tag.active {
+	border-color: var(--color-electric);
+	color: #fff;
+	background: var(--color-electric);
+	box-shadow: 0 0 0 2px rgba(90, 20, 240, 0.2);
 }
 
 

@@ -23,6 +23,25 @@
 	let authorName = $state('');
 	let contentBlocks = $state<any[]>([]);
 
+	// Predefined tags options matching front-end filters
+	const tagOptions = [
+		'AI Agents',
+		'Lead Gen',
+		'Video Ads',
+		'SaaS',
+		'ChatGPT SEO',
+		'Compliance'
+	];
+	let selectedTags = $state<string[]>([]);
+
+	function handleTagToggle(tag: string) {
+		if (selectedTags.includes(tag)) {
+			selectedTags = selectedTags.filter((t) => t !== tag);
+		} else {
+			selectedTags = [...selectedTags, tag];
+		}
+	}
+
 	function generateId() {
 		return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
 	}
@@ -136,7 +155,24 @@
 			altText = blog.alt_text || '';
 			seoTitle = blog.seo_title || '';
 			seoDescription = blog.seo_description || '';
-			seoKeywords = blog.seo_keywords || '';
+			
+			// Extract tags and custom keywords
+			const keywordsList = (blog.seo_keywords || '')
+				.split(',')
+				.map((k) => k.trim())
+				.filter(Boolean);
+			
+			selectedTags = keywordsList.filter((k) => 
+				tagOptions.some((opt) => opt.toLowerCase() === k.toLowerCase())
+			).map((k) => {
+				return tagOptions.find((opt) => opt.toLowerCase() === k.toLowerCase()) || k;
+			});
+			
+			const customKeywords = keywordsList.filter((k) => 
+				!tagOptions.some((opt) => opt.toLowerCase() === k.toLowerCase())
+			);
+			seoKeywords = customKeywords.join(', ');
+
 			readTime = blog.read_time || '';
 			featured = blog.featured ?? false;
 			authorName = blog.author_name || 'Adymade Team';
@@ -165,6 +201,7 @@
 			seoTitle = '';
 			seoDescription = '';
 			seoKeywords = '';
+			selectedTags = [];
 			readTime = '5 min read';
 			featured = false;
 			authorName = 'Adymade Team';
@@ -216,6 +253,13 @@
 			(b.type === 'image' && b.url)
 		);
 
+		// Combine selected tags and custom keywords
+		const allKeywords = [
+			...selectedTags,
+			...(seoKeywords ? seoKeywords.split(',').map(s => s.trim()).filter(Boolean) : [])
+		];
+		const combinedKeywords = Array.from(new Set(allKeywords)).join(', ');
+
 		const blogData = {
 			title,
 			slug: slug.toLowerCase().replace(/[^a-z0-9_-]/g, '_'),
@@ -225,7 +269,7 @@
 			alt_text: altText || null,
 			seo_title: seoTitle || null,
 			seo_description: seoDescription || null,
-			seo_keywords: seoKeywords || null,
+			seo_keywords: combinedKeywords || null,
 			read_time: readTime || null,
 			featured,
 			author_name: authorName || 'Adymade Team',
@@ -394,6 +438,24 @@
 						<label for="featured" class="admin-label" style="margin: 0; cursor: pointer;">
 							Featured Post (Highlighted on top)
 						</label>
+					</div>
+				</div>
+
+				<div>
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label class="admin-label">Tags / Keywords</label>
+					<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+						{#each tagOptions as tag (tag)}
+							<label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.85); cursor: pointer; user-select: none;">
+								<input
+									type="checkbox"
+									checked={selectedTags.includes(tag)}
+									onchange={() => handleTagToggle(tag)}
+									style="width: 15px; height: 15px; accent-color: var(--color-cyan);"
+								/>
+								{tag}
+							</label>
+						{/each}
 					</div>
 				</div>
 

@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	const { data: blogs, error: blogsError } = await supabase
 		.from('blogs')
-		.select('title, slug, category, created_at, image_url, image, read_time, readTime')
+		.select('*')
 		.order('created_at', { ascending: false });
 
 	if (fetchError) {

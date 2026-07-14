@@ -9,6 +9,7 @@
 
 	let searchQuery = $state('');
 	let activeCategory = $state(data.selectedCategory || 'All Topics');
+	let activeTag = $state('');
 
 	// Update activeCategory when URL search parameter changes
 	$effect(() => {
@@ -19,13 +20,42 @@
 		}
 	});
 
-	// Compute filtered posts dynamically based on search query and active category
+	function matchesTag(post: any, tag: string) {
+		const t = tag.toLowerCase();
+		const keywords = (post.seo_keywords || '').toLowerCase();
+		const title = (post.title || '').toLowerCase();
+		const excerpt = (post.excerpt || '').toLowerCase();
+		const category = (post.category || '').toLowerCase();
+		
+		if (keywords.includes(t) || title.includes(t) || excerpt.includes(t) || category.includes(t)) {
+			return true;
+		}
+		
+		// Fallbacks/synonyms to ensure the static tags work well with dynamic posts:
+		if (t === 'ai agents' && (keywords.includes('ai') || title.includes('ai') || category.includes('ai'))) return true;
+		if (t === 'lead gen' && (keywords.includes('lead') || title.includes('lead'))) return true;
+		if (t === 'video ads' && (keywords.includes('video') || title.includes('video'))) return true;
+		if (t === 'chatgpt seo' && (keywords.includes('seo') || keywords.includes('geo') || title.includes('seo') || category.includes('seo'))) return true;
+		
+		return false;
+	}
+
+	function toggleTag(tag: string) {
+		if (activeTag === tag) {
+			activeTag = '';
+		} else {
+			activeTag = tag;
+		}
+	}
+
+	// Compute filtered posts dynamically based on search query, active category, and active tag
 	const filteredPosts = $derived(
 		blogPosts.filter((p) => {
 			const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
 				p.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
 			const matchesCategory = activeCategory === 'All Topics' || p.category === activeCategory;
-			return matchesSearch && matchesCategory;
+			const matchesActiveTag = !activeTag || matchesTag(p, activeTag);
+			return matchesSearch && matchesCategory && matchesActiveTag;
 		})
 	);
 
@@ -211,7 +241,14 @@
 				<h4>Popular Tags</h4>
 				<div class="blog-tag-cloud">
 					{#each blogTags as tag (tag)}
-						<span class="blog-tag">{tag}</span>
+						<button 
+							type="button" 
+							class="blog-tag" 
+							class:active={activeTag === tag}
+							onclick={() => toggleTag(tag)}
+						>
+							{tag}
+						</button>
 					{/each}
 				</div>
 			</div>

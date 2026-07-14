@@ -6,18 +6,7 @@
 
 	const post = $derived(data.post);
 	const blogPosts = $derived(data.blogs && data.blogs.length > 0 ? data.blogs : fallbackPosts);
-	const popularPosts = $derived(blogPosts.filter((p) => p.slug !== post?.slug).slice(0, 3));
-
-	// Compute categories and counts dynamically
-	const blogCategories = $derived([
-		{ name: 'All Topics', count: blogPosts.length },
-		...Object.entries(
-			blogPosts.reduce((acc, p) => {
-				acc[p.category] = (acc[p.category] || 0) + 1;
-				return acc;
-			}, {} as Record<string, number>)
-		).map(([name, count]) => ({ name, count }))
-	]);
+	const popularPosts = $derived(blogPosts.slice(0, 5));
 
 	function formatDate(dateStr?: string, fallback = '') {
 		if (!dateStr) return fallback;
@@ -197,20 +186,6 @@
 			</article>
 
 			<aside class="blog-sidebar">
-				<div class="blog-widget">
-					<h4>Categories</h4>
-					<ul class="blog-cat-list">
-						{#each blogCategories as cat (cat.name)}
-							<li>
-								<a href="/blog?category={encodeURIComponent(cat.name)}" class="blog-cat-btn">
-									<span>{cat.name}</span>
-									<span class="blog-cat-count">{cat.count}</span>
-								</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
-
 				<div class="blog-widget">
 					<h4>Popular Posts</h4>
 					{#each popularPosts as p (p.slug)}
