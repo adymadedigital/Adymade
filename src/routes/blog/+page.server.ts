@@ -1,7 +1,7 @@
 import { supabase } from '$lib/supabase';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
 	const { data: blogs, error } = await supabase
 		.from('blogs')
 		.select('*')
@@ -9,8 +9,13 @@ export const load: PageServerLoad = async () => {
 
 	if (error) {
 		console.error('Error fetching blogs:', error);
-		return { blogs: [] };
+		return { blogs: [], selectedCategory: null };
 	}
 
-	return { blogs: blogs || [] };
+	const selectedCategory = url.searchParams.get('category');
+
+	return { 
+		blogs: blogs || [], 
+		selectedCategory 
+	};
 };

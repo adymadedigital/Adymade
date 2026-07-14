@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Search, ArrowRight } from 'lucide-svelte';
+	import { Search, ArrowRight, X } from 'lucide-svelte';
 	import { blogPosts as fallbackPosts, blogTags } from '$lib/data/blog';
 
 	let { data } = $props();
@@ -8,7 +8,16 @@
 	const blogPosts = $derived(data.blogs && data.blogs.length > 0 ? data.blogs : fallbackPosts);
 
 	let searchQuery = $state('');
-	let activeCategory = $state('All Topics');
+	let activeCategory = $state(data.selectedCategory || 'All Topics');
+
+	// Update activeCategory when URL search parameter changes
+	$effect(() => {
+		if (data.selectedCategory) {
+			activeCategory = data.selectedCategory;
+		} else {
+			activeCategory = 'All Topics';
+		}
+	});
 
 	// Compute filtered posts dynamically based on search query and active category
 	const filteredPosts = $derived(
@@ -129,10 +138,22 @@
 		<aside class="blog-sidebar">
 			<div class="blog-widget blog-search">
 				<h4>Search</h4>
-				<input type="text" placeholder="Search articles…" bind:value={searchQuery} />
-				<span class="blog-search-icon">
-					<Search size={16} />
-				</span>
+				<div class="blog-search-input-wrapper">
+					<input type="text" placeholder="Search articles…" bind:value={searchQuery} />
+					{#if searchQuery}
+						<button 
+							type="button" 
+							onclick={() => searchQuery = ''} 
+							class="blog-search-clear-btn"
+							title="Clear search"
+						>
+							<X size={14} />
+						</button>
+					{/if}
+					<span class="blog-search-icon">
+						<Search size={16} />
+					</span>
+				</div>
 			</div>
 
 			<div class="blog-widget">

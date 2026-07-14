@@ -10,19 +10,26 @@ export const load: PageServerLoad = async ({ params }) => {
 		.eq('slug', params.slug)
 		.maybeSingle();
 
+	const { data: blogs, error: blogsError } = await supabase
+		.from('blogs')
+		.select('title, slug, category, created_at, image_url, image, read_time, readTime')
+		.order('created_at', { ascending: false });
+
 	if (fetchError) {
 		console.error('Error fetching blog post:', fetchError);
 	}
-
-	if (post) {
-		return { post };
+	if (blogsError) {
+		console.error('Error fetching all blogs:', blogsError);
 	}
 
-	// Fallback to static blog post if not found in database (e.g. database not seeded yet)
-	const staticPost = fallbackPosts.find(p => p.slug === params.slug);
-	if (staticPost) {
-		return { post: staticPost };
+	const activePost = post || fallbackPosts.find(p => p.slug === params.slug);
+
+	if (!activePost) {
+		throw error(404, 'Blog post not found');
 	}
 
-	throw error(404, 'Blog post not found');
+	return {
+		post: activePost,
+		blogs: blogs || []
+	};
 };

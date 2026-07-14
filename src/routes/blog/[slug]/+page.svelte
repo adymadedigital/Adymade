@@ -1,11 +1,23 @@
 <script lang="ts">
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
-	import { blogPosts as fallbackPosts, blogCategories, blogTags } from '$lib/data/blog';
+	import { blogPosts as fallbackPosts, blogTags } from '$lib/data/blog';
 
 	let { data } = $props();
 
 	const post = $derived(data.post);
-	const popularPosts = $derived(fallbackPosts.filter((p) => p.slug !== post?.slug).slice(0, 3));
+	const blogPosts = $derived(data.blogs && data.blogs.length > 0 ? data.blogs : fallbackPosts);
+	const popularPosts = $derived(blogPosts.filter((p) => p.slug !== post?.slug).slice(0, 3));
+
+	// Compute categories and counts dynamically
+	const blogCategories = $derived([
+		{ name: 'All Topics', count: blogPosts.length },
+		...Object.entries(
+			blogPosts.reduce((acc, p) => {
+				acc[p.category] = (acc[p.category] || 0) + 1;
+				return acc;
+			}, {} as Record<string, number>)
+		).map(([name, count]) => ({ name, count }))
+	]);
 
 	function formatDate(dateStr?: string, fallback = '') {
 		if (!dateStr) return fallback;
@@ -190,10 +202,10 @@
 					<ul class="blog-cat-list">
 						{#each blogCategories as cat (cat.name)}
 							<li>
-								<span class="blog-cat-btn">
+								<a href="/blog?category={encodeURIComponent(cat.name)}" class="blog-cat-btn">
 									<span>{cat.name}</span>
 									<span class="blog-cat-count">{cat.count}</span>
-								</span>
+								</a>
 							</li>
 						{/each}
 					</ul>

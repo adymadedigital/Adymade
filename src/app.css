@@ -4147,11 +4147,12 @@ textarea:focus {
 	margin-bottom: 20px;
 }
 
-.blog-search {
+.blog-search-input-wrapper {
 	position: relative;
+	width: 100%;
 }
 
-.blog-search input {
+.blog-search-input-wrapper input {
 	padding-right: 46px;
 }
 
@@ -4165,6 +4166,27 @@ textarea:focus {
 	pointer-events: none;
 }
 
+.blog-search-clear-btn {
+	position: absolute;
+	top: 50%;
+	right: 38px;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	color: var(--color-muted);
+	cursor: pointer;
+	padding: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.blog-search-clear-btn:hover {
+	color: #fff;
+	transform: translateY(-50%) scale(1.1);
+}
+
 .blog-cat-list {
 	list-style: none;
 	display: flex;
@@ -4172,29 +4194,47 @@ textarea:focus {
 	gap: 2px;
 }
 
-.blog-cat-list a {
+.blog-cat-list a,
+.blog-cat-btn {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
-	padding: 10px 10px;
+	padding: 10px 12px;
 	border-radius: 8px;
 	font-size: 14px;
 	font-weight: 500;
 	color: var(--color-body-text);
 	text-decoration: none;
-	transition: all 0.18s;
+	background: transparent;
+	border: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+	font-family: inherit;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .blog-cat-list a:hover,
-.blog-cat-list a.active {
+.blog-cat-list a.active,
+.blog-cat-btn:hover,
+.blog-cat-btn.active {
 	background: rgba(90, 20, 240, 0.1);
 	color: #fff;
 }
 
-.blog-cat-list a.active {
+.blog-cat-list a.active,
+.blog-cat-btn.active {
+	color: var(--color-lavender);
+	font-weight: 600;
+}
+
+.blog-cat-btn:hover .blog-cat-count,
+.blog-cat-btn.active .blog-cat-count {
+	background: rgba(90, 20, 240, 0.25);
 	color: var(--color-lavender);
 }
+
 
 .blog-cat-count {
 	font-size: 12px;
