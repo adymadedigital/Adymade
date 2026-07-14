@@ -8,6 +8,8 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import WhatsAppFloat from '$lib/components/WhatsAppFloat.svelte';
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
+	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 	// import { injectAnalytics } from '@vercel/analytics/sveltekit';
 
 	// injectAnalytics({ mode: dev ? 'development' : 'production' });
@@ -51,3 +53,7 @@
 	<Footer />
 	<WhatsAppFloat />
 {/if}
+
+<ToastContainer />
+<ConfirmModal />
+

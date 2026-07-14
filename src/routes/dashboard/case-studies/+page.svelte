@@ -17,6 +17,7 @@
 		Image as ImageIcon,
 		Upload
 	} from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	// ── State ────────────────────────────────────────────────────────────────
 	let studies = $state<CaseStudyDB[]>([]);
@@ -374,10 +375,20 @@
 
 		if (editingId) {
 			const { error: e } = await supabase.from('case_studies').update(payload).eq('id', editingId);
-			if (e) error = e.message;
+			if (e) {
+				error = e.message;
+				uiState.error('Failed to update case study: ' + error);
+			} else {
+				uiState.success('Case study updated successfully!');
+			}
 		} else {
 			const { error: e } = await supabase.from('case_studies').insert([payload]);
-			if (e) error = e.message;
+			if (e) {
+				error = e.message;
+				uiState.error('Failed to create case study: ' + error);
+			} else {
+				uiState.success('Case study created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -389,10 +400,22 @@
 
 	// ── Delete ───────────────────────────────────────────────────────────────
 	async function deleteStudy(id: string) {
-		if (!confirm('Delete this case study?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Case Study',
+			message: 'Are you sure you want to delete this case study?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
+
 		const { error: e } = await supabase.from('case_studies').delete().eq('id', id);
-		if (e) alert('Failed to delete: ' + e.message);
-		else await fetchStudies();
+		if (e) {
+			uiState.error('Failed to delete: ' + e.message);
+		} else {
+			uiState.success('Case study deleted successfully');
+			await fetchStudies();
+		}
 	}
 </script>
 

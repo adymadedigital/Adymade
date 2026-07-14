@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabase';
 	import { Upload, Trash2, Copy, Loader2, Image as ImageIcon, Check } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let images = $state<{ name: string; url: string; size: number }[]>([]);
 	let loading = $state(true);
@@ -58,23 +59,33 @@
 
 		if (uploadError) {
 			error = uploadError.message;
+			uiState.error('Failed to upload image: ' + error);
 		} else {
 			// Reset file input
 			input.value = '';
+			uiState.success('Image uploaded successfully!');
 			await fetchImages();
 		}
 	}
 
 	async function deleteImage(name: string) {
-		if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Image',
+			message: `Are you sure you want to delete the image "${name}"?`,
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 		
 		const { error: deleteError } = await supabase.storage
 			.from('images')
 			.remove([name]);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete image: ' + deleteError.message);
 		} else {
+			uiState.success('Image deleted successfully');
 			await fetchImages();
 		}
 	}
@@ -82,6 +93,7 @@
 	function copyToClipboard(url: string) {
 		navigator.clipboard.writeText(url);
 		copiedUrl = url;
+		uiState.success('Image URL copied to clipboard!');
 		setTimeout(() => {
 			if (copiedUrl === url) copiedUrl = null;
 		}, 2000);

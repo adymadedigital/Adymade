@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase, type FaqDB } from '$lib/supabase';
 	import { Plus, Trash2, Edit2, Loader2, Save, X, ArrowUp, ArrowDown, HelpCircle } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let faqs = $state<FaqDB[]>([]);
 	let loading = $state(true);
@@ -68,14 +69,24 @@
 				.from('faqs')
 				.update(faqData)
 				.eq('id', editingId);
-			if (updateError) error = updateError.message;
+			if (updateError) {
+				error = updateError.message;
+				uiState.error('Failed to update FAQ: ' + error);
+			} else {
+				uiState.success('FAQ updated successfully!');
+			}
 		} else {
 			// Find max sort_order to append at the end
 			const maxOrder = faqs.length > 0 ? Math.max(...faqs.map(f => f.sort_order ?? 0)) : 0;
 			const { error: insertError } = await supabase
 				.from('faqs')
 				.insert([{ ...faqData, sort_order: maxOrder + 10 }]);
-			if (insertError) error = insertError.message;
+			if (insertError) {
+				error = insertError.message;
+				uiState.error('Failed to create FAQ: ' + error);
+			} else {
+				uiState.success('FAQ created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -86,7 +97,14 @@
 	}
 
 	async function deleteFaq(id: string) {
-		if (!confirm('Are you sure you want to delete this FAQ?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete FAQ',
+			message: 'Are you sure you want to delete this FAQ?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 
 		const { error: deleteError } = await supabase
 			.from('faqs')
@@ -94,8 +112,9 @@
 			.eq('id', id);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete: ' + deleteError.message);
 		} else {
+			uiState.success('FAQ deleted successfully');
 			await fetchFaqs();
 		}
 	}

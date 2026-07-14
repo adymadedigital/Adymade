@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase, type Blog } from '$lib/supabase';
 	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText, Upload, Image as ImageIcon, ArrowUp, ArrowDown } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let blogs = $state<Blog[]>([]);
 	let loading = $state(true);
@@ -237,12 +238,22 @@
 				.from('blogs')
 				.update(blogData)
 				.eq('id', editingId);
-			if (updateError) error = updateError.message;
+			if (updateError) {
+				error = updateError.message;
+				uiState.error('Failed to update blog post: ' + error);
+			} else {
+				uiState.success('Blog post updated successfully!');
+			}
 		} else {
 			const { error: insertError } = await supabase
 				.from('blogs')
 				.insert([blogData]);
-			if (insertError) error = insertError.message;
+			if (insertError) {
+				error = insertError.message;
+				uiState.error('Failed to create blog post: ' + error);
+			} else {
+				uiState.success('Blog post created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -253,7 +264,14 @@
 	}
 
 	async function deleteBlog(id: string) {
-		if (!confirm('Are you sure you want to delete this blog post?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Blog Post',
+			message: 'Are you sure you want to delete this blog post?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 		
 		const { error: deleteError } = await supabase
 			.from('blogs')
@@ -261,8 +279,9 @@
 			.eq('id', id);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete: ' + deleteError.message);
 		} else {
+			uiState.success('Blog post deleted successfully');
 			await fetchBlogs();
 		}
 	}
