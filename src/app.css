@@ -4131,6 +4131,13 @@ textarea:focus {
 	gap: 28px;
 }
 
+@media (min-width: 960px) {
+	.blog-sidebar {
+		position: sticky;
+		top: 110px;
+	}
+}
+
 .blog-widget {
 	background: var(--color-midnight);
 	border: 1px solid var(--color-slate);
