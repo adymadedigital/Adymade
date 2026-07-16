@@ -41,17 +41,6 @@
 				</ul>
 			</div>
 
-			<!-- Industries -->
-			<div class="foot-col">
-				<h5>Industries</h5>
-				<ul>
-					<li><a href="/industries/construction">Construction</a></li>
-					<li><a href="/industries/healthcare">Healthcare</a></li>
-					<li><a href="/industries/ecommerce">E-commerce</a></li>
-					<li><a href="/industries/saas">SaaS &amp; Tech</a></li>
-				</ul>
-			</div>
-
 			<!-- Company -->
 			<div class="foot-col">
 				<h5>Company</h5>
@@ -70,7 +59,7 @@
 				<ul>
 					<li><a href="mailto:contact@adymade.com">contact@adymade.com</a></li>
 					<li><a href="https://wa.link/u03r6i" target="_blank" rel="noopener">WhatsApp us</a></li>
-					<li>	
+					<li>
 						<a href="https://calendly.com/addymade/15-minute-consultation-call"
 							target="_blank"
 							rel="noopener"
@@ -96,4 +85,5 @@
 			</div>
 		</div>
 	</div>
+
 </footer>

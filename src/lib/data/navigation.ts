@@ -86,7 +86,7 @@ export interface ClientChip {
 }
 
 export const clientChips: ClientChip[] = [
-	{ name: 'RGS', logo: '/logos/rgss.png' },
+	{ name: 'RGS', logo: '/logos/rgs.png' },
 	// { name: 'UltraTech Cement', logo: '/logos/ultraa.png' },
 	// { name: 'Axis Bank', logo: '/logos/axiss.png' },
 	// { name: 'HDFC', logo: '/logos/hdfcc.png' },
@@ -130,7 +130,7 @@ export const clientChips: ClientChip[] = [
 
 
 export const allClientChips: ClientChip[] = [
-	{ name: 'RGS', logo: '/logos/rgss.png' },
+	{ name: 'RGS', logo: '/logos/rgs.png' },
 	{ name: 'UltraTech Cement', logo: '/logos/ultraa.png' },
 	{ name: 'Axis Bank', logo: '/logos/axiss.png' },
 	{ name: 'HDFC', logo: '/logos/hdfcc.png' },
@@ -169,6 +169,7 @@ export const allClientChips: ClientChip[] = [
 	{ name: 'Trilok', logo: '/logos/trilok.png' },
 	{ name: 'Weaddo', logo: '/logos/weaddo.png' },
 	{ name: 'Wellyfy', logo: '/logos/wellyfy.png' }
+
 ];
 
 
