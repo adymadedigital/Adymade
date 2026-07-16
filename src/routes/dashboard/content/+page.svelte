@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase, type Content } from '$lib/supabase';
 	import { Plus, Trash2, Edit2, Loader2, Save, X, Settings } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let contentItems = $state<Content[]>([]);
 	let loading = $state(true);
@@ -66,12 +67,22 @@
 				.from('content')
 				.update(contentData)
 				.eq('id', editingId);
-			if (updateError) error = updateError.message;
+			if (updateError) {
+				error = updateError.message;
+				uiState.error('Failed to update content: ' + error);
+			} else {
+				uiState.success('Content item updated successfully!');
+			}
 		} else {
 			const { error: insertError } = await supabase
 				.from('content')
 				.insert([contentData]);
-			if (insertError) error = insertError.message;
+			if (insertError) {
+				error = insertError.message;
+				uiState.error('Failed to create content: ' + error);
+			} else {
+				uiState.success('Content item created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -82,7 +93,14 @@
 	}
 
 	async function deleteContent(id: string) {
-		if (!confirm('Are you sure you want to delete this content item?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Content Item',
+			message: 'Are you sure you want to delete this content item?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 		
 		const { error: deleteError } = await supabase
 			.from('content')
@@ -90,8 +108,9 @@
 			.eq('id', id);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete: ' + deleteError.message);
 		} else {
+			uiState.success('Content item deleted successfully');
 			await fetchContent();
 		}
 	}

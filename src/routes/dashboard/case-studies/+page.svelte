@@ -17,6 +17,7 @@
 		Image as ImageIcon,
 		Upload
 	} from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	// ── State ────────────────────────────────────────────────────────────────
 	let studies = $state<CaseStudyDB[]>([]);
@@ -374,10 +375,20 @@
 
 		if (editingId) {
 			const { error: e } = await supabase.from('case_studies').update(payload).eq('id', editingId);
-			if (e) error = e.message;
+			if (e) {
+				error = e.message;
+				uiState.error('Failed to update case study: ' + error);
+			} else {
+				uiState.success('Case study updated successfully!');
+			}
 		} else {
 			const { error: e } = await supabase.from('case_studies').insert([payload]);
-			if (e) error = e.message;
+			if (e) {
+				error = e.message;
+				uiState.error('Failed to create case study: ' + error);
+			} else {
+				uiState.success('Case study created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -389,15 +400,28 @@
 
 	// ── Delete ───────────────────────────────────────────────────────────────
 	async function deleteStudy(id: string) {
-		if (!confirm('Delete this case study?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Case Study',
+			message: 'Are you sure you want to delete this case study?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
+
 		const { error: e } = await supabase.from('case_studies').delete().eq('id', id);
-		if (e) alert('Failed to delete: ' + e.message);
-		else await fetchStudies();
+		if (e) {
+			uiState.error('Failed to delete: ' + e.message);
+		} else {
+			uiState.success('Case study deleted successfully');
+			await fetchStudies();
+		}
 	}
 </script>
 
 <div>
 	<!-- Header -->
+	 
 	<div class="admin-header">
 		<div>
 			<h2>Case Studies</h2>
@@ -437,6 +461,7 @@
 					saveStudy();
 				}}
 			>
+			
 				<!-- Title -->
 				<div>
 					<label for="cs-title" class="admin-label">Title</label>
@@ -515,15 +540,16 @@
 
 				<!-- Subcategory Services Checklist -->
 				<div>
+					<!-- svelte-ignore a11y_label_has_associated_control -->
 					<label class="admin-label">Services / Subcategories</label>
 					<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; display:flex; flex-direction:column; gap:16px;">
-						{#each Object.entries(serviceCategoryOptions) as [catName, subServices]}
+						{#each Object.entries(serviceCategoryOptions) as [catName, subServices] (catName)}
 							<div>
 								<h4 style="font-size: 13px; font-weight:600; text-transform:uppercase; color: var(--color-cyan); margin-bottom: 8px;">
 									{catName}
 								</h4>
 								<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-									{#each subServices as srv}
+									{#each subServices as srv (srv)}
 										<label style="display:flex; align-items:center; gap:8px; font-size:14px; color:rgba(255,255,255,0.8); cursor:pointer;">
 											<input
 												type="checkbox"
@@ -593,7 +619,9 @@
 				</div>
 
 				<!-- Metrics -->
+				 <!-- svelte-ignore a11y_label_has_associated_control -->
 				<div>
+				
 					<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
 						<label class="admin-label" style="margin:0;">Key Metrics</label>
 						<button
@@ -605,7 +633,7 @@
 						</button>
 					</div>
 					<div style="display:flex;flex-direction:column;gap:10px;">
-						{#each metrics as metric, i}
+						{#each metrics as metric, i (metric)}
 							<div style="display:grid;grid-template-columns:1fr 2fr auto;gap:10px;align-items:center;">
 								<input
 									type="text"
@@ -679,7 +707,7 @@
 						Page Content Sections
 					</h3>
 					<div style="display:flex; flex-direction:column; gap:20px;">
-						{#each content as block, bIdx}
+						{#each content as block, bIdx (block)}
 							<div style="background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:18px; position:relative;">
 								
 								<!-- Block header toolbar -->
@@ -701,7 +729,7 @@
 										</button>
 									</div>
 								</div>
-
+<!-- svelte-ignore a11y_label_has_associated_control -->
 								<!-- Block content inputs based on type -->
 								{#if block.type === 'under-construction'}
 									<div>
@@ -728,7 +756,7 @@
 													+ Add Paragraph
 												</button>
 											</div>
-											{#each block.paragraphs || [] as para, pIdx}
+											{#each block.paragraphs || [] as para, pIdx (pIdx)}
 												<div style="display:flex; gap:10px; margin-bottom:10px;">
 													<textarea bind:value={block.paragraphs[pIdx]} class="admin-input" style="height:60px; resize:vertical; margin:0;" placeholder="Enter paragraph text..."></textarea>
 													<button type="button" class="admin-icon-btn danger" disabled={block.paragraphs.length <= 1} onclick={() => removeParagraph(bIdx, pIdx)}>
@@ -762,7 +790,7 @@
 													+ Add Card
 												</button>
 											</div>
-											{#each block.items || [] as item, itemIdx}
+											{#each block.items || [] as item, itemIdx (item)}
 												<div style="display:flex; gap:10px; background:rgba(0,0,0,0.15); padding:10px; border-radius:8px; margin-bottom:10px; align-items: flex-start;">
 													<div style="flex:1; display:flex; flex-direction:column; gap:8px;">
 														<input type="text" bind:value={item.title} class="admin-input" style="margin:0;" placeholder="Card Title (e.g. Projects)" />
@@ -804,7 +832,7 @@
 												</button>
 											</div>
 											<div style="display:flex; flex-wrap:wrap; gap:8px;">
-												{#each block.tags || [] as tag, tIdx}
+												{#each block.tags || [] as tag, tIdx (tIdx)}
 													<div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
 														<input type="text" bind:value={block.tags[tIdx]} style="background:none; border:none; color:white; font-size:13px; width:120px; outline:none;" placeholder="Tag name..." />
 														<button type="button" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:0 2px;" onclick={() => removeTag(bIdx, tIdx)}>
@@ -839,7 +867,7 @@
 													+ Add Item
 												</button>
 											</div>
-											{#each block.items || [] as item, itemIdx}
+											{#each block.items || [] as item, itemIdx (itemIdx)}
 												<div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
 													<input type="text" bind:value={block.items[itemIdx]} class="admin-input" style="margin:0;" placeholder="e.g. Modern and professional website experience" />
 													<button type="button" class="admin-icon-btn danger" disabled={block.items.length <= 1} onclick={() => removeImprovement(bIdx, itemIdx)}>
@@ -870,7 +898,7 @@
 											</button>
 										</div>
 
-										{#each block.sections || [] as section, sIdx}
+										{#each block.sections || [] as section, sIdx (section)}
 											<div style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); padding:14px; border-radius:8px; display:flex; flex-direction:column; gap:12px; margin-bottom:12px;">
 												<div style="display:grid; grid-template-columns: 2fr 1fr auto; gap:10px; align-items:center;">
 													<div>
@@ -897,7 +925,7 @@
 														</button>
 													</div>
 													
-													{#each section.images || [] as imagePath, imgIdx}
+													{#each section.images || [] as imagePath, imgIdx (imgIdx)}
 														<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
 															<input
 																type="text"
@@ -1056,7 +1084,7 @@
 						<h3 style="font-size:17px;font-weight:600;color:white;margin-bottom:8px;">{@html cs.title}</h3>
 						<p style="font-size:13px; color:var(--color-muted); margin-bottom: 12px; line-height:1.5;">{cs.short_description}</p>
 						<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
-							{#each cs.metrics || [] as m}
+							{#each cs.metrics || [] as m (m)}
 								<div style="font-size:13px;">
 									<span style="font-weight:700;color:white;">{m.value}</span>
 									<span style="color:var(--color-muted);margin-left:4px;">{m.description}</span>

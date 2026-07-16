@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase } from '$lib/supabase';
 	import { Settings, Server, Activity, HardDrive, Download, Upload, Loader2, Save } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 	
 	let activeTab = $state('config');
 	
@@ -112,8 +113,9 @@
 			URL.revokeObjectURL(url);
 			
 			logActivity('Downloaded Data Backup', 'Admin downloaded full JSON backup');
+			uiState.success('Backup downloaded successfully!');
 		} catch (err: any) {
-			alert('Backup failed: ' + err.message);
+			uiState.error('Backup failed: ' + err.message);
 		} finally {
 			backingUp = false;
 		}
@@ -124,7 +126,14 @@
 		const target = e.target as HTMLInputElement;
 		if (!target.files || target.files.length === 0) return;
 		
-		if (!confirm('WARNING: Restoring will attempt to upsert data into your tables. Existing IDs will be overwritten. Proceed?')) {
+		const confirmed = await uiState.confirm({
+			title: 'Restore Backup',
+			message: 'WARNING: Restoring will attempt to upsert data into your database tables. Existing IDs will be overwritten. Do you want to proceed?',
+			confirmText: 'Restore',
+			cancelText: 'Cancel',
+			type: 'warning'
+		});
+		if (!confirmed) {
 			target.value = '';
 			return;
 		}
@@ -144,9 +153,9 @@
 				if (json.tables.services?.length) await supabase.from('services').upsert(json.tables.services);
 
 				logActivity('Restored Data Backup', 'Admin restored JSON backup');
-				alert('Restore completed successfully!');
+				uiState.success('Restore completed successfully!');
 			} catch (err: any) {
-				alert('Restore failed: ' + err.message);
+				uiState.error('Restore failed: ' + err.message);
 			} finally {
 				restoring = false;
 				target.value = '';

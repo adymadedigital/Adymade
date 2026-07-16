@@ -1,13 +1,93 @@
 <script lang="ts">
-	import { Search, ArrowRight } from 'lucide-svelte';
-	import { blogPosts, blogCategories, blogTags } from '$lib/data/blog';
+	import { Search, ArrowRight, X } from 'lucide-svelte';
+	import { blogPosts as fallbackPosts, blogTags } from '$lib/data/blog';
+
+	let { data } = $props();
+
+	// Fallback to static blog posts if database is empty
+	const blogPosts = $derived(data.blogs && data.blogs.length > 0 ? data.blogs : fallbackPosts);
 
 	let searchQuery = $state('');
-	let activeCategory = $state('All Topics');
+	let activeCategory = $state(data.selectedCategory || 'All Topics');
+	let activeTag = $state('');
 
-	const featuredPost = blogPosts.find((p) => p.featured) ?? blogPosts[0];
-	const gridPosts = blogPosts.filter((p) => p.slug !== featuredPost.slug);
-	const popularPosts = blogPosts.slice(0, 3);
+	// Update activeCategory when URL search parameter changes
+	$effect(() => {
+		if (data.selectedCategory) {
+			activeCategory = data.selectedCategory;
+		} else {
+			activeCategory = 'All Topics';
+		}
+	});
+
+	function matchesTag(post: any, tag: string) {
+		const t = tag.toLowerCase();
+		const keywords = (post.seo_keywords || '').toLowerCase();
+		const title = (post.title || '').toLowerCase();
+		const excerpt = (post.excerpt || '').toLowerCase();
+		const category = (post.category || '').toLowerCase();
+		
+		if (keywords.includes(t) || title.includes(t) || excerpt.includes(t) || category.includes(t)) {
+			return true;
+		}
+		
+		// Fallbacks/synonyms to ensure the static tags work well with dynamic posts:
+		if (t === 'ai agents' && (keywords.includes('ai') || title.includes('ai') || category.includes('ai'))) return true;
+		if (t === 'lead gen' && (keywords.includes('lead') || title.includes('lead'))) return true;
+		if (t === 'video ads' && (keywords.includes('video') || title.includes('video'))) return true;
+		if (t === 'chatgpt seo' && (keywords.includes('seo') || keywords.includes('geo') || title.includes('seo') || category.includes('seo'))) return true;
+		
+		return false;
+	}
+
+	function toggleTag(tag: string) {
+		if (activeTag === tag) {
+			activeTag = '';
+		} else {
+			activeTag = tag;
+		}
+	}
+
+	// Compute filtered posts dynamically based on search query, active category, and active tag
+	const filteredPosts = $derived(
+		blogPosts.filter((p) => {
+			const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+				p.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+			const matchesCategory = activeCategory === 'All Topics' || p.category === activeCategory;
+			const matchesActiveTag = !activeTag || matchesTag(p, activeTag);
+			return matchesSearch && matchesCategory && matchesActiveTag;
+		})
+	);
+
+	const featuredPost = $derived(blogPosts.find((p) => p.featured) ?? blogPosts[0]);
+	const gridPosts = $derived(filteredPosts.filter((p) => p.slug !== (featuredPost?.slug || '')));
+	const popularPosts = $derived(blogPosts.slice(0, 3));
+
+	// Compute categories and counts dynamically
+	const blogCategories = $derived([
+		{ name: 'All Topics', count: blogPosts.length },
+		...Object.entries(
+			blogPosts.reduce((acc, p) => {
+				acc[p.category] = (acc[p.category] || 0) + 1;
+				return acc;
+			}, {} as Record<string, number>)
+		).map(([name, count]) => ({ name, count }))
+	]);
+
+	function formatDate(dateStr?: string, fallback = '') {
+		if (!dateStr) return fallback;
+		// If it's already in the format "Jul 6, 2026", just return it
+		if (dateStr.includes(',') && !dateStr.includes('-') && !dateStr.includes('T')) return dateStr;
+		try {
+			return new Date(dateStr).toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric'
+			});
+		} catch (e) {
+			return dateStr;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -34,25 +114,27 @@
 
 <section class="blog-featured">
 	<div class="container">
-		<a href="/blog/{featuredPost.slug}" class="blog-featured-card">
-			<div class="blog-featured-media">
-				<span class="blog-featured-tag">Featured</span>
-				<img src={featuredPost.image} alt={featuredPost.title} />
-			</div>
-			<div class="blog-featured-body">
-				<div class="blog-featured-eyebrow">{featuredPost.category}</div>
-				<h2>{featuredPost.title}</h2>
-				<p class="blog-featured-excerpt">{featuredPost.excerpt}</p>
-				<div class="blog-featured-meta">
-					<span>{featuredPost.date}</span>
-					<span>·</span>
-					<span>{featuredPost.readTime}</span>
-					<span class="blog-read-link">
-						Read Article <ArrowRight size={14} />
-					</span>
+		{#if featuredPost}
+			<a href="/blog/{featuredPost.slug}" class="blog-featured-card">
+				<div class="blog-featured-media">
+					<span class="blog-featured-tag">Featured</span>
+					<img src={featuredPost.image_url || featuredPost.image} alt={featuredPost.alt_text || featuredPost.title} />
 				</div>
-			</div>
-		</a>
+				<div class="blog-featured-body">
+					<div class="blog-featured-eyebrow">{featuredPost.category}</div>
+					<h2>{featuredPost.title}</h2>
+					<p class="blog-featured-excerpt">{featuredPost.excerpt}</p>
+					<div class="blog-featured-meta">
+						<span>{formatDate(featuredPost.created_at || featuredPost.date)}</span>
+						<span>·</span>
+						<span>{featuredPost.read_time || featuredPost.readTime}</span>
+						<span class="blog-read-link">
+							Read Article <ArrowRight size={14} />
+						</span>
+					</div>
+				</div>
+			</a>
+		{/if}
 	</div>
 </section>
 
@@ -67,14 +149,14 @@
 				{#each gridPosts as post (post.slug)}
 					<a href="/blog/{post.slug}" class="blog-card">
 						<div class="blog-card-media">
-							<img src={post.image} alt={post.title} />
+							<img src={post.image_url || post.image} alt={post.alt_text || post.title} />
 						</div>
 						<div class="blog-card-body">
 							<span class="blog-card-cat">{post.category}</span>
 							<h3 class="blog-card-title">{post.title}</h3>
 							<p class="blog-card-excerpt">{post.excerpt}</p>
 							<div class="blog-card-footer">
-								<span>{post.date}</span>
+								<span>{formatDate(post.created_at || post.date)}</span>
 								<span class="blog-read-link">Read <ArrowRight size={13} /></span>
 							</div>
 						</div>
@@ -86,10 +168,22 @@
 		<aside class="blog-sidebar">
 			<div class="blog-widget blog-search">
 				<h4>Search</h4>
-				<input type="text" placeholder="Search articles…" bind:value={searchQuery} />
-				<span class="blog-search-icon">
-					<Search size={16} />
-				</span>
+				<div class="blog-search-input-wrapper">
+					<input type="text" placeholder="Search articles…" bind:value={searchQuery} />
+					{#if searchQuery}
+						<button 
+							type="button" 
+							onclick={() => searchQuery = ''} 
+							class="blog-search-clear-btn"
+							title="Clear search"
+						>
+							<X size={14} />
+						</button>
+					{/if}
+					<span class="blog-search-icon">
+						<Search size={16} />
+					</span>
+				</div>
 			</div>
 
 			<div class="blog-widget">
@@ -127,11 +221,11 @@
 				{#each popularPosts as post (post.slug)}
 					<a href="/blog/{post.slug}" class="blog-mini-post">
 						<div class="blog-mini-thumb">
-							<img src={post.image} alt="" />
+							<img src={post.image_url || post.image} alt="" />
 						</div>
 						<div>
 							<div class="blog-mini-title">{post.title}</div>
-							<div class="blog-mini-date">{post.date}</div>
+							<div class="blog-mini-date">{formatDate(post.created_at || post.date)}</div>
 						</div>
 					</a>
 				{/each}
@@ -147,7 +241,14 @@
 				<h4>Popular Tags</h4>
 				<div class="blog-tag-cloud">
 					{#each blogTags as tag (tag)}
-						<span class="blog-tag">{tag}</span>
+						<button 
+							type="button" 
+							class="blog-tag" 
+							class:active={activeTag === tag}
+							onclick={() => toggleTag(tag)}
+						>
+							{tag}
+						</button>
 					{/each}
 				</div>
 			</div>

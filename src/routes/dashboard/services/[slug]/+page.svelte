@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { supabase } from '$lib/supabase';
 	import { Save, Trash2, Edit2, Loader2, Image as ImageIcon, X, HelpCircle, ToggleLeft, ToggleRight, Upload } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	interface ServiceCategory {
 		id: string;
@@ -132,14 +133,23 @@
 
 		if (updateError) {
 			error = updateError.message;
+			uiState.error('Failed to update service: ' + error);
 		} else {
+			uiState.success('Service updated successfully!');
 			cancelEdit();
 			await loadData();
 		}
 	}
 
 	async function deleteService(service: ServiceDB) {
-		if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Service',
+			message: `Are you sure you want to delete the service "${service.title}"?`,
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 
 		loading = true;
 		if (service.image_path) {
@@ -152,7 +162,9 @@
 			.eq('id', service.id);
 
 		if (deleteError) {
-			alert('Failed to delete service: ' + deleteError.message);
+			uiState.error('Failed to delete service: ' + deleteError.message);
+		} else {
+			uiState.success('Service deleted successfully');
 		}
 		await loadData();
 	}

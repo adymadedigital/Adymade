@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { supabase, type TestimonialDB } from '$lib/supabase';
 	import { Plus, Trash2, Edit2, Loader2, Save, X, ArrowUp, ArrowDown, MessageSquare } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let testimonials = $state<TestimonialDB[]>([]);
 	let loading = $state(true);
@@ -80,13 +81,23 @@
 				.from('testimonials')
 				.update(tData)
 				.eq('id', editingId);
-			if (updateError) error = updateError.message;
+			if (updateError) {
+				error = updateError.message;
+				uiState.error('Failed to update testimonial: ' + error);
+			} else {
+				uiState.success('Testimonial updated successfully!');
+			}
 		} else {
 			const maxOrder = testimonials.length > 0 ? Math.max(...testimonials.map(t => t.sort_order ?? 0)) : 0;
 			const { error: insertError } = await supabase
 				.from('testimonials')
 				.insert([{ ...tData, sort_order: maxOrder + 10 }]);
-			if (insertError) error = insertError.message;
+			if (insertError) {
+				error = insertError.message;
+				uiState.error('Failed to create testimonial: ' + error);
+			} else {
+				uiState.success('Testimonial created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -97,7 +108,14 @@
 	}
 
 	async function deleteTestimonial(id: string) {
-		if (!confirm('Are you sure you want to delete this testimonial?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Testimonial',
+			message: 'Are you sure you want to delete this testimonial?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 
 		const { error: deleteError } = await supabase
 			.from('testimonials')
@@ -105,8 +123,9 @@
 			.eq('id', id);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete: ' + deleteError.message);
 		} else {
+			uiState.success('Testimonial deleted successfully');
 			await fetchTestimonials();
 		}
 	}

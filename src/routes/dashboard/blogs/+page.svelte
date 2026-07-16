@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { supabase, type Blog } from '$lib/supabase';
-	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText } from 'lucide-svelte';
+	import { Plus, Trash2, Edit2, Loader2, Save, X, FileText, Upload, Image as ImageIcon, ArrowUp, ArrowDown } from 'lucide-svelte';
+	import { uiState } from '$lib/state/ui.svelte';
 
 	let blogs = $state<Blog[]>([]);
 	let loading = $state(true);
@@ -9,10 +10,48 @@
 
 	let isEditing = $state(false);
 	let editingId = $state<string | null>(null);
+
+	// Form fields
 	let title = $state('');
-	let content = $state('');
+	let slug = $state('');
+	let category = $state('');
+	let excerpt = $state('');
 	let imageUrl = $state('');
+	let altText = $state('');
+	let readTime = $state('');
+	let featured = $state(false);
+	let authorName = $state('');
+	let contentBlocks = $state<any[]>([]);
+
+	// Predefined tags options matching front-end filters
+	const tagOptions = [
+		'AI Agents',
+		'Lead Gen',
+		'Video Ads',
+		'SaaS',
+		'ChatGPT SEO',
+		'Compliance'
+	];
+	let selectedTags = $state<string[]>([]);
+
+	function handleTagToggle(tag: string) {
+		if (selectedTags.includes(tag)) {
+			selectedTags = selectedTags.filter((t) => t !== tag);
+		} else {
+			selectedTags = [...selectedTags, tag];
+		}
+	}
+
+	function generateId() {
+		return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+	}
+
+	let seoTitle = $state('');
+	let seoDescription = $state('');
+	let seoKeywords = $state('');
+
 	let saveLoading = $state(false);
+	let uploadingImage = $state(false);
 
 	onMount(async () => {
 		await fetchBlogs();
@@ -20,6 +59,7 @@
 
 	async function fetchBlogs() {
 		loading = true;
+		error = '';
 		const { data, error: fetchError } = await supabase
 			.from('blogs')
 			.select('*')
@@ -33,20 +73,139 @@
 		loading = false;
 	}
 
+	function generateSlug() {
+		if (!editingId) {
+			slug = title
+				.toLowerCase()
+				.replace(/<\/?[^>]+(>|$)/g, '') // Strip HTML tags
+				.replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+				.trim()
+				.replace(/\s+/g, '-');
+		}
+	}
+
+	function addBlock(type: string) {
+		const id = generateId();
+		if (type === 'heading') {
+			contentBlocks = [...contentBlocks, { id, type: 'heading', level: 2, text: '' }];
+		} else if (type === 'paragraph') {
+			contentBlocks = [...contentBlocks, { id, type: 'paragraph', text: '' }];
+		} else if (type === 'image') {
+			contentBlocks = [...contentBlocks, { id, type: 'image', url: '', caption: '' }];
+		} else if (type === 'newline') {
+			contentBlocks = [...contentBlocks, { id, type: 'newline' }];
+		}
+	}
+
+	function removeBlock(idx: number) {
+		contentBlocks = contentBlocks.filter((_, i) => i !== idx);
+	}
+
+	function moveBlockUp(idx: number) {
+		if (idx === 0) return;
+		const temp = contentBlocks[idx];
+		contentBlocks[idx] = contentBlocks[idx - 1];
+		contentBlocks[idx - 1] = temp;
+		contentBlocks = [...contentBlocks];
+	}
+
+	function moveBlockDown(idx: number) {
+		if (idx === contentBlocks.length - 1) return;
+		const temp = contentBlocks[idx];
+		contentBlocks[idx] = contentBlocks[idx + 1];
+		contentBlocks[idx + 1] = temp;
+		contentBlocks = [...contentBlocks];
+	}
+
+	async function handleBlockImageUpload(idx: number, e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files || target.files.length === 0) return;
+
+		const file = target.files[0];
+		error = '';
+
+		const fileExt = file.name.split('.').pop();
+		const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+		const filePath = `blogs/${fileName}`;
+
+		const { error: uploadError } = await supabase.storage
+			.from('images')
+			.upload(filePath, file);
+
+		if (uploadError) {
+			error = uploadError.message;
+			return;
+		}
+
+		const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+		contentBlocks[idx].url = data.publicUrl;
+		contentBlocks = [...contentBlocks];
+	}
+
 	function startEdit(blog?: Blog) {
 		error = '';
 		if (blog) {
 			isEditing = true;
 			editingId = blog.id!;
 			title = blog.title;
-			content = blog.content;
+			slug = blog.slug;
+			category = blog.category;
+			excerpt = blog.excerpt;
 			imageUrl = blog.image_url || '';
+			altText = blog.alt_text || '';
+			seoTitle = blog.seo_title || '';
+			seoDescription = blog.seo_description || '';
+			
+			// Extract tags and custom keywords
+			const keywordsList = (blog.seo_keywords || '')
+				.split(',')
+				.map((k) => k.trim())
+				.filter(Boolean);
+			
+			selectedTags = keywordsList.filter((k) => 
+				tagOptions.some((opt) => opt.toLowerCase() === k.toLowerCase())
+			).map((k) => {
+				return tagOptions.find((opt) => opt.toLowerCase() === k.toLowerCase()) || k;
+			});
+			
+			const customKeywords = keywordsList.filter((k) => 
+				!tagOptions.some((opt) => opt.toLowerCase() === k.toLowerCase())
+			);
+			seoKeywords = customKeywords.join(', ');
+
+			readTime = blog.read_time || '';
+			featured = blog.featured ?? false;
+			authorName = blog.author_name || 'Adymade Team';
+			
+			// Safe dynamic parsing of content blocks
+			if (blog.content && Array.isArray(blog.content)) {
+				contentBlocks = blog.content.map(b => {
+					const id = b.id || generateId();
+					if (typeof b === 'string') {
+						return { id, type: 'paragraph', text: b };
+					}
+					return { id, ...b };
+				});
+			} else {
+				contentBlocks = [{ id: generateId(), type: 'paragraph', text: '' }];
+			}
 		} else {
 			isEditing = true;
 			editingId = null;
 			title = '';
-			content = '';
+			slug = '';
+			category = 'AI Automation';
+			excerpt = '';
 			imageUrl = '';
+			altText = '';
+			seoTitle = '';
+			seoDescription = '';
+			seoKeywords = '';
+			selectedTags = [];
+			readTime = '5 min read';
+			featured = false;
+			authorName = 'Adymade Team';
+			contentBlocks = [{ id: generateId(), type: 'paragraph', text: '' }];
 		}
 	}
 
@@ -55,14 +214,67 @@
 		editingId = null;
 	}
 
+	async function handleImageUpload(e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files || target.files.length === 0) return;
+
+		const file = target.files[0];
+		uploadingImage = true;
+		error = '';
+
+		const fileExt = file.name.split('.').pop();
+		const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+		const filePath = `blogs/${fileName}`;
+
+		const { error: uploadError } = await supabase.storage
+			.from('images')
+			.upload(filePath, file);
+
+		if (uploadError) {
+			error = uploadError.message;
+			uploadingImage = false;
+			return;
+		}
+
+		const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+		imageUrl = data.publicUrl;
+		uploadingImage = false;
+	}
+
 	async function saveBlog() {
 		saveLoading = true;
 		error = '';
 
+		// Filter out invalid blocks
+		const validBlocks = contentBlocks.filter(b => 
+			b.type === 'newline' || 
+			(b.type === 'paragraph' && b.text) || 
+			(b.type === 'heading' && b.text) || 
+			(b.type === 'image' && b.url)
+		);
+
+		// Combine selected tags and custom keywords
+		const allKeywords = [
+			...selectedTags,
+			...(seoKeywords ? seoKeywords.split(',').map(s => s.trim()).filter(Boolean) : [])
+		];
+		const combinedKeywords = Array.from(new Set(allKeywords)).join(', ');
+
 		const blogData = {
 			title,
-			content,
-			image_url: imageUrl || null
+			slug: slug.toLowerCase().replace(/[^a-z0-9_-]/g, '_'),
+			category,
+			excerpt,
+			image_url: imageUrl || null,
+			alt_text: altText || null,
+			seo_title: seoTitle || null,
+			seo_description: seoDescription || null,
+			seo_keywords: combinedKeywords || null,
+			read_time: readTime || null,
+			featured,
+			author_name: authorName || 'Adymade Team',
+			content: validBlocks,
+			updated_at: new Date().toISOString()
 		};
 
 		if (editingId) {
@@ -70,12 +282,22 @@
 				.from('blogs')
 				.update(blogData)
 				.eq('id', editingId);
-			if (updateError) error = updateError.message;
+			if (updateError) {
+				error = updateError.message;
+				uiState.error('Failed to update blog post: ' + error);
+			} else {
+				uiState.success('Blog post updated successfully!');
+			}
 		} else {
 			const { error: insertError } = await supabase
 				.from('blogs')
 				.insert([blogData]);
-			if (insertError) error = insertError.message;
+			if (insertError) {
+				error = insertError.message;
+				uiState.error('Failed to create blog post: ' + error);
+			} else {
+				uiState.success('Blog post created successfully!');
+			}
 		}
 
 		saveLoading = false;
@@ -86,7 +308,14 @@
 	}
 
 	async function deleteBlog(id: string) {
-		if (!confirm('Are you sure you want to delete this blog post?')) return;
+		const confirmed = await uiState.confirm({
+			title: 'Delete Blog Post',
+			message: 'Are you sure you want to delete this blog post?',
+			confirmText: 'Delete',
+			cancelText: 'Cancel',
+			type: 'danger'
+		});
+		if (!confirmed) return;
 		
 		const { error: deleteError } = await supabase
 			.from('blogs')
@@ -94,8 +323,9 @@
 			.eq('id', id);
 
 		if (deleteError) {
-			alert('Failed to delete: ' + deleteError.message);
+			uiState.error('Failed to delete: ' + deleteError.message);
 		} else {
+			uiState.success('Blog post deleted successfully');
 			await fetchBlogs();
 		}
 	}
@@ -119,13 +349,13 @@
 	</div>
 
 	{#if error}
-		<div class="admin-alert error">
+		<div class="admin-alert error" style="margin-bottom: 24px;">
 			{error}
 		</div>
 	{/if}
 
 	{#if isEditing}
-		<div class="admin-card" style="margin-bottom: 32px;">
+		<div class="admin-card" style="margin-bottom: 32px; max-width: 800px;">
 			<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
 				<h3 style="font-size: 20px; font-weight: 600; color: white;">{editingId ? 'Edit Post' : 'Create New Post'}</h3>
 				<button onclick={cancelEdit} style="background: none; border: none; padding: 8px; color: var(--color-muted); cursor: pointer; border-radius: 8px; transition: all 0.2s;">
@@ -140,6 +370,7 @@
 						type="text"
 						id="title"
 						bind:value={title}
+						oninput={generateSlug}
 						required
 						class="admin-input"
 						placeholder="Post Title"
@@ -147,31 +378,306 @@
 				</div>
 
 				<div>
-					<label for="imageUrl" class="admin-label">Image URL</label>
-					<div style="display: flex; gap: 12px; margin-top: 8px;">
+					<label for="slug" class="admin-label">Slug</label>
+					<input
+						type="text"
+						id="slug"
+						bind:value={slug}
+						required
+						class="admin-input"
+						placeholder="e.g. post-title-slug"
+					/>
+				</div>
+
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+					<div>
+						<label for="category" class="admin-label">Category</label>
+						<select id="category" bind:value={category} class="admin-input" style="background: var(--color-abyss); color: white;">
+							<option value="AI Automation">AI Automation</option>
+							<option value="AI Video Production">AI Video Production</option>
+							<option value="Web Development">Web Development</option>
+							<option value="SEO & GEO">SEO & GEO</option>
+							<option value="Software Development">Software Development</option>
+							<option value="Digital Marketing">Digital Marketing</option>
+						</select>
+					</div>
+
+					<div>
+						<label for="readTime" class="admin-label">Read Time</label>
 						<input
-							type="url"
-							id="imageUrl"
-							bind:value={imageUrl}
+							type="text"
+							id="readTime"
+							bind:value={readTime}
+							required
 							class="admin-input"
-							style="margin-top: 0;"
-							placeholder="https://example.com/image.jpg"
+							placeholder="e.g. 5 min read"
 						/>
 					</div>
-					<p style="font-size: 12px; color: var(--color-muted); margin-top: 8px;">You can upload images in the Images section and paste the URL here.</p>
+				</div>
+
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+					<div>
+						<label for="authorName" class="admin-label">Author Name</label>
+						<input
+							type="text"
+							id="authorName"
+							bind:value={authorName}
+							required
+							class="admin-input"
+							placeholder="e.g. Adymade Team"
+						/>
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding-top: 24px;">
+						<input
+							id="featured"
+							type="checkbox"
+							bind:checked={featured}
+							style="width: 18px; height: 18px; accent-color: var(--color-cyan);"
+						/>
+						<label for="featured" class="admin-label" style="margin: 0; cursor: pointer;">
+							Featured Post (Highlighted on top)
+						</label>
+					</div>
 				</div>
 
 				<div>
-					<label for="content" class="admin-label">Content</label>
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label class="admin-label">Tags / Keywords</label>
+					<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+						{#each tagOptions as tag (tag)}
+							<label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.85); cursor: pointer; user-select: none;">
+								<input
+									type="checkbox"
+									checked={selectedTags.includes(tag)}
+									onchange={() => handleTagToggle(tag)}
+									style="width: 15px; height: 15px; accent-color: var(--color-cyan);"
+								/>
+								{tag}
+							</label>
+						{/each}
+					</div>
+				</div>
+
+				<div>
+					<label for="imageUrl" class="admin-label">Featured Image</label>
+					<div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+						<input
+							type="text"
+							id="imageUrl"
+							bind:value={imageUrl}
+							class="admin-input"
+							placeholder="Image URL or upload a file..."
+							style="margin: 0;"
+						/>
+						<input
+							type="file"
+							id="blog-file-upload"
+							accept="image/*"
+							style="display: none;"
+							onchange={handleImageUpload}
+							disabled={uploadingImage}
+						/>
+						<label
+							for="blog-file-upload"
+							class="admin-btn"
+							style="margin: 0; white-space: nowrap; cursor: pointer;"
+						>
+							{#if uploadingImage}
+								<Loader2 style="width: 14px; height: 14px; animation: spin 1s linear infinite;" /> uploading
+							{:else}
+								<Upload style="width: 14px; height: 14px;" /> Upload File
+							{/if}
+						</label>
+					</div>
+					{#if imageUrl}
+						<div style="margin-top: 10px; width: 140px; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);">
+							<img src={imageUrl} alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" />
+						</div>
+					{/if}
+				</div>
+
+				<div>
+					<label for="altText" class="admin-label">Image Alt Text</label>
+					<input
+						type="text"
+						id="altText"
+						bind:value={altText}
+						class="admin-input"
+						placeholder="Describe the cover image for SEO & accessibility (e.g. Lead response graph)..."
+					/>
+				</div>
+
+				<div>
+					<label for="excerpt" class="admin-label">Excerpt (Short Description)</label>
 					<textarea
-						id="content"
-						bind:value={content}
-						rows="10"
+						id="excerpt"
+						bind:value={excerpt}
+						rows="3"
 						required
 						class="admin-input"
-						style="font-family: monospace; font-size: 14px;"
-						placeholder="Write your post content here (HTML or plain text)..."
+						placeholder="Brief summary of the article..."
 					></textarea>
+				</div>
+
+				<!-- SEO Settings Group -->
+				<div style="border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 20px; background: rgba(255, 255, 255, 0.01);">
+					<h4 style="font-size: 15px; font-weight: 600; color: white; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+						SEO Configuration (Search Optimization)
+					</h4>
+					
+					<div style="display: flex; flex-direction: column; gap: 16px;">
+						<div>
+							<label for="seoTitle" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Meta Title</label>
+							<input
+								type="text"
+								id="seoTitle"
+								bind:value={seoTitle}
+								class="admin-input"
+								placeholder="Defaults to standard title if left empty..."
+								style="margin: 0;"
+							/>
+						</div>
+						
+						<div>
+							<label for="seoDescription" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Meta Description</label>
+							<textarea
+								id="seoDescription"
+								bind:value={seoDescription}
+								rows="2"
+								class="admin-input"
+								placeholder="Defaults to excerpt if left empty..."
+								style="margin: 0;"
+							></textarea>
+						</div>
+						
+						<div>
+							<label for="seoKeywords" class="admin-label" style="font-size: 12px; color: var(--color-muted);">SEO Keywords</label>
+							<input
+								type="text"
+								id="seoKeywords"
+								bind:value={seoKeywords}
+								class="admin-input"
+								placeholder="e.g. AI automation, B2B sales automation, WhatsApp CRM integration (comma separated)"
+								style="margin: 0;"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<!-- Structured Content Blocks Editor -->
+				<div>
+					<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+						<span class="admin-label" style="margin: 0;">Blog Body Content Blocks</span>
+						<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('heading')}>
+								<Plus size={12} /> Heading
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('paragraph')}>
+								<Plus size={12} /> Paragraph
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('image')}>
+								<Plus size={12} /> Image
+							</button>
+							<button type="button" class="admin-btn" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick={() => addBlock('newline')}>
+								<Plus size={12} /> Spacing
+							</button>
+						</div>
+					</div>
+
+					<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+						{#each contentBlocks as block, idx (block.id)}
+							<div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 16px;">
+								<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 8px;">
+									<span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-cyan); background: rgba(6, 182, 212, 0.1); padding: 2px 8px; border-radius: 4px;">
+										{block.type} Block
+									</span>
+									<div style="display: flex; gap: 4px;">
+										<button type="button" class="admin-icon-btn" onclick={() => moveBlockUp(idx)} disabled={idx === 0}>
+											<ArrowUp size={12} />
+										</button>
+										<button type="button" class="admin-icon-btn" onclick={() => moveBlockDown(idx)} disabled={idx === contentBlocks.length - 1}>
+											<ArrowDown size={12} />
+										</button>
+										<button type="button" class="admin-icon-btn danger" onclick={() => removeBlock(idx)} disabled={contentBlocks.length === 1}>
+											<Trash2 size={12} />
+										</button>
+									</div>
+								</div>
+
+								{#if block.type === 'paragraph'}
+									<textarea
+										bind:value={block.text}
+										rows="4"
+										class="admin-input"
+										style="margin: 0;"
+										placeholder="Type paragraph text..."
+									></textarea>
+
+								{:else if block.type === 'heading'}
+									<div style="display: flex; gap: 12px; align-items: center;">
+										<select bind:value={block.level} class="admin-input" style="margin: 0; width: 140px; background: var(--color-abyss); color: white;">
+											<option value={1}>Heading 1</option>
+											<option value={2}>Heading 2</option>
+											<option value={3}>Heading 3</option>
+											<option value={4}>Heading 4</option>
+										</select>
+										<input
+											type="text"
+											bind:value={block.text}
+											class="admin-input"
+											style="margin: 0; flex: 1;"
+											placeholder="Heading text..."
+										/>
+									</div>
+
+								{:else if block.type === 'image'}
+									<div style="display: flex; flex-direction: column; gap: 10px;">
+										<div style="display: flex; gap: 10px; align-items: center;">
+											<input
+												type="text"
+												bind:value={block.url}
+												class="admin-input"
+												style="margin: 0; flex: 1;"
+												placeholder="Image URL or upload..."
+											/>
+											<input
+												type="file"
+												id={`block-file-${idx}`}
+												accept="image/*"
+												style="display: none;"
+												onchange={(e) => handleBlockImageUpload(idx, e)}
+											/>
+											<label
+												for={`block-file-${idx}`}
+												class="admin-btn"
+												style="margin: 0; cursor: pointer; white-space: nowrap;"
+											>
+												<Upload size={14} /> Upload
+											</label>
+										</div>
+										<input
+											type="text"
+											bind:value={block.caption}
+											class="admin-input"
+											style="margin: 0;"
+											placeholder="Image caption (optional)..."
+										/>
+										{#if block.url}
+											<div style="width: 100px; aspect-ratio: 16/10; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); margin-top: 4px;">
+												<img src={block.url} alt="Block preview" style="width: 100%; height: 100%; object-fit: cover;" />
+											</div>
+										{/if}
+									</div>
+
+								{:else if block.type === 'newline'}
+									<div style="color: var(--color-muted); font-size: 13px; padding: 4px 0;">
+										Adds a clean vertical separation margin (24px space) inside the article.
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
 				</div>
 
 				<div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid rgba(54, 40, 112, 0.4);">
@@ -202,7 +708,7 @@
 
 	{#if loading}
 		<div style="display: flex; justify-content: center; padding: 48px 0;">
-			<Loader2 style="width: 32px; height: 32px; color: var(--color-muted); animation: spin 1s linear infinite;" />
+			<Loader2 style="width: 32px; height: 32px; color: var(--color-cyan); animation: spin 1s linear infinite;" />
 		</div>
 	{:else if blogs.length === 0 && !isEditing}
 		<div class="admin-card" style="text-align: center; padding: 48px 24px;">
@@ -221,24 +727,36 @@
 			</button>
 		</div>
 	{:else if !isEditing}
-		<div class="admin-grid">
+		<div class="admin-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
 			{#each blogs as blog (blog.id)}
-				<div class="admin-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+				<div class="admin-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%;">
 					{#if blog.image_url}
-						<div class="admin-image-container" style="height: 192px;">
-							<img src={blog.image_url} alt={blog.title} />
+						<div class="admin-image-container" style="height: 192px; width: 100%; position: relative; overflow: hidden;">
+							<img src={blog.image_url} alt={blog.title} style="width: 100%; height: 100%; object-fit: cover;" />
 						</div>
 					{:else}
 						<div style="height: 192px; width: 100%; background: var(--color-abyss); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(54, 40, 112, 0.4);">
 							<FileText style="width: 48px; height: 48px; color: rgba(54, 40, 112, 0.6);" />
 						</div>
 					{/if}
-					<div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
-						<h3 style="font-size: 18px; font-weight: 600; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{blog.title}</h3>
-						<p style="margin-top: 8px; font-size: 14px; color: var(--color-body-text); flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{blog.content.replace(/<[^>]*>?/gm, '')}</p>
+					<div style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+						<div>
+							<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+								<span style="border-radius: 6px; background: rgba(54, 40, 112, 0.4); padding: 2px 6px; font-size: 11px; font-weight: 500; color: white;">
+									{blog.category}
+								</span>
+								{#if blog.featured}
+									<span style="border-radius: 6px; background: rgba(6, 182, 212, 0.2); padding: 2px 6px; font-size: 11px; font-weight: 600; color: var(--color-cyan);">
+										Featured
+									</span>
+								{/if}
+							</div>
+							<h3 style="font-size: 18px; font-weight: 600; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">{blog.title}</h3>
+							<p style="font-size: 14px; color: var(--color-body-text); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">{blog.excerpt}</p>
+						</div>
 						<div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(54, 40, 112, 0.4); display: flex; align-items: center; justify-content: space-between;">
 							<span style="font-size: 12px; color: var(--color-muted);">
-								{new Date(blog.created_at || '').toLocaleDateString()}
+								{blog.read_time || '5 min read'}
 							</span>
 							<div style="display: flex; gap: 8px;">
 								<button
@@ -246,7 +764,7 @@
 									class="admin-icon-btn"
 									title="Edit"
 								>
-									<Edit2 style="width: 16px; height: 16px;" />
+									<Edit2 style="width: 16px; height: 16px; color: var(--color-cyan);" />
 								</button>
 								<button
 									onclick={() => deleteBlog(blog.id!)}
@@ -263,3 +781,9 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+</style>
