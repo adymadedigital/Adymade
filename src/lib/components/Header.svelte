@@ -86,6 +86,7 @@
 				</li>
 
 				<li><a href="/case-studies">Case Studies</a></li>
+				<li><a href="/gallery">Gallery</a></li>
 				<li><a href="/about">About</a></li>
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/contact">Contact</a></li>
@@ -134,6 +135,7 @@
 			</div>
 
 			<a href="/case-studies" class="mob-link" onclick={() => (mobileOpen = false)}>Our Work</a>
+			<a href="/gallery"      class="mob-link" onclick={() => (mobileOpen = false)}>Gallery</a>
 			<a href="/about"        class="mob-link" onclick={() => (mobileOpen = false)}>About</a>
 			<a href="/blog"         class="mob-link" onclick={() => (mobileOpen = false)}>Blog</a>
 			<a href="/contact"      class="mob-link" onclick={() => (mobileOpen = false)}>Contact</a>
