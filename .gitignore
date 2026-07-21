@@ -22,3 +22,9 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Gallery media - hosted on Supabase Storage now
+static/gallery/videos/
+static/gallery/posts/
+static/gallery/videos-compressed/
+static/gallery/posts-compressed/

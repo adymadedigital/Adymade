@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { galleryVideos, galleryPosts } from '$lib/data/gallery';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
+	let galleryVideos = $derived(data.galleryVideos);
+	let galleryPosts = $derived(data.galleryPosts);
 
 	type Tab = 'all' | 'videos' | 'posts';
 
