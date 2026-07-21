@@ -18,6 +18,17 @@
 
 	let showVideos = $derived(activeTab === 'all' || activeTab === 'videos');
 	let showPosts = $derived(activeTab === 'all' || activeTab === 'posts');
+
+	// Jab bhi koi video play ho, baaki saare video tags (chahe videos section ho
+	// ya posts section) pause ho jaane chahiye — sirf ek hi video ek time pe chale.
+	function handleVideoPlay(e: Event) {
+		const playedVideo = e.currentTarget as HTMLVideoElement;
+		document.querySelectorAll('video').forEach((v) => {
+			if (v !== playedVideo && !v.paused) {
+				v.pause();
+			}
+		});
+	}
 </script>
 
 <svelte:head>
@@ -76,7 +87,7 @@
 						{#each galleryVideos as video (video.id)}
 							<div class="gallery-card gallery-card-video">
 								<div class="gallery-card-media">
-									<video controls preload="metadata" poster={video.poster}>
+									<video controls preload="metadata" poster={video.poster} onplay={handleVideoPlay}>
 										<source src={video.videoSrc} type="video/mp4" />
 										Your browser doesn't support video playback.
 									</video>
@@ -110,7 +121,7 @@
 							<div class="gallery-card">
 								<div class="gallery-card-media">
 									{#if post.type === 'video'}
-										<video controls preload="metadata">
+										<video controls preload="metadata" onplay={handleVideoPlay}>
 											<source src={post.videoSrc} type="video/mp4" />
 											Your browser doesn't support video playback.
 										</video>
