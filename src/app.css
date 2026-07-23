@@ -1325,7 +1325,7 @@ header {
 	transition: all 0.28s;
 }
 
-.svc-icon :global(svg) {
+.svc-icon svg {
 	width: 30px;
 	height: 30px;
 }
