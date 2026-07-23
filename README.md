@@ -67,5 +67,5 @@ npm publish
 2emjMktk8gWgJKI3 
 ```
 ```
-Update
+Update_logo
 ```
