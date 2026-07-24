@@ -4,6 +4,7 @@
 	import { seo, localBusinessSchema, buildFaqSchema } from '$lib/config/seo';
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
+	import { themeStore } from '$lib/stores/theme.svelte';
 	
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -15,6 +16,11 @@
 	// injectAnalytics({ mode: dev ? 'development' : 'production' });
 
 	let { data, children } = $props();
+
+	// Initialize theme system (hydrate from localStorage, start OS listener)
+	$effect(() => {
+		themeStore.init();
+	});
 
 	const faqSchema = $derived(buildFaqSchema(data.faqItems));
 

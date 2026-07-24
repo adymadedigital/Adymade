@@ -33,14 +33,14 @@
 </script>
 
 <svelte:head>
-	<title>Our Services | Adymade CMS</title>
+	<title>Our Services | Adymade</title>
 	<meta name="description" content="Explore Adymade's comprehensive services including AI & Automation, Development, Marketing, and GCC Expertise." />
 </svelte:head>
 
 <svelte:window onscroll={handleScroll} />
 
 <!-- Liquid Glass Wrapper -->
-<div class="relative min-h-screen bg-[#08051a] overflow-hidden">
+<div class="relative min-h-screen overflow-hidden">
 
 	<!-- Ambient Background Orbs -->
 	<div class="admin-login-ambient-1" style="position: absolute; z-index: 0;"></div>
@@ -51,11 +51,11 @@
 		<section class="services-hero">
 			<div class="container relative">
 				<div class="hero-content text-center">
-					<div class="eyebrow" style="justify-content: center; margin-bottom: 24px; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">Our Capabilities</div>
-					<h1 style="font-size: clamp(40px, 6vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: white;">
+					<div class="eyebrow" style="justify-content: center; margin-bottom: 24px;">Our Capabilities</div>
+					<h1 style="font-size: clamp(40px, 6vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: var(--theme-heading);">
 						Transform Your Business with <br/><span class="grad">Next-Gen Solutions</span>
 					</h1>
-					<p style="font-size: 18px; color: rgba(255,255,255,0.7); max-width: 650px; margin: 0 auto 40px; line-height: 1.6;">
+					<p style="font-size: 18px; color: var(--theme-text-secondary); max-width: 650px; margin: 0 auto 40px; line-height: 1.6;">
 						From AI automation to high-performance web development and enterprise-grade marketing, we provide end-to-end digital solutions utilizing a premium, data-driven approach.
 					</p>
 				</div>
@@ -121,19 +121,19 @@
 				<div class="service-category" id="development-cat">
 					<div class="category-header">
 						<h2>Development</h2>
-						<p>Robust, scalable, and high-performance digital infrastructure.</p>
+						<p>High-performance web and software engineering tailored to your requirements.</p>
 					</div>
 					<div class="services-grid">
 						<a href="/web-development" class="glass-card">
 							<div class="gc-icon"><Globe size={32} /></div>
-							<h3>Web &amp; App Development</h3>
-							<p>Fast websites &amp; apps built for scale and conversions.</p>
+							<h3>Web Development</h3>
+							<p>Ultra-fast Next.js &amp; SvelteKit websites built for maximum conversions.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/software-development" class="glass-card">
 							<div class="gc-icon"><Settings2 size={32} /></div>
 							<h3>Custom Software</h3>
-							<p>Bespoke SaaS &amp; ERP systems engineered for your operations.</p>
+							<p>Scalable SaaS platforms, custom internal tools &amp; enterprise portals.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 					</div>
@@ -142,20 +142,20 @@
 				<!-- Marketing -->
 				<div class="service-category" id="marketing-cat">
 					<div class="category-header">
-						<h2>Marketing</h2>
-						<p>Data-driven strategies to dominate your market and capture intent.</p>
+						<h2>Digital Marketing</h2>
+						<p>Data-backed marketing strategies engineered to scale revenues.</p>
 					</div>
 					<div class="services-grid">
 						<a href="/digital-marketing" class="glass-card">
 							<div class="gc-icon"><TrendingUp size={32} /></div>
-							<h3>Digital Marketing</h3>
-							<p>ROI-focused campaigns across Google, Meta &amp; LinkedIn.</p>
+							<h3>Performance Marketing</h3>
+							<p>ROI-focused Google Ads, Meta Ads &amp; funnel optimization.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 						<a href="/seo-services" class="glass-card">
 							<div class="gc-icon"><Search size={32} /></div>
 							<h3>SEO Services</h3>
-							<p>Technical &amp; content SEO for sustainable organic growth.</p>
+							<p>Organic search strategies to dominate SERPs and drive intent traffic.</p>
 							<span class="gc-link">Learn more <ArrowRight size={16} /></span>
 						</a>
 					</div>
@@ -165,23 +165,27 @@
 				<div class="service-category" id="gcc-cat">
 					<div class="category-header">
 						<h2>GCC Expertise</h2>
-						<p>Specialized enterprise solutions for the Middle East market.</p>
+						<p>Specialized digital transformation services for the Gulf Region.</p>
 					</div>
-					<div class="services-grid" style="grid-template-columns: 1fr;">
-						<a href="/case-studies/rgs-saudi-arabia" class="glass-card featured-glass-card">
-							<div class="featured-card-content">
-								<div class="gc-icon featured-icon">
-									<HardHat size={36} color="white" />
-								</div>
-								<div style="flex: 1;">
-									<h3 style="font-size: 24px; margin-bottom: 12px;">🇸🇦 RGS — Tamimi Group</h3>
-									<p style="font-size: 16px; margin-bottom: 0;">Enterprise website rebuild &amp; digital transformation for a leading Saudi scaffolding company.</p>
-								</div>
-								<span class="glass-btn-inline">View Case Study <ArrowRight size={16} /></span>
+
+					<div class="glass-card featured-glass-card">
+						<div class="featured-card-content">
+							<div class="gc-icon featured-icon">
+								<HardHat size={36} />
 							</div>
-						</a>
+							<div style="flex: 1;">
+								<span class="eyebrow" style="margin-bottom: 12px;">Middle East Specialization</span>
+								<h3 style="font-size: 26px; margin-bottom: 12px;">GCC Digital Transformation</h3>
+								<p style="font-size: 16px; margin-bottom: 0;">
+									Custom digital infrastructure, Arabic/English localized AI workflows, and compliance-ready enterprise solutions tailored for Saudi Arabia, UAE, and Qatar markets.
+								</p>
+							</div>
+							<a href="/contact" class="btn btn-primary" style="align-self: center; white-space: nowrap;">
+								Get Started <ArrowRight size={18} />
+							</a>
+						</div>
 					</div>
-				</div> -->
+				</div>
 
 			</div>
 		</section>
@@ -192,22 +196,21 @@
 
 <style>
 	.services-hero {
-		padding: 140px 0 40px;
+		padding: 140px 0 60px;
 		position: relative;
 	}
 
-	/* ── Sticky category nav ── */
 	.cat-nav-sticky {
 		position: sticky;
-		top: 72px; /* sits just below the fixed header */
+		top: 72px;
 		z-index: 50;
-		background: rgba(8, 5, 26, 0.85);
+		background: var(--theme-header-bg);
 		backdrop-filter: blur(16px);
 		-webkit-backdrop-filter: blur(16px);
-		border-top: 1px solid rgba(255, 255, 255, 0.06);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		border-top: 1px solid var(--theme-border);
+		border-bottom: 1px solid var(--theme-border);
 		padding: 14px 0;
-		margin-bottom: 8px;
+		margin-bottom: 32px;
 	}
 
 	.cat-nav-bar {
@@ -220,9 +223,9 @@
 	.cat-nav-btn {
 		padding: 8px 20px;
 		border-radius: 999px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid var(--theme-border);
 		background: transparent;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--theme-text-secondary);
 		font-size: 13px;
 		font-weight: 500;
 		font-family: inherit;
@@ -232,14 +235,14 @@
 	}
 
 	.cat-nav-btn:hover {
-		border-color: rgba(6, 182, 212, 0.4);
-		color: white;
+		border-color: var(--color-cyan);
+		color: var(--theme-heading);
 	}
 
 	.cat-nav-btn.active {
 		background: var(--color-electric, #5a14f0);
 		border-color: var(--color-electric, #5a14f0);
-		color: white;
+		color: white !important;
 	}
 
 	.service-category {
@@ -253,21 +256,21 @@
 
 	.category-header {
 		margin-bottom: 32px;
-		border-bottom: 1px solid rgba(255,255,255,0.05);
+		border-bottom: 1px solid var(--theme-border);
 		padding-bottom: 24px;
 	}
 
 	.category-header h2 {
 		font-size: 32px;
 		font-weight: 700;
-		color: white;
+		color: var(--theme-heading);
 		margin-bottom: 8px;
 		letter-spacing: -0.02em;
 	}
 
 	.category-header p {
 		font-size: 16px;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--theme-text-secondary);
 	}
 
 	.services-grid {
@@ -282,90 +285,9 @@
 		}
 	}
 
-	/* Liquid Glass Card Styling */
-	.glass-card {
-		background: rgba(255, 255, 255, 0.02);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 24px;
-		padding: 32px;
-		text-decoration: none;
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-	}
-
-	.glass-card:hover {
-		background: rgba(255, 255, 255, 0.04);
-		border-color: rgba(6, 182, 212, 0.4);
-		transform: translateY(-6px);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.1);
-	}
-
-	.gc-icon {
-		width: 76px;
-		height: 76px;
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-cyan);
-		margin-bottom: 24px;
-		transition: all 0.3s ease;
-		box-shadow: inset 0 2px 10px rgba(255,255,255,0.05);
-	}
-
-	.glass-card:hover .gc-icon {
-		background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(90, 20, 240, 0.15));
-		border-color: rgba(6, 182, 212, 0.5);
-		color: white;
-		transform: scale(1.05) rotate(-2deg);
-	}
-
-	.glass-card h3 {
-		font-size: 20px;
-		font-weight: 700;
-		color: white;
-		margin-bottom: 10px;
-		letter-spacing: -0.01em;
-	}
-
-	.glass-card p {
-		font-size: 14px;
-		color: rgba(255, 255, 255, 0.6);
-		line-height: 1.55;
-		margin-bottom: 24px;
-		flex: 1;
-	}
-
-	.gc-link {
-		font-size: 15px;
-		font-weight: 600;
-		color: var(--color-cyan);
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		transition: gap 0.2s, color 0.2s;
-	}
-
-	.glass-card:hover .gc-link {
-		gap: 12px;
-		color: white;
-	}
-
 	.featured-glass-card {
-		background: linear-gradient(135deg, rgba(90, 20, 240, 0.05), rgba(6, 182, 212, 0.05));
-		border: 1px solid rgba(90, 20, 240, 0.2);
-	}
-
-	.featured-glass-card:hover {
-		background: linear-gradient(135deg, rgba(90, 20, 240, 0.08), rgba(6, 182, 212, 0.08));
-		border: 1px solid rgba(90, 20, 240, 0.4);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-border-hover);
 	}
 
 	.featured-icon {
@@ -377,34 +299,10 @@
 		box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
 	}
 
-	.featured-glass-card:hover .featured-icon {
-		transform: scale(1.05);
-	}
-
 	.featured-card-content {
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
-	}
-
-	.glass-btn-inline {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		background: white;
-		color: #08051a;
-		padding: 12px 24px;
-		border-radius: 12px;
-		font-weight: 600;
-		transition: all 0.2s ease;
-		align-self: flex-start;
-		box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-	}
-
-	.featured-glass-card:hover .glass-btn-inline {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(255,255,255,0.25);
 	}
 
 	@media (min-width: 900px) {
@@ -412,11 +310,6 @@
 			flex-direction: row;
 			align-items: center;
 			gap: 40px;
-		}
-
-		.glass-btn-inline {
-			align-self: center;
-			white-space: nowrap;
 		}
 	}
 </style>

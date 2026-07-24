@@ -97,8 +97,8 @@
 	.testi-card {
 		flex: 0 0 auto;
 		width: 340px;
-		background: var(--color-midnight);
-		border: 1px solid var(--color-slate);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: var(--radius-md);
 		padding: 30px;
 		display: flex;
@@ -107,7 +107,7 @@
 	}
 
 	.testi-card:hover {
-		border-color: rgba(90, 20, 240, 0.4);
+		border-color: var(--theme-border-hover);
 	}
 
 	.stars {
@@ -120,7 +120,7 @@
 	.testi-quote {
 		font-size: 15px;
 		line-height: 1.75;
-		color: rgba(255, 255, 255, 0.9);
+		color: var(--theme-text);
 		margin-bottom: 24px;
 		flex: 1;
 		font-style: italic;
@@ -141,7 +141,7 @@
 		align-items: center;
 		gap: 12px;
 		padding-top: 18px;
-		border-top: 1px solid var(--color-slate);
+		border-top: 1px solid var(--theme-card-border);
 	}
 
 	.t-avatar {
@@ -160,12 +160,12 @@
 	.t-name {
 		font-size: 14px;
 		font-weight: 600;
-		color: #fff;
+		color: var(--theme-heading);
 		margin-bottom: 2px;
 	}
 	.t-role {
 		font-size: 12px;
-		color: var(--color-body-text);
+		color: var(--theme-text-muted);
 	}
 
 	@media (max-width: 600px) {

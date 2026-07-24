@@ -312,9 +312,9 @@
 
 <style>
 	.cs-page {
-		background: #08051a;
+		background: var(--theme-bg);
 		min-height: 100vh;
-		color: rgba(255, 255, 255, 0.92);
+		color: var(--theme-text);
 		font-family: inherit;
 	}
 
@@ -322,19 +322,19 @@
 	/* Back bar */
 	.cs-back-bar {
 		padding: 1.25rem 0;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		border-bottom: 1px solid var(--theme-border);
 	}
 	.back-link {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
-		color: rgba(255, 255, 255, 0.5);
+		color: var(--theme-text-muted);
 		font-size: 0.85rem;
 		text-decoration: none;
 		transition: color 0.2s;
 	}
 	.back-link:hover {
-		color: #fff;
+		color: var(--theme-heading);
 	}
 
 	/* Hero */
@@ -361,6 +361,7 @@
 		line-height: 1.15;
 		margin: 0 auto 1.5rem;
 		max-width: 800px;
+		color: var(--theme-heading);
 	}
 	.cs-hero :global(.grad) {
 		background: linear-gradient(135deg, #a78bfa, #7c3aed);
@@ -375,7 +376,7 @@
 		background-clip: text;
 	}
 	.cs-subtitle {
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--theme-text-secondary);
 		font-size: 1.15rem;
 		max-width: 600px;
 		margin: 0 auto 2.5rem;
@@ -394,8 +395,8 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 0.25rem;
-		background: var(--color-theme-pill-bg);
-		border: 1px solid var(--color-theme-pill-border);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: 14px;
 		padding: 1.25rem 2rem;
 		min-width: 140px;
@@ -410,7 +411,7 @@
 	}
 	.mp-label {
 		font-size: 0.78rem;
-		color: rgba(255, 255, 255, 0.5);
+		color: var(--theme-text-muted);
 		text-align: center;
 	}
 
@@ -429,16 +430,16 @@
 	}
 	.section.alt-bg {
 		background: var(--color-theme-bg);
-		border-block: 1px solid rgba(255, 255, 255, 0.05);
+		border-block: 1px solid var(--theme-card-border);
 	}
 	.section h2 {
 		font-size: clamp(1.5rem, 3vw, 2rem);
 		font-weight: 700;
 		margin: 0 0 1.5rem;
-		color: white;
+		color: var(--theme-heading);
 	}
 	.body-text {
-		color: rgba(255, 255, 255, 0.65);
+		color: var(--theme-text-secondary);
 		font-size: 1rem;
 		line-height: 1.75;
 		margin: 0 0 1.25rem;
@@ -450,7 +451,7 @@
 	.body-text.foot-note {
 		margin-top: 1.75rem;
 		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.45);
+		color: var(--theme-text-muted);
 	}
 
 	/* Project snapshot */
@@ -463,8 +464,8 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.75rem;
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid rgba(255, 255, 255, 0.07);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: 12px;
 		padding: 1rem 1.1rem;
 	}
@@ -483,13 +484,14 @@
 		font-size: 0.72rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: rgba(255, 255, 255, 0.4);
+		color: var(--theme-text-muted);
 		margin-bottom: 0.2rem;
 	}
 	.snapshot-value {
 		font-size: 0.9rem;
 		font-weight: 600;
 		line-height: 1.4;
+		color: var(--theme-heading);
 	}
 
 	/* Feature grid (What Adymade Built) */
@@ -500,8 +502,8 @@
 		margin-top: 2rem;
 	}
 	.feature-card {
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid rgba(255, 255, 255, 0.07);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: 14px;
 		padding: 1.5rem;
 		transition: border-color 0.2s ease;
@@ -517,7 +519,7 @@
 	}
 	.feature-card p {
 		font-size: 0.9rem;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--theme-text-secondary);
 		line-height: 1.6;
 		margin: 0;
 	}
@@ -532,26 +534,66 @@
 	.cms-tag {
 		padding: 0.5rem 1rem;
 		border-radius: 999px;
-		color: rgba(255, 255, 255, 0.85);
+		color: var(--theme-heading);
 		font-size: 0.85rem;
 		font-weight: 500;
 		background: var(--color-theme-tag-bg);
 		border: 1px solid var(--color-theme-tag-border);
 	}
 
+	/* Problem / Solution */
+	.prob-sol-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.5rem;
+	}
+	.prob-sol-card {
+		background: var(--theme-card-bg);
+		border-radius: 16px;
+		padding: 2rem;
+		border: 1px solid var(--theme-card-border);
+	}
+	.prob-sol-card.prob {
+		border-left: 3px solid #ef4444;
+	}
+	.prob-sol-card.sol {
+		border-left: 3px solid #10b981;
+	}
+	.prob-sol-card h3 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		margin: 0 0 0.75rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--theme-heading);
+	}
+	.prob-sol-card.prob h3 {
+		color: #ef4444;
+	}
+	.prob-sol-card.sol h3 {
+		color: #10b981;
+	}
+	.prob-sol-card p {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--theme-text-secondary);
+		margin: 0;
+	}
+
 	/* Notice box */
 	.notice-box {
 		display: flex;
 		align-items: flex-start;
-		gap: 0.65rem;
-		background: rgba(251, 191, 36, 0.06);
-		border: 1px solid rgba(251, 191, 36, 0.2);
-		color: #fbbf24;
+		gap: 0.75rem;
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: 12px;
 		padding: 0.9rem 1.1rem;
 		font-size: 0.85rem;
 		line-height: 1.5;
 		margin-top: 1rem;
+		color: var(--theme-text-secondary);
 	}
 	.notice-box :global(svg) {
 		flex-shrink: 0;
@@ -569,7 +611,7 @@
 		align-items: flex-start;
 		gap: 0.65rem;
 		font-size: 0.92rem;
-		color: rgba(255, 255, 255, 0.8);
+		color: var(--theme-text);
 		line-height: 1.5;
 	}
 
@@ -581,7 +623,7 @@
 		gap: 0.5rem;
 		font-size: 0.95rem;
 		font-weight: 700;
-		color: rgba(255, 255, 255, 0.85);
+		color: var(--theme-heading);
 		margin: 2rem 0 1rem;
 	}
 	.shot-grid {
@@ -591,22 +633,22 @@
 	}
 	.shot-placeholder {
 		aspect-ratio: 16 / 10;
-		border: 1px dashed rgba(255, 255, 255, 0.15);
+		border: 1px dashed var(--theme-card-border);
 		border-radius: 12px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 0.5rem;
-		color: rgba(255, 255, 255, 0.35);
+		color: var(--theme-text-muted);
 		font-size: 0.8rem;
-		background: rgba(255, 255, 255, 0.015);
+		background: var(--theme-card-bg);
 	}
 	.shot-image-wrapper {
 		aspect-ratio: 16 / 10;
 		border-radius: 12px;
 		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		border: 1px solid var(--theme-card-border);
 	}
 	.shot-img {
 		width: 100%;
@@ -624,8 +666,8 @@
 		border-radius: 20px;
 		padding: 2.5rem;
 		text-align: center;
-		background: var(--color-theme-testimonial-bg);
-		border: 1px solid var(--color-theme-border);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 	}
 	.placeholder-tag {
 		display: inline-block;
@@ -643,7 +685,7 @@
 	.testimonial-text {
 		font-size: 1.1rem;
 		line-height: 1.7;
-		color: rgba(255, 255, 255, 0.85);
+		color: var(--theme-text);
 		font-style: italic;
 		margin: 0 0 1.25rem;
 	}
@@ -652,7 +694,7 @@
 		align-items: center;
 		gap: 0.4rem;
 		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.55);
+		color: var(--theme-text-muted);
 		font-weight: 600;
 	}
 
@@ -663,8 +705,8 @@
 	.uc-card {
 		max-width: 560px;
 		margin: 0 auto;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		background: var(--theme-card-bg);
+		border: 1px solid var(--theme-card-border);
 		border-radius: 24px;
 		padding: 3.5rem 2.5rem;
 		text-align: center;
@@ -677,20 +719,21 @@
 		width: 80px;
 		height: 80px;
 		border-radius: 50%;
-		background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.05));
-		border: 1px solid rgba(139, 92, 246, 0.2);
+		background: var(--theme-icon-bg);
+		border: 1px solid var(--theme-icon-border);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #a78bfa;
+		color: var(--theme-icon-color);
 	}
 	.uc-card h2 {
 		font-size: 1.75rem;
 		font-weight: 700;
 		margin: 0;
+		color: var(--theme-heading);
 	}
 	.uc-card p {
-		color: rgba(255, 255, 255, 0.55);
+		color: var(--theme-text-secondary);
 		font-size: 1rem;
 		line-height: 1.7;
 		margin: 0;
@@ -730,28 +773,29 @@
 		gap: 0.5rem;
 		padding: 0.75rem 2rem;
 		border-radius: 10px;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.15);
-		color: #fff;
+		background: var(--theme-glass-bg);
+		border: 1px solid var(--theme-card-border);
+		color: var(--theme-heading);
 		font-weight: 600;
 		font-size: 0.9rem;
 		text-decoration: none;
 		transition: background-color 0.2s, transform 0.2s;
 	}
 	.btn-secondary:hover {
-		background: rgba(255, 255, 255, 0.1);
+		background: var(--theme-glass-hover-bg);
 		transform: translateY(-2px);
 	}
 
 	/* CTA */
 	.cta-section {
 		padding: 5rem 0 6rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.06);
+		border-top: 1px solid var(--theme-border);
 	}
 	.cta-section h2 {
 		font-size: clamp(1.5rem, 3vw, 2.25rem);
 		font-weight: 800;
 		margin: 0 0 1rem;
+		color: var(--theme-heading);
 	}
 
 	/* Responsive */

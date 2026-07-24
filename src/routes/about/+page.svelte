@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Zap, Users, ShieldCheck, Clock } from 'lucide-svelte';
 
 	const values = [
@@ -23,6 +24,39 @@
 		{ initials: 'CD', name: 'Creative Direction', role: 'Video & Brand Design' },
 		{ initials: 'WD', name: 'Web & Product', role: 'Development' }
 	];
+
+	// ── Process section: pinned scroll-scrubbed stack ──
+	let processPinEl: HTMLElement;
+	let sectionProgress = $state(0);
+
+	function computeSectionProgress() {
+		if (!processPinEl) return 0;
+		const rect = processPinEl.getBoundingClientRect();
+		const vh = window.innerHeight;
+		const total = rect.height - vh;
+		if (total <= 0) return 0;
+		const scrolled = Math.min(Math.max(-rect.top, 0), total);
+		return scrolled / total;
+	}
+
+	let rafId = 0;
+	function onScroll() {
+		if (rafId) return;
+		rafId = requestAnimationFrame(() => {
+			sectionProgress = computeSectionProgress();
+			rafId = 0;
+		});
+	}
+
+	onMount(() => {
+		sectionProgress = computeSectionProgress();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		return () => {
+			window.removeEventListener('scroll', onScroll);
+			window.removeEventListener('resize', onScroll);
+		};
+	});
 
 	// ── Dynamic stats count-up ──
 	let sectionEl: HTMLElement;
@@ -191,23 +225,35 @@
 		</div>
 	</section>
 
-	<!-- HOW WE WORK -->
-	<section class="section">
-		<div class="container">
-			<div class="section-header">
-				<div class="eyebrow" style="justify-content:center;">Our Process</div>
-				<h2>How We Work, Start to Scale</h2>
-				<p>A simple, repeatable process — the same one behind every case study on our site.</p>
-			</div>
+	<!-- HOW WE WORK — pinned scroll-scrubbed stack -->
+	<section class="section cs-process-pin" bind:this={processPinEl} aria-label="Our process">
+		<div class="cs-process-sticky">
+			<div class="container">
+				<div class="section-header">
+					<div class="eyebrow" style="justify-content:center;">Our Process</div>
+					<h2>How We Work, Start to Scale</h2>
+					<p>A simple, repeatable process — the same one behind every case study on our site.</p>
+				</div>
 
-			<div class="cs-process-grid">
-				{#each process as p}
-					<div class="cs-process-step">
-						<div class="cs-process-num">{p.num}</div>
-						<div class="cs-process-name">{p.name}</div>
-						<div class="cs-process-desc">{p.desc}</div>
-					</div>
-				{/each}
+				<div class="cs-process-grid">
+					{#each process as p, i (p.num)}
+						{@const windowSize = 1 / process.length}
+						{@const localRaw = (sectionProgress - i * windowSize) / windowSize}
+						{@const local = Math.min(Math.max(localRaw, 0), 1)}
+						{@const depth = (i % 2 === 0 ? 1 : -1) * (1 - local) * 14}
+						<div
+							class="cs-process-step"
+							style="
+								opacity: {local};
+								transform: translateY({(1 - local) * 70}px) translateX({depth}px) scale({0.9 + local * 0.1});
+							"
+						>
+							<div class="cs-process-num">{p.num}</div>
+							<div class="cs-process-name">{p.name}</div>
+							<div class="cs-process-desc">{p.desc}</div>
+						</div>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</section>
@@ -248,240 +294,29 @@
 </main>
 
 <style>
-	.about-hero {
-		padding: 150px 0 70px;
+	.cs-process-pin {
 		position: relative;
+		height: 250vh;
+	}
+	.cs-process-sticky {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		overflow: hidden;
-		text-align: center;
 	}
-	.about-hero::before {
-		content: '';
-		position: absolute;
-		top: -25%;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 70vw;
-		height: 50vw;
-		max-width: 820px;
-		max-height: 600px;
-		border-radius: 50%;
-		background: radial-gradient(circle, rgba(90, 20, 240, 0.16) 0%, transparent 65%);
-		pointer-events: none;
-	}
-	.about-hero-inner {
-		max-width: 980px;
-		margin: 0 auto;
-		position: relative;
-		z-index: 1;
-	}
-	.about-hero-inner :global(.eyebrow) {
-		justify-content: center;
-	}
-	.about-hero-inner h1 {
-		margin-bottom: 22px;
-		white-space: nowrap;
-		font-size: clamp(22px, 3.6vw, 54px);
-	}
-	@media (max-width: 640px) {
-		.about-hero-inner h1 {
-			white-space: normal;
-			font-size: clamp(26px, 6.5vw, 38px);
-		}
-	}
-	.about-hero-desc {
-		font-size: clamp(15px, 1.6vw, 19px);
-		color: var(--color-body-text);
-		line-height: 1.75;
-		max-width: 780px;
-		margin: 0 auto;
-	}
-	.about-hero-desc :global(strong) {
-		color: var(--color-lavender);
-		font-weight: 700;
-		font-style: italic;
+	.cs-process-step {
+		will-change: transform, opacity;
 	}
 
-	.about-story {
-		padding: 20px 0 110px;
-	}
-	.about-story-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 56px;
-		align-items: center;
-	}
-	@media (min-width: 940px) {
-		.about-story-grid {
-			grid-template-columns: 0.85fr 1.15fr;
+	@media (prefers-reduced-motion: reduce) {
+		.cs-process-step {
+			opacity: 1 !important;
+			transform: none !important;
 		}
-	}
-	.about-story-media {
-		position: relative;
-		border-radius: var(--radius-lg);
-		overflow: hidden;
-		border: 1px solid var(--color-slate);
-		aspect-ratio: 4 / 5;
-		background: var(--color-midnight);
-	}
-	.about-story-media img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-	.about-story-media-badge {
-		position: absolute;
-		bottom: 20px;
-		left: 20px;
-		right: 20px;
-		background: rgba(8, 5, 26, 0.75);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: var(--radius-md);
-		padding: 16px 18px;
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
-	.about-story-media-badge-icon {
-		width: 38px;
-		height: 38px;
-		border-radius: 10px;
-		background: linear-gradient(135deg, #320082, #5a14f0);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #fff;
-		flex-shrink: 0;
-	}
-	.about-story-media-badge-title {
-		font-size: 13px;
-		font-weight: 700;
-		color: #fff;
-	}
-	.about-story-media-badge-desc {
-		font-size: 11px;
-		color: var(--color-body-text);
-	}
-	.about-story-copy :global(.eyebrow) {
-		margin-bottom: 18px;
-	}
-	.about-story-copy h2 {
-		margin-bottom: 22px;
-	}
-	.about-story-copy p {
-		font-size: 15px;
-		color: var(--color-body-text);
-		line-height: 1.8;
-		margin-bottom: 18px;
-	}
-	.about-story-copy p:last-of-type {
-		margin-bottom: 0;
-	}
-	.about-story-copy :global(strong) {
-		color: #fff;
-		font-weight: 600;
-	}
-
-	.about-value-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 18px;
-	}
-	@media (min-width: 560px) {
-		.about-value-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-	@media (min-width: 900px) {
-		.about-value-grid {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-	.about-value-card {
-		background: var(--color-midnight);
-		border: 1px solid var(--color-slate);
-		border-radius: var(--radius-md);
-		padding: 28px 24px;
-		transition: all 0.28s ease;
-	}
-	.about-value-card:hover {
-		border-color: rgba(90, 20, 240, 0.55);
-		transform: translateY(-5px);
-		box-shadow: 0 20px 40px -18px rgba(90, 20, 240, 0.28);
-	}
-	.about-value-icon {
-		width: 52px;
-		height: 52px;
-		border-radius: 14px;
-		background: linear-gradient(135deg, rgba(50, 0, 130, 0.6), rgba(90, 20, 240, 0.4));
-		border: 1px solid rgba(90, 20, 240, 0.3);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-lavender);
-		margin-bottom: 20px;
-		transition: all 0.28s;
-	}
-	.about-value-card:hover .about-value-icon {
-		background: linear-gradient(135deg, #320082, #5a14f0);
-		border-color: transparent;
-		color: #fff;
-	}
-	.about-value-card h3 {
-		font-size: 16px;
-		margin-bottom: 10px;
-	}
-	.about-value-card p {
-		font-size: 13px;
-		color: var(--color-body-text);
-		line-height: 1.65;
-	}
-
-	.about-team-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-	}
-	@media (min-width: 700px) {
-		.about-team-grid {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-	.about-team-card {
-		background: var(--color-midnight);
-		border: 1px solid var(--color-slate);
-		border-radius: var(--radius-md);
-		padding: 30px 20px;
-		text-align: center;
-		transition: all 0.25s ease;
-	}
-	.about-team-card:hover {
-		border-color: rgba(90, 20, 240, 0.5);
-		transform: translateY(-4px);
-	}
-	.about-team-avatar {
-		width: 68px;
-		height: 68px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 19px;
-		font-weight: 800;
-		color: #fff;
-		margin: 0 auto 18px;
-		background: linear-gradient(135deg, var(--color-royal), var(--color-electric));
-	}
-	.about-team-name {
-		font-size: 15px;
-		font-weight: 700;
-		color: #fff;
-		margin-bottom: 4px;
-	}
-	.about-team-role {
-		font-size: 12px;
-		color: var(--color-cyan);
-		font-weight: 500;
 	}
 </style>
+
+

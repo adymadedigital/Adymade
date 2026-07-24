@@ -43,8 +43,5 @@
 	<FinalCTA />
 </main>
 
-<style>
-	.form-section {
-		background: #08051a;
-	}
-</style>
+
+

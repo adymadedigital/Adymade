@@ -59,7 +59,7 @@
 
 				{#each cities as city}
 					<circle cx={city.x} cy={city.y} r="1.0" fill="url(#glowC)" />
-					<circle cx={city.x} cy={city.y} r="0.35" fill="#0d0a1f" stroke="#06B6D4" stroke-width="0.15" vector-effect="non-scaling-stroke" />
+					<circle cx={city.x} cy={city.y} r="0.35" fill="var(--theme-card-bg)" stroke="#06B6D4" stroke-width="0.15" vector-effect="non-scaling-stroke" />
 				{/each}
 			</svg>
 
@@ -84,44 +84,4 @@
 	</div>
 </section>
 
-<style>
-	.world-map-wrap {
-		position: relative;
-		width: 100%;
-		max-width: 1000px;
-		margin: 0 auto;
-		aspect-ratio: 2 / 1;
-		background: var(--abyss);
-	}
-	.world-map-img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-		filter: brightness(0) invert(1) opacity(0.16);
-	}
-	.world-map-overlay {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-	.map-label {
-		position: absolute;
-		font-size: 10px;
-		font-weight: 500;
-		color: var(--body-text);
-		white-space: nowrap;
-		pointer-events: none;
-	}
-	.map-label-hq {
-		font-size: 13px;
-		font-weight: 700;
-		color: var(--pale);
-	}
-	.map-flag {
-		font-size: 9px;
-		opacity: 0.7;
-		font-weight: 600;
-	}
-</style>
+

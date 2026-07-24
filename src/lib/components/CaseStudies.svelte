@@ -63,20 +63,5 @@
 	</div>
 </section>
 
-<style>
-	.cs-empty-state {
-		text-align: center;
-		padding: 4rem 1.5rem;
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px dashed rgba(255, 255, 255, 0.1);
-		border-radius: 16px;
-		color: rgba(255, 255, 255, 0.45);
-		font-size: 0.95rem;
-	}
 
-	.see-more-wrap {
-		display: flex;
-		justify-content: center;
-		margin-top: 3.5rem;
-	}
-</style>
+

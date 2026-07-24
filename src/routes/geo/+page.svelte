@@ -422,7 +422,7 @@
 	.geo-framework-content h3 {
 		font-size: 16px;
 		font-weight: 600;
-		color: white;
+		color: var(--theme-heading);
 		margin: 0;
 	}
 
@@ -438,7 +438,7 @@
 	.geo-faq-card h3 {
 		font-size: 19px;
 		font-weight: 700;
-		color: white;
+		color: var(--theme-heading);
 		margin-bottom: 10px;
 	}
 
@@ -465,69 +465,9 @@
 		justify-content: center;
 		gap: 12px;
 		min-height: 280px;
-		color: rgba(255,255,255,0.3);
+		color: var(--theme-text-muted);
 		font-size: 13px;
 		text-align: center;
 		padding: 24px;
-	}
-
-	/* Scoped glass card */
-	.glass-card {
-		background: rgba(255,255,255,0.02);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		border: 1px solid rgba(255,255,255,0.08);
-		border-radius: 24px;
-		padding: 32px;
-		text-decoration: none;
-		transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-	}
-
-	.glass-card:hover {
-		background: rgba(255,255,255,0.04);
-		border-color: rgba(6,182,212,0.4);
-		transform: translateY(-4px);
-		box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(6,182,212,0.08);
-	}
-
-	.gc-icon {
-		width: 52px;
-		height: 52px;
-		background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-		border: 1px solid rgba(255,255,255,0.1);
-		border-radius: 14px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-cyan);
-		margin-bottom: 20px;
-		transition: all 0.3s ease;
-	}
-
-	.glass-card:hover .gc-icon {
-		background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(90,20,240,0.15));
-		border-color: rgba(6,182,212,0.5);
-		color: white;
-		transform: scale(1.05) rotate(-2deg);
-	}
-
-	.glass-card h3 {
-		font-size: 20px;
-		font-weight: 700;
-		color: white;
-		margin-bottom: 12px;
-		letter-spacing: -0.01em;
-	}
-
-	.glass-card p {
-		font-size: 15px;
-		color: rgba(255,255,255,0.65);
-		line-height: 1.7;
-		margin-bottom: 0;
-		flex: 1;
 	}
 </style>
