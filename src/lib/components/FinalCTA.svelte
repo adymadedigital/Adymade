@@ -20,7 +20,7 @@
 					Book Your Free Strategy Call <ArrowRight size={18} />
 				</a>
 				<a
-					href="https://wa.link/u03r6i"
+					href="https://wa.me/919826886021"
 					class="cta-btn-ghost"
 					target="_blank"
 					rel="noopener"

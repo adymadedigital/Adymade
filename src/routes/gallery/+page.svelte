@@ -145,7 +145,7 @@
 			<p>Book a free 15-minute strategy call — no commitment, reply within 2 hours, IST/GST/GMT compatible.</p>
 			<div class="cta-btns">
 				<a href="https://calendly.com/addymade/15-minute-consultation-call" class="cta-btn-primary" target="_blank" rel="noopener">Book a Free Call →</a>
-				<a href="https://api.whatsapp.com/send?phone=919752571277&text=Hello%2C%20I%20have%20just%20visited%20your%20website%20and%20wanted%20to%20connect%20for%20further%20discussion.%20" class="cta-btn-ghost" target="_blank" rel="noopener">Get in Touch</a>
+				<a href="https://api.whatsapp.com/send?phone=919826886021&text=Hello%2C%20I%20have%20just%20visited%20your%20website%20and%20wanted%20to%20connect%20for%20further%20discussion.%20" class="cta-btn-ghost" target="_blank" rel="noopener">Get in Touch</a>
 			</div>
 			<p class="cta-micro">Trusted by 150+ businesses across India, Saudi Arabia, UAE, UK & Australia</p>
 		</div>

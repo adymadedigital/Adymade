@@ -32,7 +32,7 @@
 		</div>
 
 		<a
-			href="https://wa.link/u03r6i"
+			href="https://wa.me/919826886021"
 			class="chat-panel-cta"
 			target="_blank"
 			rel="noopener"

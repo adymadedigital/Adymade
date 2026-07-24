@@ -2250,7 +2250,7 @@ footer {
 .foot-col h5 {
 	font-size: 13px;
 	font-weight: 600;
-	color: #fff;
+	color: var(--theme-heading);
 	margin-bottom: 18px;
 	letter-spacing: 0.02em;
 }
@@ -2270,7 +2270,7 @@ footer {
 }
 
 .foot-col a:hover {
-	color: var(--color-lavender);
+	color: var(--color-electric);
 }
 
 .foot-address {
@@ -2293,7 +2293,7 @@ footer {
 }
 .currency-values {
 	font-size: 13px;
-	color: var(--color-lavender);
+	color: var(--color-electric);
 	font-weight: 600;
 }
 
@@ -2309,7 +2309,7 @@ footer {
 
 .foot-bottom p {
 	font-size: 13px;
-	color: white;
+	color: var(--theme-text-muted);
 }
 .foot-legal {
 	display: flex;
@@ -2317,12 +2317,12 @@ footer {
 }
 .foot-legal a {
 	font-size: 13px;
-	color: white;
+	color: var(--theme-text-secondary);
 	transition: color 0.2s;
 	text-decoration: none;
 }
 .foot-legal a:hover {
-	color: var(--color-lavender);
+	color: var(--color-electric);
 }
 
 /* ══════════════════════════════════
