@@ -59,9 +59,9 @@
 						<!-- Placeholder image 1 -->
 						<div class="glass-card" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02);">
 							<!-- Note to User: Replace this placeholder src with your local image path -->
-							<img src="/placeholder-ai-1.jpg" alt="AI Automation Dashboard" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
+							<img src="/image1.png" alt="AI Automation Dashboard" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
 							<div style="position: absolute; padding: 24px; text-align: center;">
-								<span style="color: rgba(255,255,255,0.5);">Local Image Placeholder 1</span>
+								<span style="color: rgba(255,255,255,0.5);"></span>
 							</div>
 						</div>
 
@@ -138,17 +138,17 @@
 					<div class="glass-grid" style="margin-top: 80px;">
 						<!-- Placeholder image 2 -->
 						<div class="glass-card" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); height: 300px;">
-							<img src="/placeholder-ai-2.jpg" alt="AI Analytics" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
+							<img src="/image2.png" alt="AI Analytics" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
 							<div style="position: absolute; padding: 24px; text-align: center;">
-								<span style="color: rgba(255,255,255,0.5);">Local Image Placeholder 2</span>
+								<span style="color: rgba(255,255,255,0.5);"></span>
 							</div>
 						</div>
 						
 						<!-- Placeholder image 3 -->
 						<div class="glass-card" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); height: 300px;">
-							<img src="/placeholder-ai-3.jpg" alt="AI Workflows" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
+							<img src="/image3.png" alt="AI Workflows" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;" />
 							<div style="position: absolute; padding: 24px; text-align: center;">
-								<span style="color: rgba(255,255,255,0.5);">Local Image Placeholder 3</span>
+								<span style="color: rgba(255,255,255,0.5);"></span>
 							</div>
 						</div>
 					</div>

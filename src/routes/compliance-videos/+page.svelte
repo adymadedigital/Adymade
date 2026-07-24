@@ -56,11 +56,11 @@
 					<!-- Hero Image 1 -->
 					<div class="cv-hero-media glass-card">
 						{#if !img1Error}
-							<img src="/compliance-hero.jpg" alt="Compliance Video Production" class="cv-img" onerror={() => img1Error = true} />
+							<img src="image8.png" alt="Compliance Video Production" class="cv-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="cv-img-placeholder">
 								<ClipboardCheck size={56} color="rgba(6,182,212,0.5)" />
-								<span>Image 1 — Place in static/</span>
+								<span></span>
 							</div>
 						{/if}
 					</div>
@@ -119,11 +119,11 @@
 						<!-- Image 2 -->
 						<div class="glass-card cv-img-card">
 							{#if !img2Error}
-								<img src="/compliance-types.jpg" alt="Compliance Video Types" class="cv-img" onerror={() => img2Error = true} />
+								<img src="/image9.png" alt="Compliance Video Types" class="cv-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="cv-img-placeholder">
 									<ShieldCheck size={40} color="rgba(6,182,212,0.5)" />
-									<span>Image 2 — Place in static/</span>
+									<span></span>
 								</div>
 							{/if}
 						</div>
@@ -136,7 +136,7 @@
 					<div class="cv-img-row">
 						<div class="glass-card cv-img-card">
 							{#if !img3Error}
-								<img src="/compliance-workplace.jpg" alt="Workplace Compliance" class="cv-img" onerror={() => img3Error = true} />
+								<img src="/image10.png" alt="Workplace Compliance" class="cv-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="cv-img-placeholder">
 									<Users size={40} color="rgba(6,182,212,0.5)" />
@@ -146,7 +146,7 @@
 						</div>
 						<div class="glass-card cv-img-card">
 							{#if !img4Error}
-								<img src="/compliance-training.jpg" alt="Training Session" class="cv-img" onerror={() => img4Error = true} />
+								<img src="/image11.png" alt="Training Session" class="cv-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="cv-img-placeholder">
 									<Heart size={40} color="rgba(6,182,212,0.5)" />
@@ -197,7 +197,7 @@
 					<div class="cv-img-row">
 						<div class="glass-card cv-img-card">
 							{#if !img5Error}
-								<img src="/compliance-safety.jpg" alt="Safety Compliance" class="cv-img" onerror={() => img5Error = true} />
+								<img src="/image12.png" alt="Safety Compliance" class="cv-img" onerror={() => img5Error = true} />
 							{:else}
 								<div class="cv-img-placeholder">
 									<HardHat size={40} color="rgba(6,182,212,0.5)" />
@@ -207,7 +207,7 @@
 						</div>
 						<div class="glass-card cv-img-card">
 							{#if !img6Error}
-								<img src="/compliance-results.jpg" alt="Compliance Results" class="cv-img" onerror={() => img6Error = true} />
+								<img src="/image13.png" alt="Compliance Results" class="cv-img" onerror={() => img6Error = true} />
 							{:else}
 								<div class="cv-img-placeholder">
 									<TrendingUp size={40} color="rgba(6,182,212,0.5)" />

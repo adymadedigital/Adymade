@@ -95,7 +95,7 @@
 					</div>
 					<div class="dm-hero-media dm-glass">
 						{#if !img1Error}
-							<img src="/dm-hero.jpg" alt="Digital Marketing" class="dm-img" onerror={() => img1Error = true} />
+							<img src="/image34.png" class="dm-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="dm-img-ph"><TrendingUp size={56} color="rgba(6,182,212,0.5)" /><span>Image 1 — Place in static/</span></div>
 						{/if}
@@ -118,7 +118,7 @@
 						</div>
 						<div class="dm-glass dm-img-card">
 							{#if !img2Error}
-								<img src="/dm-overview.jpg" alt="Digital Marketing Overview" class="dm-img" onerror={() => img2Error = true} />
+				                <img src="/image29.png" alt="Digital Marketing" class="dm-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="dm-img-ph"><BarChart3 size={40} color="rgba(6,182,212,0.5)" /><span>Image 2 — Place in static/</span></div>
 							{/if}
@@ -147,7 +147,7 @@
 						<!-- Image 3 -->
 						<div class="dm-glass dm-img-card">
 							{#if !img3Error}
-								<img src="/dm-campaigns.jpg" alt="Marketing Campaigns" class="dm-img" onerror={() => img3Error = true} />
+								<img src="/image30.png" alt="Marketing Campaigns" class="dm-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="dm-img-ph"><Globe size={40} color="rgba(6,182,212,0.5)" /><span>Image 3 — Place in static/</span></div>
 							{/if}
@@ -174,14 +174,14 @@
 					<div class="dm-img-row">
 						<div class="dm-glass dm-img-card">
 							{#if !img4Error}
-								<img src="/dm-social.jpg" alt="Social Media Marketing" class="dm-img" onerror={() => img4Error = true} />
+								<img src="/image31.png" alt="Social Media Marketing" class="dm-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="dm-img-ph"><Users size={40} color="rgba(6,182,212,0.5)" /><span>Image 4 — Place in static/</span></div>
 							{/if}
 						</div>
 						<div class="dm-glass dm-img-card">
 							{#if !img5Error}
-								<img src="/dm-analytics.jpg" alt="Marketing Analytics" class="dm-img" onerror={() => img5Error = true} />
+								<img src="/image32.png" alt="Marketing Analytics" class="dm-img" onerror={() => img5Error = true} />
 							{:else}
 								<div class="dm-img-ph"><BarChart3 size={40} color="rgba(6,182,212,0.5)" /><span>Image 5 — Place in static/</span></div>
 							{/if}
@@ -235,7 +235,7 @@
 						<!-- Image 6 -->
 						<div class="dm-glass dm-img-card">
 							{#if !img6Error}
-								<img src="/dm-results.jpg" alt="Marketing Results" class="dm-img" onerror={() => img6Error = true} />
+								<img src="/image33.png" alt="Marketing Results" class="dm-img" onerror={() => img6Error = true} />
 							{:else}
 								<div class="dm-img-ph"><Target size={40} color="rgba(6,182,212,0.5)" /><span>Image 6 — Place in static/</span></div>
 							{/if}

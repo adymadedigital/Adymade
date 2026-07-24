@@ -100,7 +100,7 @@
 					</div>
 					<div class="cs-hero-media cs-glass">
 						{#if !img1Error}
-							<img src="/software-hero.jpg" alt="Custom Software" class="cs-img" onerror={() => img1Error = true} />
+							<img src="/image25.png" alt="Custom Software" class="cs-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="cs-img-ph"><Settings2 size={56} color="rgba(6,182,212,0.5)" /><span>Image 1 — Place in static/</span></div>
 						{/if}
@@ -123,7 +123,7 @@
 						</div>
 						<div class="cs-glass cs-img-card">
 							{#if !img2Error}
-								<img src="/software-overview.jpg" alt="Custom Software Overview" class="cs-img" onerror={() => img2Error = true} />
+								<img src="/image26.png" alt="Custom Software Overview" class="cs-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="cs-img-ph"><Cpu size={40} color="rgba(6,182,212,0.5)" /><span>Image 2 — Place in static/</span></div>
 							{/if}
@@ -172,14 +172,14 @@
 					<div class="cs-img-row">
 						<div class="cs-glass cs-img-card">
 							{#if !img3Error}
-								<img src="/software-team.jpg" alt="Software Team" class="cs-img" onerror={() => img3Error = true} />
+								<img src="/image27.png" alt="Software Team" class="cs-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="cs-img-ph"><Building2 size={40} color="rgba(6,182,212,0.5)" /><span>Image 3 — Place in static/</span></div>
 							{/if}
 						</div>
 						<div class="cs-glass cs-img-card">
 							{#if !img4Error}
-								<img src="/software-dashboard.jpg" alt="Software Dashboard" class="cs-img" onerror={() => img4Error = true} />
+								<img src="/image28.png" alt="Software Dashboard" class="cs-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="cs-img-ph"><Users size={40} color="rgba(6,182,212,0.5)" /><span>Image 4 — Place in static/</span></div>
 							{/if}

@@ -88,7 +88,7 @@
 					</div>
 					<div class="sp-hero-media sp-glass">
 						{#if !img1Error}
-							<img src="/webdev-hero.jpg" alt="Web Development" class="sp-img" onerror={() => img1Error = true} />
+							<img src="/image20.png" alt="Web Development" class="sp-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="sp-img-ph"><Globe size={56} color="rgba(6,182,212,0.5)" /><span>Image 1 — Place in static/</span></div>
 						{/if}
@@ -111,7 +111,7 @@
 						</div>
 						<div class="sp-glass sp-img-card">
 							{#if !img2Error}
-								<img src="/webdev-overview.jpg" alt="Web Development Overview" class="sp-img" onerror={() => img2Error = true} />
+								<img src="/image21.png" alt="Web Development Overview" class="sp-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="sp-img-ph"><LayoutDashboard size={40} color="rgba(6,182,212,0.5)" /><span>Image 2 — Place in static/</span></div>
 							{/if}
@@ -144,14 +144,14 @@
 					<div class="sp-img-row">
 						<div class="sp-glass sp-img-card">
 							{#if !img3Error}
-								<img src="/webdev-mobile.jpg" alt="Mobile Development" class="sp-img" onerror={() => img3Error = true} />
+								<img src="/image22.png" alt="Mobile Development" class="sp-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="sp-img-ph"><Smartphone size={40} color="rgba(6,182,212,0.5)" /><span>Image 3 — Place in static/</span></div>
 							{/if}
 						</div>
 						<div class="sp-glass sp-img-card">
 							{#if !img4Error}
-								<img src="/webdev-ui.jpg" alt="UI/UX Design" class="sp-img" onerror={() => img4Error = true} />
+								<img src="/image23.png" alt="UI/UX Design" class="sp-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="sp-img-ph"><Palette size={40} color="rgba(6,182,212,0.5)" /><span>Image 4 — Place in static/</span></div>
 							{/if}
@@ -223,9 +223,9 @@
 						{/each}
 
 						<!-- Image 5 beside FAQ -->
-						<div class="sp-glass sp-img-card">
+						<div class="sp-glass sp-img-card sp-faq-img">
 							{#if !img5Error}
-								<img src="/webdev-team.jpg" alt="Development Team" class="sp-img" onerror={() => img5Error = true} />
+								<img src="/image24.png" class="sp-img" onerror={() => img5Error = true} />
 							{:else}
 								<div class="sp-img-ph"><Globe size={40} color="rgba(6,182,212,0.5)" /><span>Image 5 — Place in static/</span></div>
 							{/if}
@@ -329,4 +329,16 @@
 	.sp-img-card { padding:0!important; overflow:hidden; min-height:280px; position:relative; }
 	.sp-img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
 	.sp-img-ph { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; min-height:280px; color:rgba(255,255,255,.3); font-size:13px; text-align:center; padding:24px; }
+
+	/* FAQ image — bigger + shifted down */
+	.sp-faq-img {
+		min-height: 420px;
+		margin-top: 32px;
+	}
+
+	@media (min-width: 768px) {
+		.sp-faq-img {
+			min-height: 480px;
+		}
+	}
 </style>

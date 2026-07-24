@@ -1177,7 +1177,7 @@ header {
 	}
 } */
 
-.clients-row {
+/* .clients-row {
 	display: flex;
 	flex-wrap: wrap;
 	gap:26px;
@@ -1197,6 +1197,62 @@ header {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+} */
+
+/* Marquee wrapper — same fade-edge technique as Industries section */
+.clients-marquee-wrapper {
+	overflow: hidden;
+	width: 100%;
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent 0%,
+		black 8%,
+		black 92%,
+		transparent 100%
+	);
+	mask-image: linear-gradient(
+		to right,
+		transparent 0%,
+		black 8%,
+		black 92%,
+		transparent 100%
+	);
+}
+
+.clients-marquee-track {
+	display: flex;
+	align-items: center;
+	width: max-content;
+	gap: 26px;
+	animation: trust-scroll 28s linear infinite;
+}
+
+.clients-marquee-wrapper:hover .clients-marquee-track {
+	animation-play-state: paused;
+}
+
+@keyframes trust-scroll {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.client-chip {
+	flex: 0 0 auto;
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	opacity: 1;
+	text-align: center;
+	padding: 0;
+	cursor: default;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 120px;
 }
 
 .client-chip.star {
