@@ -40,6 +40,24 @@
 		</div>
 	</div>
 
+	<!-- Analytics & SEO Banner -->
+	<div class="admin-card" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(90, 20, 240, 0.15), rgba(6, 182, 212, 0.15)); border-color: rgba(90, 20, 240, 0.35);">
+		<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+			<div style="display: flex; align-items: center; gap: 16px;">
+				<div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #320082, #5a14f0); display: flex; align-items: center; justify-content: center; color: white;">
+					<BookOpen style="width: 24px; height: 24px;" />
+				</div>
+				<div>
+					<h3 style="font-size: 18px; font-weight: 700; color: white; margin-bottom: 4px;">Analytics &amp; SEO Control Center</h3>
+					<p style="font-size: 13px; color: var(--color-body-text);">Monitor Google Analytics (GA4), Microsoft Clarity Session Replays &amp; Heatmaps, and SEO/GEO Health.</p>
+				</div>
+			</div>
+			<a href="/dashboard/analytics" class="admin-nav-link active" style="padding: 10px 20px; font-size: 13px; text-decoration: none; border-radius: 8px;">
+				Open Analytics &amp; SEO Center →
+			</a>
+		</div>
+	</div>
+
 	<WixAnalyticsCard />
 
 	<div class="stats-grid">
