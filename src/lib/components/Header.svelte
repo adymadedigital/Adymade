@@ -5,6 +5,7 @@
 	} from 'lucide-svelte';
 	import { navLinks } from '$lib/data/navigation';
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
+	import { themeStore } from '$lib/stores/theme.svelte';
 
 	// Lucide icon map — all icons used in nav dropdowns
 	const iconMap: Record<string, any> = {
@@ -39,7 +40,7 @@
 		<nav class="nav-inner">
 			<!-- Logo -->
 			<a href="/" class="logo-wrap">
-				<img src="/logos/adymade.png" alt="adymade Logo" class="logo-icon"/>
+				<img src={themeStore.resolved === 'light' ? '/adymade-light.svg' : '/logos/adymade.png'} alt="adymade Logo" class="logo-icon"/>
 				<div class="logo-text-group">
 				    <span class="logo-text">adymade</span>
 				    <span class="logo-subtext">Digital LLP</span>

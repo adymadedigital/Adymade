@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { themeStore } from '$lib/stores/theme.svelte';
 	// Social icons defined as inline Lucide-style SVGs for reliable SSR rendering
 </script>
 
@@ -8,7 +9,7 @@
 			<!-- Brand Column -->
 			<div class="foot-brand">
 				<a href="/" class="logo-wrap">
-					<img src="/logos/adymade.png" alt="adymade Logo" class="logo-icon" />
+					<img src={themeStore.resolved === 'light' ? '/adymade-light.svg' : '/logos/adymade.png'} alt="adymade Logo" class="logo-icon" />
 					<div class="logo-text-group">
 						<span class="logo-text">adymade</span>
 						<span class="logo-subtext">Digital LLP</span>
