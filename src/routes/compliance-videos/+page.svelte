@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ClipboardCheck, ShieldCheck, Heart, Lock, HardHat, Stethoscope, FileText, Play, CheckSquare, Globe, ArrowRight, CheckCircle2, TrendingUp, Users } from 'lucide-svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
+	import VideoShowcase from '$lib/components/VideoShowcase.svelte';
 
 	const approach = [
 		{ icon: FileText, title: "Script Development", desc: "Transform complex policies into simple, engaging narratives your employees will actually understand and retain." },
@@ -70,6 +71,21 @@
 
 		<section class="section pt-0">
 			<div class="container">
+
+			<VideoShowcase
+			videos={[
+				{
+					videoId: 'QfMlZaVx3Z4',
+					title: 'Workplace Compliance Training',
+					description: 'A quick look at how we simplify complex policies into engaging videos.'
+				},
+				{
+					videoId: 'TXwg5zEIlvY',
+					title: 'Safety Compliance Training',
+					description: 'See how animation and scenarios make safety training stick.'
+				}
+			]}
+		/>
 
 				<!-- Types of Compliance Videos -->
 				<div class="cv-category">
