@@ -115,6 +115,8 @@
 	--color-slate: var(--theme-card-border);
 	--color-body-text: var(--theme-text-secondary);
 	--color-muted: var(--theme-text-muted);
+	--stat-grad-start: var(--color-imperial);
+	--stat-grad-end: var(--color-cyan-dark);
 }
 
 .dark {
@@ -154,6 +156,8 @@
 	--color-slate: #362870;
 	--color-body-text: rgba(255, 255, 255, 0.92);
 	--color-muted: rgba(255, 255, 255, 0.7);
+	--stat-grad-start: var(--color-lavender);
+	--stat-grad-end: var(--color-cyan);
 }
 
 /* ══════════════════════════════════
@@ -1400,7 +1404,7 @@ header {
 }
 
 .chip-logo {
-	height: 44px;
+	height: 84px;
 	width: auto;
 	object-fit: contain;
 }
@@ -1426,6 +1430,40 @@ header {
 .clients-row > div:nth-child(7) .chip-logo {
 	height: 44px;
 } /* Cisco */
+
+.clients-marquee-wrap {
+	overflow: hidden;
+	width: 100%;
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent 0%,
+		black 5%,
+		black 95%,
+		transparent 100%
+	);
+	mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.clients-marquee-track {
+	display: flex;
+	width: max-content;
+	gap: 44px;
+	align-items: center;
+	animation: clients-scroll-left 28s linear infinite;
+}
+
+.clients-marquee-wrap:hover .clients-marquee-track {
+	animation-play-state: paused;
+}
+
+@keyframes clients-scroll-left {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
 
 /* ══════════════════════════════════
    10. COMPONENT: SERVICES
@@ -1482,7 +1520,14 @@ header {
 	background: radial-gradient(circle, rgba(90, 20, 240, 0.12) 0%, transparent 70%);
 	transition: all 0.4s;
 }
+/* Hide the corner glow in light theme — looks like a stray blur on white cards */
+.svc-card::after {
+	opacity: 0;
+}
 
+.dark .svc-card::after {
+	opacity: 1;
+}
 .svc-card:hover {
 	border-color: rgba(90, 20, 240, 0.6);
 	transform: translateY(-6px);
@@ -1721,7 +1766,7 @@ header {
 	font-weight: 800;
 	line-height: 1;
 	margin-bottom: 10px;
-	background: linear-gradient(120deg, var(--color-lavender), var(--color-cyan));
+	background: linear-gradient(120deg, var(--stat-grad-start), var(--stat-grad-end));
 	-webkit-background-clip: text;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -1729,7 +1774,7 @@ header {
 
 .stat-lbl {
 	font-size: 13px;
-	color: var(--color-body-text);
+	color: var(--theme-text-secondary);
 	font-weight: 500;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
@@ -5781,7 +5826,7 @@ header {
 }
 
 .logo-card-img {
-	max-height: 48px;
+	max-height: 150px;
 	max-width: 100%;
 	width: auto;
 	object-fit: contain;

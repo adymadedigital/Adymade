@@ -13,7 +13,7 @@
 <section class="clients-hero">
 	<div class="container">
 		<div class="eyebrow">Our Clients</div>
-		<h1>150+ Businesses<br />Trust Adymade</h1>
+		<h1>Brands We've<br />Helped Grow</h1>
 		<p>
 			From startups to established brands, here's a look at the businesses we've helped automate,
 			create, and grow — across India, Saudi Arabia, UAE, UK and Australia.
@@ -23,8 +23,6 @@
 
 <section class="clients-section">
 	<div class="container">
-		<p class="results-count">{allClientChips.length} clients and counting</p>
-
 		<div class="client-grid">
 			{#each allClientChips as chip (chip.name)}
 				<div class="logo-card">
@@ -38,5 +36,3 @@
 		</div>
 	</div>
 </section>
-
-
