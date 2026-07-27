@@ -56,7 +56,7 @@
 					<!-- Right: Hero Image 1 -->
 					<div class="aiv-hero-media glass-card" style="padding: 0; overflow: hidden; min-height: 380px;">
 						{#if !img1Error}
-							<img src="/ai-video-hero.jpg" alt="AI Video Production" class="aiv-img" onerror={() => img1Error = true} />
+							<img src="/image4.png" alt="AI Video Production" class="aiv-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="aiv-img-placeholder">
 								<Clapperboard size={48} color="rgba(6,182,212,0.5)" />
@@ -123,7 +123,7 @@
 						<!-- Image 2 -->
 						<div class="glass-card aiv-img-card">
 							{#if !img2Error}
-								<img src="/ai-video-services.jpg" alt="AI Creative Services" class="aiv-img" onerror={() => img2Error = true} />
+								<img src="/image5.png" alt="AI Creative Services" class="aiv-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="aiv-img-placeholder">
 									<Film size={40} color="rgba(6,182,212,0.5)" />
@@ -159,7 +159,7 @@
 						<!-- Image 3 -->
 						<div class="glass-card aiv-img-card">
 							{#if !img3Error}
-								<img src="/ai-video-production.jpg" alt="AI Production Workflow" class="aiv-img" onerror={() => img3Error = true} />
+								<img src="/image6.png" alt="AI Production Workflow" class="aiv-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="aiv-img-placeholder">
 									<Clapperboard size={40} color="rgba(6,182,212,0.5)" />
@@ -171,7 +171,7 @@
 						<!-- Image 4 -->
 						<div class="glass-card aiv-img-card">
 							{#if !img4Error}
-								<img src="/ai-video-results.jpg" alt="AI Video Results" class="aiv-img" onerror={() => img4Error = true} />
+								<img src="/image7.png" alt="AI Video Results" class="aiv-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="aiv-img-placeholder">
 									<Globe size={40} color="rgba(6,182,212,0.5)" />

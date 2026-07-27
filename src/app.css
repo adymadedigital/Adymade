@@ -5556,7 +5556,7 @@ header {
 .svc-img-card {
 	padding: 0 !important;
 	overflow: hidden;
-	min-height: 280px;
+	min-height: 420px;
 	position: relative;
 }
 

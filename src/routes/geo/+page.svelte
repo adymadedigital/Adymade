@@ -71,7 +71,7 @@
 					<!-- Hero Image 1 -->
 					<div class="geo-hero-media glass-card">
 						{#if !img1Error}
-							<img src="/geo-hero.jpg" alt="GEO AI Search" class="geo-img" onerror={() => img1Error = true} />
+							<img src="/image14.png" alt="GEO AI Search" class="geo-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="geo-img-placeholder">
 								<Sparkles size={56} color="rgba(6,182,212,0.5)" />
@@ -99,7 +99,7 @@
 						<!-- Image 2 -->
 						<div class="glass-card geo-img-card">
 							{#if !img2Error}
-								<img src="/geo-what.jpg" alt="What is GEO" class="geo-img" onerror={() => img2Error = true} />
+								<img src="/image15.png" alt="What is GEO" class="geo-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="geo-img-placeholder">
 									<Search size={40} color="rgba(6,182,212,0.5)" />
@@ -128,7 +128,7 @@
 						<!-- Image 3 — spans to fill the 5-item + 1 image = 2×3 grid -->
 						<div class="glass-card geo-img-card">
 							{#if !img3Error}
-								<img src="/geo-services.jpg" alt="GEO Services" class="geo-img" onerror={() => img3Error = true} />
+								<img src="/image16.png" alt="GEO Services" class="geo-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="geo-img-placeholder">
 									<Activity size={40} color="rgba(6,182,212,0.5)" />
@@ -161,7 +161,7 @@
 					<div class="geo-img-row">
 						<div class="glass-card geo-img-card">
 							{#if !img4Error}
-								<img src="/geo-strategy.jpg" alt="GEO Strategy" class="geo-img" onerror={() => img4Error = true} />
+								<img src="/image17.png" alt="GEO Strategy" class="geo-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="geo-img-placeholder">
 									<TrendingUp size={40} color="rgba(6,182,212,0.5)" />
@@ -171,7 +171,7 @@
 						</div>
 						<div class="glass-card geo-img-card">
 							{#if !img5Error}
-								<img src="/geo-results.jpg" alt="GEO Results" class="geo-img" onerror={() => img5Error = true} />
+								<img src="/image19.png" alt="GEO Results" class="geo-img" onerror={() => img5Error = true} />
 							{:else}
 								<div class="geo-img-placeholder">
 									<Star size={40} color="rgba(6,182,212,0.5)" />
@@ -217,7 +217,7 @@
 						<!-- Image 6 in FAQ row -->
 						<div class="glass-card geo-img-card" style="min-height: 200px;">
 							{#if !img6Error}
-								<img src="/geo-faq.jpg" alt="GEO FAQ" class="geo-img" onerror={() => img6Error = true} />
+								<img src="/image18.png" alt="GEO FAQ" class="geo-img" onerror={() => img6Error = true} />
 							{:else}
 								<div class="geo-img-placeholder">
 									<Sparkles size={40} color="rgba(6,182,212,0.5)" />

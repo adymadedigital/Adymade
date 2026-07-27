@@ -88,7 +88,7 @@
 					</div>
 					<div class="svc-hero-media glass-card">
 						{#if !img1Error}
-							<img src="/webdev-hero.jpg" alt="Web Development" class="svc-img" onerror={() => img1Error = true} />
+							<img src="/image20.png" alt="Web Development" class="svc-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="svc-img-placeholder"><Globe size={56} color="rgba(6,182,212,0.5)" /><span>Image 1 — Place in static/</span></div>
 						{/if}
@@ -111,7 +111,7 @@
 						</div>
 						<div class="glass-card svc-img-card">
 							{#if !img2Error}
-								<img src="/webdev-overview.jpg" alt="Web Development Overview" class="svc-img" onerror={() => img2Error = true} />
+								<img src="/image21.png" alt="Web Development Overview" class="svc-img" onerror={() => img2Error = true} />
 							{:else}
 								<div class="svc-img-placeholder"><LayoutDashboard size={40} color="rgba(6,182,212,0.5)" /><span>Image 2 — Place in static/</span></div>
 							{/if}
@@ -144,14 +144,14 @@
 					<div class="svc-img-row">
 						<div class="glass-card svc-img-card">
 							{#if !img3Error}
-								<img src="/webdev-mobile.jpg" alt="Mobile Development" class="svc-img" onerror={() => img3Error = true} />
+								<img src="/image22.png" alt="Mobile Development" class="svc-img" onerror={() => img3Error = true} />
 							{:else}
 								<div class="svc-img-placeholder"><Smartphone size={40} color="rgba(6,182,212,0.5)" /><span>Image 3 — Place in static/</span></div>
 							{/if}
 						</div>
 						<div class="glass-card svc-img-card">
 							{#if !img4Error}
-								<img src="/webdev-ui.jpg" alt="UI/UX Design" class="svc-img" onerror={() => img4Error = true} />
+								<img src="/image23.png" alt="UI/UX Design" class="svc-img" onerror={() => img4Error = true} />
 							{:else}
 								<div class="svc-img-placeholder"><Palette size={40} color="rgba(6,182,212,0.5)" /><span>Image 4 — Place in static/</span></div>
 							{/if}
@@ -223,9 +223,9 @@
 						{/each}
 
 						<!-- Image 5 beside FAQ -->
-						<div class="glass-card svc-img-card">
+						<div class="glass-card svc-img-card svc-faq-img">
 							{#if !img5Error}
-								<img src="/webdev-team.jpg" alt="Development Team" class="svc-img" onerror={() => img5Error = true} />
+								<img src="/image24.png" alt="Development Team" class="svc-img" onerror={() => img5Error = true} />
 							{:else}
 								<div class="svc-img-placeholder"><Globe size={40} color="rgba(6,182,212,0.5)" /><span>Image 5 — Place in static/</span></div>
 							{/if}
@@ -239,3 +239,16 @@
 		<FinalCTA />
 	</main>
 </div>
+
+<style>
+	.svc-faq-img {
+		min-height: 420px;
+		margin-top: 32px;
+	}
+
+	@media (min-width: 768px) {
+		.svc-faq-img {
+			min-height: 480px;
+		}
+	}
+</style>

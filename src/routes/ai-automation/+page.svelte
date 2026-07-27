@@ -51,7 +51,7 @@
 
 					<div class="svc-grid-2col" style="margin-bottom: 80px;">
 						<div class="glass-card" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 320px;">
-							<img src="/placeholder-ai-1.jpg" alt="AI Automation Dashboard" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" />
+							<img src="/image1.png" alt="AI Automation Dashboard" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" />
 						</div>
 
 						<div class="glass-card">
