@@ -1,71 +1,89 @@
-# Svelte library
+# Adymade Website
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+Official website for **Adymade**, built with **SvelteKit** and **TypeScript**.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+## Tech Stack
 
-## Creating a project
+- SvelteKit
+- TypeScript
+- Tailwind CSS
+- Supabase
+- Vite
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
 
-```sh
-# create a new project in the current directory
-npx sv create
+- Responsive Landing Pages
+- AI Automation
+- AI Videos
+- Compliance Videos
+- Digital Marketing
+- Web Development
+- Software Development
+- SEO Services
+- Case Studies
+- Gallery
+- Contact Forms
+- Admin Dashboard
+- Testimonials
+- Client Showcase
+- Theme Switching
 
-# create a new project in my-app
-npx sv create my-app
+## Getting Started
+
+### Install dependencies
+
+```bash
+npm install
 ```
 
-To recreate this project with the same configuration:
+### Start the development server
 
-```sh
-# recreate this project
-npx sv@0.16.1 create --template library --types ts --add prettier eslint vitest="usages:unit,component" tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:auto" --install npm adymade
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+Open your browser at:
 
-## Building
-
-To build your library:
-
-```sh
-npm pack
+```
+http://localhost:5173
 ```
 
-To create a production version of your showcase app:
+## Build for Production
 
-```sh
+```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Preview Production Build
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+npm run preview
+```
 
-## Publishing
+## Project Structure
 
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
+```
+src/
+ ├── lib/
+ │   ├── components/
+ │   ├── stores/
+ │   └── data/
+ ├── routes/
+ └── app.html
 
-To publish your library to [npm](https://www.npmjs.com):
+static/
+README.md
+package.json
+```
 
-```sh
-npm publish
-```
-```
-2emjMktk8gWgJKI3 
-```
-```
-Update_logo_new1
-```
+## Deployment
+
+The project is deployed from the **main** branch.
+
+## Repository
+
+Adymade Website Source Code
+
+---
+
+Maintained by the Adymade Development Team.
