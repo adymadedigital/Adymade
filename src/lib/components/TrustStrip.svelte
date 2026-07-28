@@ -18,9 +18,9 @@
 			{/each}
 		</div>
 
-		<div class="clients-marquee-wrapper">
+		<div class="clients-marquee-wrap">
 			<div class="clients-marquee-track">
-				{#each marqueeChips as chip, i (chip.name + i)}
+				{#each [...clientChips, ...clientChips] as chip, i (chip.name + '-' + i)}
 					{#if chip.star}
 						<div class="client-chip star">
 							<div class="chip-name">{chip.name}</div>

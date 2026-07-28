@@ -160,13 +160,13 @@
 								<p>{block.text}</p>
 							{:else if block.type === 'heading'}
 								{#if block.level === 1}
-									<h1 style="color: white; margin-top: 32px; margin-bottom: 16px; font-size: 32px; font-weight: 700;">{block.text}</h1>
+									<h1 style="color: var(--theme-heading); margin-top: 32px; margin-bottom: 16px; font-size: 32px; font-weight: 700;">{block.text}</h1>
 								{:else if block.level === 2}
-									<h2 style="color: white; margin-top: 28px; margin-bottom: 14px; font-size: 26px; font-weight: 600;">{block.text}</h2>
+									<h2 style="color: var(--theme-heading); margin-top: 28px; margin-bottom: 14px; font-size: 26px; font-weight: 600;">{block.text}</h2>
 								{:else if block.level === 3}
-									<h3 style="color: white; margin-top: 24px; margin-bottom: 12px; font-size: 22px; font-weight: 600;">{block.text}</h3>
+									<h3 style="color: var(--theme-heading); margin-top: 24px; margin-bottom: 12px; font-size: 22px; font-weight: 600;">{block.text}</h3>
 								{:else if block.level === 4}
-									<h4 style="color: white; margin-top: 20px; margin-bottom: 10px; font-size: 18px; font-weight: 600;">{block.text}</h4>
+									<h4 style="color: var(--theme-heading); margin-top: 20px; margin-bottom: 10px; font-size: 18px; font-weight: 600;">{block.text}</h4>
 								{/if}
 							{:else if block.type === 'image'}
 								<div class="article-body-image" style="margin: 32px 0; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">

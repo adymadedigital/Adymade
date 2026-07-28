@@ -4,6 +4,8 @@
 		ChevronDown, MessageCircle, X, Menu
 	} from 'lucide-svelte';
 	import { navLinks } from '$lib/data/navigation';
+	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
+	import { themeStore } from '$lib/stores/theme.svelte';
 
 	// Lucide icon map — all icons used in nav dropdowns
 	const iconMap: Record<string, any> = {
@@ -38,7 +40,7 @@
 		<nav class="nav-inner">
 			<!-- Logo -->
 			<a href="/" class="logo-wrap">
-				<img src="/logos/adymade.png" alt="adymade Logo" class="logo-icon"/>
+				<img src={themeStore.resolved === 'light' ? '/adymade-light.svg' : '/logos/adymade.png'} alt="adymade Logo" class="logo-icon"/>
 				<div class="logo-text-group">
 				    <span class="logo-text">adymade</span>
 				    <span class="logo-subtext">Digital LLP</span>
@@ -94,12 +96,13 @@
 
 			<!-- Nav Actions -->
 			<div class="nav-actions">
-				<!-- <a href="https://wa.link/u03r6i" class="wa-nav" aria-label="WhatsApp" target="_blank" rel="noopener">
+				<!-- <a href="https://wa.me/919826886021" class="wa-nav" aria-label="WhatsApp" target="_blank" rel="noopener">
 					<MessageCircle size={20} />
 				</a> -->
 				<a href="https://calendly.com/addymade/15-minute-consultation-call" class="nav-cta" target="_blank" rel="noopener">
 					Book a Call
 				</a>
+				<ThemeSwitcher />
 				<button class="mob-menu-btn" onclick={toggleMobile} aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen}>
 					{#if mobileOpen}
 						<X size={22} />
@@ -141,7 +144,11 @@
 			<a href="/contact"      class="mob-link" onclick={() => (mobileOpen = false)}>Contact</a>
 
 			<div class="mob-ctas">
-				<a href="https://wa.link/u03r6i" class="btn btn-wa" target="_blank" rel="noopener">
+				<div class="mob-theme-row">
+					<span style="font-size: 14px; font-weight: 500; color: var(--theme-text-secondary);">Theme Mode</span>
+					<ThemeSwitcher />
+				</div>
+				<a href="https://wa.me/919826886021" class="btn btn-wa" target="_blank" rel="noopener">
 					<MessageCircle size={18} /> WhatsApp Us
 				</a>
 				<a href="https://calendly.com/addymade/15-minute-consultation-call" class="btn btn-primary" target="_blank" rel="noopener">

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ClipboardCheck, ShieldCheck, Heart, Lock, HardHat, Stethoscope, FileText, Play, CheckSquare, Globe, ArrowRight, CheckCircle2, TrendingUp, Users } from 'lucide-svelte';
 	import FinalCTA from '$lib/components/FinalCTA.svelte';
+	import VideoShowcase from '$lib/components/VideoShowcase.svelte';
 
 	const approach = [
 		{ icon: FileText, title: "Script Development", desc: "Transform complex policies into simple, engaging narratives your employees will actually understand and retain." },
@@ -56,7 +57,7 @@
 					<!-- Hero Image 1 -->
 					<div class="cv-hero-media glass-card">
 						{#if !img1Error}
-							<img src="image8.png" alt="Compliance Video Production" class="cv-img" onerror={() => img1Error = true} />
+							<img src="/image8.png" alt="Compliance Video Production" class="cv-img" onerror={() => img1Error = true} />
 						{:else}
 							<div class="cv-img-placeholder">
 								<ClipboardCheck size={56} color="rgba(6,182,212,0.5)" />
@@ -70,6 +71,21 @@
 
 		<section class="section pt-0">
 			<div class="container">
+
+			<VideoShowcase
+			videos={[
+				{
+					videoId: 'QfMlZaVx3Z4',
+					title: 'Workplace Compliance Training',
+					description: 'A quick look at how we simplify complex policies into engaging videos.'
+				},
+				{
+					videoId: 'TXwg5zEIlvY',
+					title: 'Safety Compliance Training',
+					description: 'See how animation and scenarios make safety training stick.'
+				}
+			]}
+		/>
 
 				<!-- Types of Compliance Videos -->
 				<div class="cv-category">
@@ -407,65 +423,5 @@
 		background-clip: text;
 		margin-bottom: 12px;
 		line-height: 1;
-	}
-
-	/* Scoped glass card */
-	.glass-card {
-		background: rgba(255,255,255,0.02);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		border: 1px solid rgba(255,255,255,0.08);
-		border-radius: 24px;
-		padding: 32px;
-		text-decoration: none;
-		transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-	}
-
-	.glass-card:hover {
-		background: rgba(255,255,255,0.04);
-		border-color: rgba(6,182,212,0.4);
-		transform: translateY(-4px);
-		box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(6,182,212,0.08);
-	}
-
-	.gc-icon {
-		width: 52px;
-		height: 52px;
-		background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-		border: 1px solid rgba(255,255,255,0.1);
-		border-radius: 14px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-cyan);
-		margin-bottom: 20px;
-		transition: all 0.3s ease;
-	}
-
-	.glass-card:hover .gc-icon {
-		background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(90,20,240,0.15));
-		border-color: rgba(6,182,212,0.5);
-		color: white;
-		transform: scale(1.05) rotate(-2deg);
-	}
-
-	.glass-card h3 {
-		font-size: 20px;
-		font-weight: 700;
-		color: white;
-		margin-bottom: 14px;
-		letter-spacing: -0.01em;
-	}
-
-	.glass-card p {
-		font-size: 15px;
-		color: rgba(255,255,255,0.65);
-		line-height: 1.7;
-		margin-bottom: 0;
-		flex: 1;
 	}
 </style>

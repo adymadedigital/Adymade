@@ -205,7 +205,7 @@
 									translateX({dir * (1 - p) * 90}px)
 									rotate({dir * (1 - p) * 14}deg)
 									scale({0.9 + p * 0.1});
-								z-index: {10 + i};
+								z-index: {Math.min(1 + i, 100)};
 							"
 						>
 							<!-- Left: info -->
@@ -325,7 +325,7 @@
 	.cs-filter-section {
 		position: sticky;
 		top: 5.5rem; /* adjust to sit just below your header */
-		z-index: 20;
+		z-index: 150;
 		padding-block: 0.75rem;
 	}
 

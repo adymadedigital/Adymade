@@ -5,6 +5,7 @@
 	import { supabase } from '$lib/supabase';
 	import { 
 		LayoutDashboard, 
+		BarChart3,
 		FileText, 
 		Settings, 
 		LogOut,
@@ -31,6 +32,7 @@
 			title: 'Main',
 			items: [
 				{ name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+				{ name: 'Analytics & SEO', href: '/dashboard/analytics', icon: BarChart3 },
 				{ name: 'Blogs', href: '/dashboard/blogs', icon: FileText },
 				{ name: 'Case Studies', href: '/dashboard/case-studies', icon: BookOpen },
 				{ name: 'Testimonials', href: '/dashboard/testimonials', icon: MessageSquare },

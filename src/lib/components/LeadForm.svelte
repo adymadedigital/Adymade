@@ -66,7 +66,7 @@
 			<p>
 				Your message has been received. We'll review your requirements and reach out with a custom
 				proposal. In the meantime, feel free to
-				<a href="https://wa.link/u03r6i" target="_blank" rel="noopener">WhatsApp us</a> for a faster response.
+				<a href="https://wa.me/919826886021" target="_blank" rel="noopener">WhatsApp us</a> for a faster response.
 			</p>
 			<button class="btn btn-ghost" onclick={() => { success = false; onClose?.(); }}>
 				Close
